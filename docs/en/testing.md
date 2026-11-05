@@ -23,9 +23,7 @@ python -m unittest discover -s tests -p 'test_check_docs.py' -v
 
 Choose other targeted tests by the changed behavior, then run the full suite for runtime closure. Documentation-only edits need scoped checks and factual review; they do not by themselves require reading a private instance. Verify documented commands against actual `--help` and code. The documentation checker verifies declared pairs, local links, and supported heading anchors, not semantic translation or rendered diagrams.
 
-## What requires separate evidence
-
-### Installation regression checks (2026-11-05)
+## Installation regression checks (2026-11-05)
 
 Clean-clone review found three blockers: assisted onboarding required an unavailable external router; validation accepted a missing vault as zero notes without errors; and the package audit rejected the documented ignored local `.venv`. The product now includes a native-registry-verified router, rejects missing/non-directory validation targets, and excludes only an ignored, entirely untracked root `.venv` in a Git checkout from the local audit. A package or tracked environment remains rejected; exports exclude `.venv` at every depth. The doctor recommendation now matches Python 3.11+.
 
@@ -39,7 +37,15 @@ python scripts/check_docs.py
 git diff --check
 ```
 
-These checks cover successful explicit selection, ambiguous/missing/malformed registration, native identity mismatch, path traversal/symlinks, read-only resolution, invalid vault CLI exits and environment audit/export boundaries. Platform-default path tests mock Linux/Windows; they do not establish installation on those systems. Native Obsidian registration fixtures are synthetic, not GUI evidence. Actual GUI/Bases behavior, other operating systems, semantic usefulness and owner acceptance remain separate gates. Run the full suite above against the final checkout for runtime acceptance; these focused results do not replace it.
+These checks cover successful explicit selection, ambiguous/missing/malformed registration, native identity mismatch, path traversal/symlinks, read-only resolution, invalid vault CLI exits and environment audit/export boundaries.
+
+Independent clean-clone review of candidate `4444224` ran **460 tests: 458 passed and 2 failed** in 550.845 seconds. Both failures concerned skill documentation links: an incorrect relative path and a link outside the skills-only distribution contract. The links were corrected without changing runtime code or tests; an independent rerun then passed all 29 targeted tests: routing links (7), resolver (9), registration (8) and delivery checks (5). Documentation and whitespace checks also passed after the correction. This is a full run followed by focused verification of the two repairs, not a claim that a second uninterrupted 460-test run passed.
+
+A separate fresh-clone/venv rehearsal passed creation, validation, state and negative cases. On this same macOS machine, already-installed Obsidian 1.15.0 opened the synthetic vault, displayed `Inicio` and the `Ofertas` Base, and assigned the native ID verified by the included registration/resolution commands using an isolated Codex registry. All 72 original vault files remained unchanged; Obsidian created 4 normal `.obsidian` files. The candidate ZIP contained 472 files with every manifest size/hash matching and no private or `.venv` contents.
+
+Limits: this did not test installing Obsidian from scratch, all Bases views, Windows/Linux installation, semantic business usefulness or owner acceptance. Linux/Windows default-path tests use mocks. The GUI observation covers one Base and a synthetic business; it does not establish those remaining gates.
+
+## What requires separate evidence
 
 | Gate | Evidence required |
 | --- | --- |
