@@ -1,35 +1,145 @@
 # Obsidian-Bussines-Brain
 
-[Español](README.es.md) · [Documentation](docs/en/README.md) · [MIT license](LICENSE)
+**Turn how you work and decide into business knowledge you can use.**
 
-A private, source-backed business knowledge workspace for business owners, entrepreneurs, and self-employed people. Work with Codex to turn conversations, decisions, and working methods into useful knowledge in Obsidian.
+**English** · [Español](README.es.md)
 
-The repository contains software, methodology, agent instructions, and synthetic examples. Business knowledge lives in a separate private Obsidian vault; original transcripts live in a separate private source bank. This is a local toolkit operated during an agent session, not a hosted service or background worker. Codex and optional connectors have their own access and data-processing conditions.
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Python: 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue)](docs/en/onboarding.md) [![Docs: EN / ES](https://img.shields.io/badge/docs-EN%20%2F%20ES-green)](docs/en/README.md)
 
-## Start with your situation
+[Get started](START_HERE.md) · [Continue an existing business](CONTINUE_WITH_CODEX.md) · [Explore the docs](docs/en/README.md) · [Report an issue](https://github.com/unsulabs/Obsidian-Bussines-Brain/issues)
 
-| Your situation | Start here |
+## Contents
+
+- [About the project](#about-the-project)
+- [Built with](#built-with)
+- [Getting started](#getting-started)
+- [Usage](#usage)
+- [Privacy and editorial control](#privacy-and-editorial-control)
+- [Roadmap and current limits](#roadmap-and-current-limits)
+- [Contributing](#contributing)
+- [License](#license)
+- [Support](#support)
+- [Acknowledgments](#acknowledgments)
+
+## About the project
+
+Obsidian-Bussines-Brain is a private, source-backed knowledge workspace for business owners, entrepreneurs, and self-employed people. Work with Codex to preserve conversations, explain decisions and exceptions, and develop knowledge your team or agents can use in Obsidian.
+
+Use it to answer “Why do we qualify customers this way?”, prepare an offer from established criteria, or recover what changed between two decisions. The workflow connects original evidence, the owner's judgment, reviewable notes, and the task at hand.
+
+- **Preserve meaning:** keep complete originals and provenance before summarizing; carry reasons, exceptions, and corrections into the resulting knowledge.
+- **Develop useful knowledge:** identify subjects and existing notes before drafting, with proposed and approved content kept distinct.
+- **Find and maintain it:** retrieve original passages, review revisions, and navigate Markdown notes, Bases views, and Canvas maps.
+
+| Location | What belongs there |
 | --- | --- |
-| First time using the product | [Start here](START_HERE.md) |
-| A business vault already exists | [Continue with Codex](CONTINUE_WITH_CODEX.md) |
-| Use or update knowledge | [User guide](docs/en/user-guide.md) |
-| Change the product | [Development guide](docs/en/development.md) |
+| Public product repository | Software, methodology, agent instructions, templates, and synthetic examples |
+| Private Obsidian vault | Business knowledge and its review state |
+| Private source bank, outside Git and the vault | Original transcripts and their custody records |
 
-You need Python **3.11 or later**, the packages in `requirements.txt`, and Codex with verified file and command access for the assisted workflow. Obsidian Desktop displays the vault; check Bases and CLI availability in your installation. Follow [onboarding](docs/en/onboarding.md) for setup and the new/existing vault split.
+This is a local toolkit operated during an agent session. It does not install a hosted service or background worker. Codex and optional connectors have their own access and data-processing conditions.
 
-**External dependency:** assisted work on an existing vault requires `obsidian-router`, a local destination registry, and verification against Obsidian. Cloning does not install them. If routing cannot be verified, keep authorized work outside the vault and leave vault access pending. An explicit CLI path does not replace the agent's routing checks.
+### Built with
 
-## What you can build
+| Component | Role |
+| --- | --- |
+| Python 3.11+, PyYAML, jsonschema | Local commands and validation; see [dependencies](requirements.txt) |
+| Markdown and Obsidian Desktop | Readable notes, Properties, native Bases, and Canvas |
+| Codex and repository skills | Assisted source review, knowledge development, and editorial workflow |
 
-- Preserve authorized sources with provenance, sensitivity, and purpose-specific permissions.
-- Develop operating knowledge from evidence and the owner's judgment, keeping proposed and approved content distinct.
-- Retrieve passages, maintain revisions, and navigate Markdown notes, Bases views, and Canvas maps.
-- Check a real business task and a question that should remain uncertain, separately from structural validation.
+See the [architecture guide](docs/en/architecture.md) for component boundaries.
 
-No country, currency, tax regime, legal form, departments, or employees are assumed. Unknown context stays unknown. AI output remains a proposal until appropriate verification and decision. The product is under development: automated tests do not establish business accuracy, regulatory compliance, semantic retrieval quality, or GUI compatibility.
+## Getting started
 
-## Privacy and distribution
+### Prerequisites
 
-Do not put real sources, personal data, credentials, or client evidence in commits, issues, or pull requests. Sensitivity labels are metadata; Obsidian does not enforce per-note access control. Maps and views are derived navigation, not independent authority. Publication, external uploads, plugins, and integrations require applicable authorization.
+- Git and **Python 3.11 or later**.
+- Codex with verified filesystem and command access for the assisted workflow.
+- Obsidian Desktop to view the vault; verify Bases and CLI availability locally.
+- Separate private locations for the business vault and source bank.
 
-Read [contributing](CONTRIBUTING.md), [changes](CHANGELOG.md), and the [documentation index](docs/en/README.md). Methodology originals remain in Spanish and are identified as such. Runtime commands, schema keys, IDs, enums, and vault filenames retain their existing identifiers.
+**External dependency for existing vaults:** `obsidian-router`, a local destination registry, and verification against Obsidian. Cloning does not install them. Before listing or reading vault files, the agent must resolve the destination and read local instructions. An active window or typed CLI path does not replace these checks. If routing is unavailable, continue authorized work outside the vault and leave vault access/integration pending.
+
+### Installation
+
+Prepare the product on macOS or Linux:
+
+```bash
+git clone https://github.com/unsulabs/Obsidian-Bussines-Brain.git
+cd Obsidian-Bussines-Brain
+python3.11 --version
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python scripts/cerebro.py doctor
+python scripts/cerebro.py --help
+```
+
+A newer Python 3 interpreter is also supported; verify its version first. On Windows, use `py -3.11 -m venv .venv` and activate with `.venv\Scripts\Activate.ps1` in PowerShell instead of `source`. After activation, the `python` commands are the same. Package installation may access the network and requires applicable authorization.
+
+`doctor` is read-only and does not install missing components. If imports fail, check the interpreter and existing environments. This quickstart prepares the toolkit; it does not create a vault or verify Obsidian GUI behavior or business usefulness.
+
+### Choose your next step
+
+| Your situation | Next step |
+| --- | --- |
+| No business instance exists | Follow [onboarding](docs/en/onboarding.md#new-business-instance) to create an authorized instance at a new private path, then [develop it with Codex](GET_STARTED_WITH_CODEX.md). |
+| A business vault already exists | Use [Continue with Codex](CONTINUE_WITH_CODEX.md). Verify routing; do not run `crear`, copy templates over the vault, or restart the initial interview. |
+| Use or update knowledge | Open the [user guide](docs/en/user-guide.md). |
+| Change the product | Open the [development guide](docs/en/development.md). |
+
+Installing a template is only the beginning: continue through source review, knowledge architecture, useful writing, review, and a real business task.
+
+## Usage
+
+These **synthetic examples** are prompts for Codex after configuring the private instance and verifying its destination. They are not claims about a real business.
+
+**Add a new conversation**
+
+> This is a new, complete synthetic transcript for the Taller Nube demo: “We offer a diagnostic session before quoting a repair. For returning customers, check the previous diagnosis first. We have not approved a fixed diagnostic price.” Preserve the exact text before analysis. Within this instance's authorization, integrate its source card, access to the full text, and justified connections. Keep the price undecided and show what changed.
+
+The transcript cycle covers every subject, prior evidence, and relevant existing notes. Identify any parts still to come; a link alone is not a captured original. Ordinary documents and long questions retain their requested task and are not automatically ingested as transcripts. See [transcript workflow](docs/en/transcripts.md).
+
+**Ask a business question**
+
+> In the Taller Nube demo, what should we check before quoting a returning customer? Open the relevant original passages and explain the reasons and exceptions. Distinguish approved decisions from proposals. If the diagnostic price is not established, leave it unknown rather than suggesting an agreed price.
+
+**Correct a working note**
+
+> The returning-customer exception applies only when the previous diagnosis covers the same problem. Review the original and related notes, then propose the correction and its impact. Preserve the earlier version and do not silently overwrite approved knowledge.
+
+See the [user guide](docs/en/user-guide.md) and [knowledge workflow](docs/en/knowledge-workflow.md). Check both a useful task and a question that should remain uncertain; structural validation alone does not establish a correct answer.
+
+## Privacy and editorial control
+
+Keep real sources, personal data, credentials, and client evidence out of commits, issues, and pull requests. Permissions are specific to the instance, source, and purpose. Sensitivity labels are metadata; Obsidian does not enforce per-note access control. Publication, external uploads, plugins, and integrations require applicable authorization.
+
+AI output remains a proposal until appropriate verification and decision. Preserve conflicting evidence and history instead of replacing approved decisions with newer statements. Source cards help locate originals; they do not prove the original was read in this session. Maps, views, and links support navigation and do not establish authority.
+
+No country, currency, tax regime, legal form, departments, or employees are assumed. Unknown context stays unknown. See [security and privacy](docs/en/security.md).
+
+## Roadmap and current limits
+
+The product is under development. The [roadmap (Spanish original)](docs/HOJA_DE_RUTA.md) prioritizes installation/recovery across operating systems, independent semantic fidelity review, adapters and external access controls, and migration/restoration tests in isolated copies. These are validation priorities, not delivery commitments.
+
+Transcript search is lexical. Hosted service, automatic ERP/CRM synchronization, multiuser access controls, and universal migrations are not implemented. Automated tests do not establish business accuracy, regulatory compliance, semantic retrieval quality, or GUI compatibility. See [current boundaries](docs/en/architecture.md#alternatives-and-remaining-gates), [acceptance guidance](docs/en/testing.md), and the [changelog](CHANGELOG.md).
+
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing a change. Use synthetic reproductions, sanitized diagnostics, and checks appropriate to the change. Keep English and Spanish guides aligned while preserving runtime commands, schema keys, IDs, enums, and vault filenames.
+
+## License
+
+The product is distributed under the [MIT license](LICENSE). Adapted documentation resources are identified separately in [third-party notices](THIRD_PARTY_NOTICES.md).
+
+## Support
+
+Use [GitHub Issues](https://github.com/unsulabs/Obsidian-Bussines-Brain/issues) for product questions, bug reports, and proposed improvements. Include the relevant version, environment, and a synthetic reproduction; remove private paths, sources, and credentials before posting.
+
+## Acknowledgments
+
+README organization adapts [Best-README-Template](https://github.com/othneildrew/Best-README-Template/tree/fc444eb7b04b2e4863f6080b1507a219e95103fa), published under The Unlicense. Other documentation tooling adapts [ai-cursor-init](https://github.com/mgiovani/ai-cursor-init/tree/fc15400e4baab4607f408f5b83fed19263e564e3). See [attribution and license details](THIRD_PARTY_NOTICES.md).
+
+Original methodology and operational references remain in Spanish; the [English documentation index](docs/en/README.md) provides paired guides and identifies preserved sources.
+
+[Back to top](#obsidian-bussines-brain)
