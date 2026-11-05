@@ -15,7 +15,7 @@ de las transcripciones permanecen intactos.
 
 `scripts/verify_platform.py tests --output /fuera/del/checkout/evidencia` ejecuta
 toda la suite unittest y registra commit, pruebas, fallos, errores y cada omisión.
-Sólo la prueba nativa de alias macOS puede omitirse fuera de macOS, y las diez
+Sólo la prueba nativa de alias macOS puede omitirse fuera de macOS, y las doce
 pruebas nativas identificadas del filesystem Windows fuera de Windows. Sus jobs
 nativos deben ejecutarlas. Cualquier otra omisión o fallo esperado rechaza la
 aceptación. La fase `installation` verifica ayuda, doctor, documentación,
@@ -29,7 +29,8 @@ exigen una DACL protegida limitada al propietario, SYSTEM y administradores;
 rechaza ACL amplias existentes sin cambiarlas silenciosamente. POSIX conserva
 sus controles de descriptores de directorio, permisos y flock. Windows usa
 handles nativos, locks liberados al morir el proceso, flush de archivo y rename
-write-through; no afirma equivalencia con fsync de directorios POSIX.
+mediante handle; no afirma equivalencia con fsync de directorios POSIX ni igual
+persistencia del rename ante pérdida de energía.
 
 ```bash
 python scripts/cerebro.py doctor

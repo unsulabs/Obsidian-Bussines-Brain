@@ -25,6 +25,8 @@ WINDOWS_ONLY = {
         'test_write_read_immutable_conflict_and_mutable_replace',
         'test_permission_preserving_replace',
         'test_preserve_acl_creates_new_destination',
+        'test_publication_inside_writer_lock_keeps_parent_pinned',
+        'test_publication_handover_rejects_in_place_junction_mutation',
         'test_directory_preserves_body_exception_types',
         'test_restrictive_but_unprotected_acl_is_rejected',
         'test_windows_aliases_and_streams_rejected',
@@ -67,7 +69,7 @@ def run_tests(output):
         'expected_failures': len(result.expectedFailures),
         'unexpected_successes': len(result.unexpectedSuccesses),
         'skipped': skipped, 'unexpected_skips': unexpected_skips,
-        'skip_policy': 'The macOS alias test and ten named Windows backend tests '
+        'skip_policy': 'The macOS alias test and twelve named Windows backend tests '
                        'may skip only off their native OS; their matrix job must execute them.',
     }
     write_report(output, 'tests', report)

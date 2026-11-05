@@ -159,7 +159,7 @@ class DatasetTests(unittest.TestCase):
         with self.assertRaisesRegex(ModelError,'HASH_MISMATCH'): self.export()
 
     def test_atomic_link_failure_cleans_temporary_payload(self):
-        publish = ('windows_fs._K.MoveFileExW' if sys.platform == 'win32'
+        publish = ('windows_fs._rename_file' if sys.platform == 'win32'
                    else 'transcripciones_modelo.os.link')
         with patch(publish,side_effect=OSError('synthetic disk failure')):
             with self.assertRaises(OSError): self.export(commit=True)

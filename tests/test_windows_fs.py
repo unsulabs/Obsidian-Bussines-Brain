@@ -5,6 +5,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
+import struct
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import windows_fs as fs
@@ -55,6 +57,57 @@ class WindowsFilesystemTests(unittest.TestCase):
     def test_preserve_acl_creates_new_destination(self):
         fs.atomic_write(self.root, "new/journal.json", b"new", immutable=False, preserve_acl=True)
         self.assertEqual(fs.read_bytes(self.root, "new/journal.json"), b"new")
+
+    def test_publication_inside_writer_lock_keeps_parent_pinned(self):
+        with fs.file_lock(self.root / ".writer.lock"):
+            with self.assertRaises(OSError):
+                self.root.rename(self.root.with_name("moved-root"))
+            fs.atomic_write(self.root, "payload", b"within lock")
+            self.assertEqual(fs.read_bytes(self.root, "payload"), b"within lock")
+
+    def test_publication_handover_rejects_in_place_junction_mutation(self):
+        outside = Path(self.temp.name) / "outside"
+        outside.mkdir()
+        native_rename = fs._rename_file
+        ioctl = fs._K.DeviceIoControl
+        ioctl.argtypes = [fs.W.HANDLE, fs.W.DWORD, fs.C.c_void_p, fs.W.DWORD,
+            fs.C.c_void_p, fs.W.DWORD, fs.C.c_void_p, fs.C.c_void_p]
+        ioctl.restype = fs.W.BOOL
+        substitute = ("\\??\\" + str(outside)).encode("utf-16-le")
+        printable = str(outside).encode("utf-16-le")
+        paths = substitute + b"\0\0" + printable + b"\0\0"
+        payload = struct.pack("<IHHHHHH", 0xA0000003, 8 + len(paths), 0,
+            0, len(substitute), len(substitute) + 2, len(printable)) + paths
+
+        def check_handover(handle, path, *, replace):
+            # At this hook directory sharing has already transitioned. Both the
+            # leaf and its synthetic ancestor must resist in-place junctions.
+            temporary, = path.parent.glob(".tmp-*")
+            with self.assertRaises(OSError):
+                temporary.write_bytes(b"tampered")
+            with self.assertRaises(OSError):
+                temporary.unlink()
+            for candidate in (path.parent, self.root):
+                directory_handle, _ = fs._open(candidate, 0x40000000, share=3)
+                try:
+                    returned = fs.W.DWORD()
+                    success = ioctl(directory_handle, 0x900A4, payload, len(payload),
+                        None, 0, fs.C.byref(returned), None)
+                    error = fs.C.get_last_error()
+                    if success:  # Restore synthetic fixture even if the invariant fails.
+                        deletion = struct.pack("<IHH", 0xA0000003, 0, 0)
+                        ioctl(directory_handle, 0x900AC, deletion, len(deletion),
+                            None, 0, fs.C.byref(returned), None)
+                    self.assertFalse(success)
+                    self.assertEqual(error, 145)  # ERROR_DIR_NOT_EMPTY
+                finally:
+                    fs._K.CloseHandle(directory_handle)
+            native_rename(handle, path, replace=replace)
+
+        with mock.patch.object(fs, "_rename_file", side_effect=check_handover):
+            fs.atomic_write(self.root, "nested/payload", b"confined")
+        self.assertEqual(fs.read_bytes(self.root, "nested/payload"), b"confined")
+        self.assertEqual(list(outside.iterdir()), [])
 
     def test_directory_preserves_body_exception_types(self):
         for exception in (FileNotFoundError("missing"), BlockingIOError("busy"), OSError("body")):

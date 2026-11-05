@@ -46,6 +46,11 @@ class _Overlapped(C.Structure):
                 ("offset", W.DWORD), ("offset_high", W.DWORD), ("event", W.HANDLE)]
 
 
+class _RenameInfo(C.Structure):
+    _fields_ = [("replace", W.DWORD), ("root", W.HANDLE),
+                ("length", W.DWORD), ("name", W.WCHAR * 1)]
+
+
 if os.name == "nt":
     _K = C.WinDLL("kernel32", use_last_error=True)
     _A = C.WinDLL("advapi32", use_last_error=True)
@@ -63,8 +68,7 @@ if os.name == "nt":
     _bind(_K, "ReadFile", [W.HANDLE, P, W.DWORD, P, P])
     _bind(_K, "WriteFile", [W.HANDLE, P, W.DWORD, P, P])
     _bind(_K, "FlushFileBuffers", [W.HANDLE])
-    _bind(_K, "MoveFileExW", [W.LPCWSTR, W.LPCWSTR, W.DWORD])
-    _bind(_K, "DeleteFileW", [W.LPCWSTR])
+    _bind(_K, "SetFileInformationByHandle", [W.HANDLE, C.c_int, P, W.DWORD])
     _bind(_K, "LockFileEx", [W.HANDLE, W.DWORD, W.DWORD, W.DWORD, W.DWORD, P])
     _bind(_K, "UnlockFileEx", [W.HANDLE, W.DWORD, W.DWORD, W.DWORD, P])
     _bind(_K, "GetVolumeInformationW", [W.LPCWSTR, P, W.DWORD, P, P, P, P, W.DWORD])
@@ -76,7 +80,6 @@ if os.name == "nt":
     _bind(_A, "GetAclInformation", [P, P, W.DWORD, C.c_int])
     _bind(_A, "GetAce", [P, W.DWORD, P])
     _bind(_A, "ConvertSecurityDescriptorToStringSecurityDescriptorW", [P, W.DWORD, W.DWORD, P, P])
-    _bind(_A, "SetFileSecurityW", [W.LPCWSTR, W.DWORD, P])
     _bind(_A, "GetSecurityDescriptorControl", [P, P, P])
     _bind(_A, "GetSecurityDescriptorDacl", [P, P, P, P])
     _bind(_A, "SetSecurityInfo", [W.HANDLE, C.c_int, W.DWORD, P, P, P, P], W.DWORD)
@@ -159,9 +162,9 @@ def _open(path, access=0x20080, disposition=3, security=None, share=3):
 
 
 @contextlib.contextmanager
-def directory(path, create=False):
+def directory(path, create=False, *, _handles=None):
     absolute = _absolute(path)
-    handles = []
+    handles = [] if _handles is None else _handles
     acquired = False
     try:
         # ACLs and local rename semantics are mandatory, not inferred from mode bits.
@@ -238,7 +241,8 @@ def read_bytes(root, relative):
 
 def atomic_write(root, relative, data, *, immutable=True, preserve_acl=False):
     path = _relative(root, relative)
-    with directory(path.parent, create=True):
+    pins = []
+    with directory(path.parent, create=True, _handles=pins):
         temporary = path.parent / (".tmp-" + uuid.uuid4().hex)
         sddl = None
         if preserve_acl:
@@ -247,43 +251,83 @@ def atomic_write(root, relative, data, *, immutable=True, preserve_acl=False):
             except FileNotFoundError:
                 pass
         with _security(sddl) as sa:
-            handle, _ = _open(temporary, 0x40000000, 1, sa)
+            # Retain DELETE access ourselves, but do not share it. The temporary
+            # entry cannot be removed by a competing writer before publication.
+            handle, _ = _open(temporary, 0x40010000, 1, sa, share=1)
+        published = False
         try:
-            try:
-                offset = 0
-                while offset < len(data):
-                    chunk = data[offset:offset + 1048576]
-                    count = W.DWORD()
-                    _check(_K.WriteFile(handle, chunk, len(chunk), C.byref(count), None))
-                    if not count.value:
-                        raise OSError("Zero-length write")
-                    offset += count.value
-                _check(_K.FlushFileBuffers(handle))
-            finally:
-                _K.CloseHandle(handle)
+            offset = 0
+            while offset < len(data):
+                chunk = data[offset:offset + 1048576]
+                count = W.DWORD()
+                _check(_K.WriteFile(handle, chunk, len(chunk), C.byref(count), None))
+                if not count.value:
+                    raise OSError("Zero-length write")
+                offset += count.value
+            _check(_K.FlushFileBuffers(handle))
             validate_path(path)
-            if not _K.MoveFileExW(str(temporary), str(path), 8 | (0 if immutable else 1)):
-                error = C.get_last_error()
+            _allow_publication(path.parent, pins)
+            try:
+                _rename_file(handle, path, replace=not immutable)
+                published = True
+            except OSError as exc:
+                error = getattr(exc, "winerror", None)
                 if immutable and error in (80, 183):
                     if read_bytes(root, relative) != data:
                         raise _error("IMMUTABLE_CONFLICT")
                 else:
-                    raise C.WinError(error)
+                    raise
+            _check(_K.FlushFileBuffers(handle))
         finally:
-            if not _K.DeleteFileW(str(temporary)) and C.get_last_error() != 2:
-                raise C.WinError(C.get_last_error())
+            try:
+                if not published:
+                    # Delete through our handle, never a path after releasing the
+                    # last nonempty-directory guard. Close completes deletion.
+                    delete = C.c_ubyte(1)
+                    _check(_K.SetFileInformationByHandle(handle, 4, C.byref(delete), C.sizeof(delete)))
+            finally:
+                _K.CloseHandle(handle)
+
+
+def _allow_publication(parent, pins):
+    """Permit child rename while keeping each directory pinned against deletion.
+
+    Call only after a non-delete-shared temporary file is open in final parent.
+    Every directory is now nonempty through a pinned child or the pinned file;
+    FSCTL_SET_REPARSE_POINT cannot turn a nonempty directory into a junction.
+    Acquire the replacement pin before releasing the stricter one.
+    """
+    for index, candidate in enumerate([*reversed(parent.parents), parent]):
+        replacement, _ = _open(candidate, access=0x20081, share=3)
+        previous, pins[index] = pins[index], replacement
+        _K.CloseHandle(previous)
+
+
+def _rename_file(handle, path, *, replace):
+    """Publish using our existing DELETE-capable handle, without reopening it."""
+    name = str(path).encode("utf-16-le")
+    size = max(C.sizeof(_RenameInfo), _RenameInfo.name.offset + len(name) + 2)
+    buffer = C.create_string_buffer(size)
+    info = _RenameInfo.from_buffer(buffer)
+    info.replace, info.root, info.length = bool(replace), None, len(name)
+    C.memmove(C.addressof(buffer) + _RenameInfo.name.offset, name, len(name))
+    _check(_K.SetFileInformationByHandle(handle, 3, buffer, size))
 
 
 @contextlib.contextmanager
 def file_lock(path, blocking=True):
     path = _absolute(path)
-    with directory(path.parent, create=True), _security() as sa:
+    pins = []
+    with directory(path.parent, create=True, _handles=pins), _security() as sa:
         handle, info = _open(path, 0xC0000000, 4, sa)
         overlapped = _Overlapped()
         acquired = False
         try:
             if info.attributes & 0x10:
                 raise _error()
+            # The persistent, non-delete-shared lock file keeps its parent
+            # nonempty while callers publish files inside this lock context.
+            _allow_publication(path.parent, pins)
             if not _K.LockFileEx(handle, 2 | (0 if blocking else 1), 0, 1, 0, C.byref(overlapped)):
                 error = C.get_last_error()
                 if error == 33:
@@ -365,7 +409,9 @@ def set_security_descriptor(path, sddl, *, protected=True):
     """Explicit ACL mutation for callers that already authorized permission changes."""
     path = _absolute(path)
     with directory(path.parent), _security(sddl) as sa:
-        handle, _ = _open(path, 0x40000)
+        # SetSecurityInfo may read the current descriptor while changing
+        # protection/inheritance; request READ_CONTROL in addition to WRITE_DAC.
+        handle, _ = _open(path, 0x60080)
         try:
             # The object cannot be swapped while its non-delete-shared handle lives.
             present, defaulted, dacl = W.BOOL(), W.BOOL(), C.c_void_p()
@@ -384,7 +430,7 @@ def set_security_descriptor(path, sddl, *, protected=True):
 def flush_directory(path):
     """Validate confinement; Win32 exposes no unprivileged directory fsync.
 
-    Callers rely on atomic_write's data flush and same-volume write-through move;
+    Callers rely on atomic_write's data flush and same-volume handle rename;
     this function deliberately does not claim a crash-durable directory barrier.
     """
     with directory(path):
