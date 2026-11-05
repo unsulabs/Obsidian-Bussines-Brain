@@ -47,12 +47,20 @@ class WindowsFilesystemTests(unittest.TestCase):
     def test_permission_preserving_replace(self):
         target = self.root / "note.md"
         fs.atomic_write(self.root, target.name, b"old")
+        original_creation_acl = fs.security_descriptor(target)
+        fs.atomic_write(self.root, target.name, b"no-ai", immutable=False, preserve_acl=True)
+        self.assertEqual(fs.security_descriptor(target), original_creation_acl)
         # A read-only grant to Everyone is intentionally distinct from default.
         fs.set_security_descriptor(target,
             f"D:P(A;;FA;;;{fs._user_sid()})(A;;FR;;;WD)")
         before = fs.security_descriptor(target)
         fs.atomic_write(self.root, target.name, b"new", immutable=False, preserve_acl=True)
         self.assertEqual(fs.security_descriptor(target), before)
+        fs.set_security_descriptor(target,
+            f"D:(A;;FA;;;{fs._user_sid()})(A;;FR;;;WD)", protected=False)
+        unprotected_acl = fs.security_descriptor(target)
+        fs.atomic_write(self.root, target.name, b"unprotected", immutable=False, preserve_acl=True)
+        self.assertEqual(fs.security_descriptor(target), unprotected_acl)
 
     def test_preserve_acl_creates_new_destination(self):
         fs.atomic_write(self.root, "new/journal.json", b"new", immutable=False, preserve_acl=True)

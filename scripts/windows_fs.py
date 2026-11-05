@@ -253,9 +253,20 @@ def atomic_write(root, relative, data, *, immutable=True, preserve_acl=False):
         with _security(sddl) as sa:
             # Retain DELETE access ourselves, but do not share it. The temporary
             # entry cannot be removed by a competing writer before publication.
-            handle, _ = _open(temporary, 0x40010000, 1, sa, share=1)
+            handle, _ = _open(temporary, 0x40070000, 1, sa, share=1)
         published = False
         try:
+            if sddl is not None and _handle_security_descriptor(handle) != sddl:
+                # CreateFile can discard AUTO_INHERITED from its input SD.
+                # Restore through the retained handle before publishing bytes;
+                # never mask control bits in the preservation comparison.
+                with _security(sddl) as sa:
+                    control, revision = W.WORD(), W.DWORD()
+                    _check(_A.GetSecurityDescriptorControl(sa.descriptor,
+                        C.byref(control), C.byref(revision)))
+                    _set_handle_dacl(handle, sa.descriptor, bool(control.value & 0x1000))
+                if _handle_security_descriptor(handle) != sddl:
+                    raise _error("PRESERVE_ACL_FAILED")
             offset = 0
             while offset < len(data):
                 chunk = data[offset:offset + 1048576]
@@ -389,20 +400,38 @@ def security_descriptor(path):
     path = _absolute(path)
     with directory(path.parent):
         handle, _ = _open(path)
-        descriptor, text = C.c_void_p(), W.LPWSTR()
         try:
-            result = _A.GetSecurityInfo(handle, 1, 4, None, None, None, None, C.byref(descriptor))
-            if result:
-                raise C.WinError(result)
-            _check(_A.ConvertSecurityDescriptorToStringSecurityDescriptorW(
-                descriptor, 1, 4, C.byref(text), None))
-            return text.value
+            return _handle_security_descriptor(handle)
         finally:
-            if text:
-                _K.LocalFree(C.cast(text, C.c_void_p))
-            if descriptor:
-                _K.LocalFree(descriptor)
             _K.CloseHandle(handle)
+
+
+def _handle_security_descriptor(handle):
+    descriptor, text = C.c_void_p(), W.LPWSTR()
+    try:
+        result = _A.GetSecurityInfo(handle, 1, 4, None, None, None, None, C.byref(descriptor))
+        if result:
+            raise C.WinError(result)
+        _check(_A.ConvertSecurityDescriptorToStringSecurityDescriptorW(
+            descriptor, 1, 4, C.byref(text), None))
+        return text.value
+    finally:
+        if text:
+            _K.LocalFree(C.cast(text, C.c_void_p))
+        if descriptor:
+            _K.LocalFree(descriptor)
+
+
+def _set_handle_dacl(handle, descriptor, protected):
+    present, defaulted, dacl = W.BOOL(), W.BOOL(), C.c_void_p()
+    _check(_A.GetSecurityDescriptorDacl(descriptor, C.byref(present),
+        C.byref(dacl), C.byref(defaulted)))
+    if not present:
+        raise _error("PRIVATE_DIRECTORY_REQUIRED")
+    result = _A.SetSecurityInfo(handle, 1,
+        4 | (0x80000000 if protected else 0x20000000), None, None, dacl, None)
+    if result:
+        raise C.WinError(result)
 
 
 def set_security_descriptor(path, sddl, *, protected=True):
@@ -414,15 +443,7 @@ def set_security_descriptor(path, sddl, *, protected=True):
         handle, _ = _open(path, 0x60080)
         try:
             # The object cannot be swapped while its non-delete-shared handle lives.
-            present, defaulted, dacl = W.BOOL(), W.BOOL(), C.c_void_p()
-            _check(_A.GetSecurityDescriptorDacl(sa.descriptor, C.byref(present),
-                C.byref(dacl), C.byref(defaulted)))
-            if not present:
-                raise _error("PRIVATE_DIRECTORY_REQUIRED")
-            result = _A.SetSecurityInfo(handle, 1,
-                4 | (0x80000000 if protected else 0x20000000), None, None, dacl, None)
-            if result:
-                raise C.WinError(result)
+            _set_handle_dacl(handle, sa.descriptor, protected)
         finally:
             _K.CloseHandle(handle)
 
