@@ -16,8 +16,6 @@ jobs:
         os: [ubuntu-24.04, windows-2022, macos-14]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
-    env:
-      CI_EVIDENCE: ${{ runner.temp }}/platform-evidence
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -44,18 +42,18 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           "$env:VIRTUAL_ENV\Scripts" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - name: Full unittest suite (strict skip policy)
-        run: python scripts/verify_platform.py tests --output "${{ env.CI_EVIDENCE }}"
+        run: python scripts/verify_platform.py tests --output "${{ runner.temp }}/platform-evidence"
       - name: Synthetic installation and export audit
         if: ${{ !cancelled() }}
-        run: python scripts/verify_platform.py installation --output "${{ env.CI_EVIDENCE }}"
+        run: python scripts/verify_platform.py installation --output "${{ runner.temp }}/platform-evidence"
       - name: Upload synthetic verification evidence only
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: platform-${{ matrix.os }}-python-3.11
           path: |
-            ${{ env.CI_EVIDENCE }}/tests.log
-            ${{ env.CI_EVIDENCE }}/tests.json
-            ${{ env.CI_EVIDENCE }}/installation.json
+            ${{ runner.temp }}/platform-evidence/tests.log
+            ${{ runner.temp }}/platform-evidence/tests.json
+            ${{ runner.temp }}/platform-evidence/installation.json
           if-no-files-found: error
           retention-days: 14
