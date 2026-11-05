@@ -34,7 +34,7 @@ python scripts/cerebro.py doctor
 python scripts/cerebro.py --help
 ```
 
-On Windows, use a local NTFS/ReFS path for the transcript bank. Choose a new bank directory so the product can create its protected private ACL; an existing directory with broader or inherited permissions is rejected. Network shares and junctions are outside this backend's supported storage scope. See [platform checks and limits](testing.md#automated-checks).
+On Windows, use a local NTFS/ReFS path for the transcript bank. Choose a new bank directory so the product can create its protected private ACL; an existing directory with broader permissions or an unprotected ACL is rejected. Network shares and junctions are outside this backend's supported storage scope. See [platform checks and limits](testing.md#automated-checks).
 
 `doctor` is read-only; it does not install missing components. If imports fail, check the interpreter and existing environments before concluding that the product cannot run. Passing this check does not verify GUI or business usefulness.
 

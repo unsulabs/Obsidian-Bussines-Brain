@@ -34,7 +34,7 @@ python scripts/cerebro.py doctor
 python scripts/cerebro.py --help
 ```
 
-En Windows usa una ruta local NTFS/ReFS para el banco de transcripciones. Elige un directorio nuevo para que el producto cree su ACL privada protegida; rechaza un directorio existente con permisos más amplios o heredados. Las rutas de red y junctions quedan fuera del almacenamiento admitido por este backend. Consulta [pruebas por plataforma y límites](testing.md#comprobaciones-automáticas).
+En Windows usa una ruta local NTFS/ReFS para el banco de transcripciones. Elige un directorio nuevo para que el producto cree su ACL privada protegida; rechaza un directorio existente con permisos más amplios o una ACL sin proteger. Las rutas de red y junctions quedan fuera del almacenamiento admitido por este backend. Consulta [pruebas por plataforma y límites](testing.md#comprobaciones-automáticas).
 
 `doctor` es de solo lectura; no instala componentes faltantes. Si fallan imports, comprueba el intérprete y los entornos existentes antes de concluir que el producto no funciona. Este diagnóstico no verifica GUI ni utilidad empresarial.
 
