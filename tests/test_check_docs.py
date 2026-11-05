@@ -24,7 +24,7 @@ class CheckDocsTest(unittest.TestCase):
             'pairs': [{'id': 'guide', 'en': 'docs/en/guide.md', 'es': 'docs/es/guide.md'}]}), encoding='utf-8', newline='\n')
 
     def test_valid_cross_language_anchor_and_fenced_example(self):
-        with (self.root / 'docs/en/guide.md').open('a') as out:
+        with (self.root / 'docs/en/guide.md').open('a', encoding='utf-8', newline='\n') as out:
             out.write('\n[Spanish](../es/guide.md#acción-útil)\n[Repeat](#repeat-1)\n'
                       '\n```markdown\n[Example](does-not-exist.md)\n```\n')
         self.assertEqual(check(self.root), [])

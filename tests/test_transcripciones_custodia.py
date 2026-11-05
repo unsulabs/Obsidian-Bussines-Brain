@@ -121,7 +121,8 @@ class CustodyTests(unittest.TestCase):
 
     def test_destination_symlink_rejected(self):
         path = capture(self.root)
-        self.bank.mkdir()
+        from platform_fs import private_directory
+        private_directory(self.bank)
         outside = self.root / "outside"
         outside.mkdir()
         (self.bank / "originales").symlink_to(outside, target_is_directory=True)

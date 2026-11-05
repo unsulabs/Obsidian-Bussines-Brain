@@ -15,6 +15,7 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path, PureWindowsPath
+from platform_fs import is_link_or_reparse
 
 
 REGISTRY = Path.home() / ".codex" / "obsidian" / "vaults.json"
@@ -22,8 +23,8 @@ def native_registry_path() -> Path:
     if sys.platform == "darwin":
         return Path.home() / "Library/Application Support/obsidian/obsidian.json"
     if sys.platform == "win32":
-        return Path(os.environ.get("APPDATA", Path.home() / "AppData/Roaming")) / "obsidian/obsidian.json"
-    return Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "obsidian/obsidian.json"
+        return Path(os.environ.get("APPDATA") or Path.home() / "AppData/Roaming") / "obsidian/obsidian.json"
+    return Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config") / "obsidian/obsidian.json"
 
 
 NATIVE = native_registry_path()
@@ -38,7 +39,7 @@ def canonical(value: str | Path) -> Path:
                 path = Path("/private") / path.relative_to("/")
                 break
     for item in (path, *path.parents):
-        if item.exists() and item.is_symlink():
+        if is_link_or_reparse(item):
             raise ValueError(f"Ruta con enlace simbólico: {item}")
     return path
 

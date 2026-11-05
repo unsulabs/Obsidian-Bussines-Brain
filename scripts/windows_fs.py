@@ -78,6 +78,8 @@ if os.name == "nt":
     _bind(_A, "ConvertSecurityDescriptorToStringSecurityDescriptorW", [P, W.DWORD, W.DWORD, P, P])
     _bind(_A, "SetFileSecurityW", [W.LPCWSTR, W.DWORD, P])
     _bind(_A, "GetSecurityDescriptorControl", [P, P, P])
+    _bind(_A, "GetSecurityDescriptorDacl", [P, P, P, P])
+    _bind(_A, "SetSecurityInfo", [W.HANDLE, C.c_int, W.DWORD, P, P, P, P], W.DWORD)
 
 
 def _check(ok):
@@ -129,12 +131,15 @@ def _absolute(path):
     drive, tail = os.path.splitdrive(raw)
     if drive and (not re.fullmatch(r"[A-Za-z]:", drive) or not tail.startswith(("/", "\\"))):
         raise _error()
-    absolute = Path(os.path.abspath(raw))
-    for part in absolute.parts[1:]:
+    # GetFullPathName (used by abspath) can remove trailing dots/spaces. Validate
+    # the supplied spelling first, before Windows normalization loses evidence.
+    for part in re.split(r"[/\\]", tail):
+        if part in ("", ".", ".."):
+            continue
         if (part.endswith((" ", ".")) or any(c in part for c in ':<>"|?*\x00')
                 or re.fullmatch(r"(?i:CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\..*)?", part)):
             raise _error()
-    return absolute
+    return Path(os.path.abspath(raw))
 
 
 def _open(path, access=0x20080, disposition=3, security=None, share=3):
@@ -157,6 +162,7 @@ def _open(path, access=0x20080, disposition=3, security=None, share=3):
 def directory(path, create=False):
     absolute = _absolute(path)
     handles = []
+    acquired = False
     try:
         # ACLs and local rename semantics are mandatory, not inferred from mode bits.
         fs = C.create_unicode_buffer(32)
@@ -171,12 +177,17 @@ def directory(path, create=False):
                     with _security() as sa:
                         if not _K.CreateDirectoryW(str(current), C.byref(sa)) and C.get_last_error() != 183:
                             raise C.WinError(C.get_last_error())
-            handle, info = _open(current, share=1)
+            # A metadata-only handle does not enforce the same sharing checks.
+            # FILE_LIST_DIRECTORY makes the handle a read-access participant.
+            handle, info = _open(current, access=0x20081, share=1)
             handles.append(handle)
             if not info.attributes & 0x10:
                 raise _error()
+        acquired = True
         yield handles[-1]
     except OSError as exc:
+        if acquired:
+            raise  # Preserve caller exceptions, including missing files/lock contention.
         raise _error() from exc
     finally:
         for handle in reversed(handles):
@@ -206,7 +217,10 @@ def _relative(root, relative):
 def read_bytes(root, relative):
     path = _relative(root, relative)
     with directory(path.parent):
-        handle, info = _open(path, 0x80000000, share=1)
+        try:
+            handle, info = _open(path, 0x80000000, share=1)
+        except OSError as exc:
+            raise _error() from exc
         try:
             if info.attributes & 0x10:
                 raise _error()
@@ -354,7 +368,15 @@ def set_security_descriptor(path, sddl, *, protected=True):
         handle, _ = _open(path, 0x40000)
         try:
             # The object cannot be swapped while its non-delete-shared handle lives.
-            _check(_A.SetFileSecurityW(str(path), 4 | (0x80000000 if protected else 0x20000000), sa.descriptor))
+            present, defaulted, dacl = W.BOOL(), W.BOOL(), C.c_void_p()
+            _check(_A.GetSecurityDescriptorDacl(sa.descriptor, C.byref(present),
+                C.byref(dacl), C.byref(defaulted)))
+            if not present:
+                raise _error("PRIVATE_DIRECTORY_REQUIRED")
+            result = _A.SetSecurityInfo(handle, 1,
+                4 | (0x80000000 if protected else 0x20000000), None, None, dacl, None)
+            if result:
+                raise C.WinError(result)
         finally:
             _K.CloseHandle(handle)
 

@@ -52,6 +52,17 @@ class WindowsFilesystemTests(unittest.TestCase):
         fs.atomic_write(self.root, target.name, b"new", immutable=False, preserve_acl=True)
         self.assertEqual(fs.security_descriptor(target), before)
 
+    def test_preserve_acl_creates_new_destination(self):
+        fs.atomic_write(self.root, "new/journal.json", b"new", immutable=False, preserve_acl=True)
+        self.assertEqual(fs.read_bytes(self.root, "new/journal.json"), b"new")
+
+    def test_directory_preserves_body_exception_types(self):
+        for exception in (FileNotFoundError("missing"), BlockingIOError("busy"), OSError("body")):
+            with self.subTest(exception=type(exception)), self.assertRaises(type(exception)) as raised:
+                with fs.directory(self.root):
+                    raise exception
+            self.assertIs(raised.exception, exception)
+
     def test_restrictive_but_unprotected_acl_is_rejected(self):
         child = self.root / "child"
         fs.ensure_private_directory(child)

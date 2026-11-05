@@ -27,4 +27,3 @@ def private_directory(path, *, exist_ok=True):
         path.mkdir(mode=0o700, parents=True, exist_ok=exist_ok)
         if stat.S_IMODE(path.stat().st_mode) & 0o077:
             raise ValueError('El directorio debe ser privado para el propietario')
-

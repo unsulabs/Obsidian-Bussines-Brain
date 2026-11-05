@@ -159,7 +159,9 @@ class DatasetTests(unittest.TestCase):
         with self.assertRaisesRegex(ModelError,'HASH_MISMATCH'): self.export()
 
     def test_atomic_link_failure_cleans_temporary_payload(self):
-        with patch('transcripciones_modelo.os.link',side_effect=OSError('synthetic disk failure')):
+        publish = ('windows_fs._K.MoveFileExW' if sys.platform == 'win32'
+                   else 'transcripciones_modelo.os.link')
+        with patch(publish,side_effect=OSError('synthetic disk failure')):
             with self.assertRaises(OSError): self.export(commit=True)
         self.assertEqual(list((self.bank/'datasets-control').iterdir()),[])
         self.assertFalse((self.bank/'datasets').exists())

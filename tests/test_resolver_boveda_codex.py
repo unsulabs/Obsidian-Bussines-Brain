@@ -91,6 +91,18 @@ class RoutingTest(unittest.TestCase):
             resolve(alias / 'vaults.json', self.native, selector='EMP-A')
         with self.assertRaises(ValueError):
             resolve(self.registry, alias / 'obsidian.json', selector='EMP-A')
+        if os.name == 'nt':
+            junction = self.root / 'junction'
+            subprocess.run(['cmd', '/c', 'mklink', '/J', str(junction), str(self.vault)],
+                           check=True, capture_output=True)
+            try:
+                with self.assertRaises(ValueError):
+                    canonical(junction / 'Inicio.md')
+                self.change_entry(path=str(junction))
+                with self.assertRaises(ValueError):
+                    self.run_resolve()
+            finally:
+                junction.rmdir()
 
     def test_cli_missing_native_returns_error(self):
         self.native.unlink()
@@ -117,8 +129,9 @@ class RoutingTest(unittest.TestCase):
             self.assertEqual(native_registry_path(), Path('/synthetic/config/obsidian/obsidian.json'))
         with patch('registrar_boveda_codex.sys.platform', 'win32'), patch.dict(os.environ, {'APPDATA': '/synthetic/roaming'}):
             self.assertEqual(native_registry_path(), Path('/synthetic/roaming/obsidian/obsidian.json'))
-        with patch('registrar_boveda_codex.sys.platform', 'linux'), patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(native_registry_path(), Path.home() / '.config/obsidian/obsidian.json')
+        with patch('registrar_boveda_codex.sys.platform', 'linux'), patch.dict(os.environ, {}, clear=True), \
+             patch('registrar_boveda_codex.Path.home', return_value=self.root):
+            self.assertEqual(native_registry_path(), self.root / '.config/obsidian/obsidian.json')
 
 
 if __name__ == '__main__':

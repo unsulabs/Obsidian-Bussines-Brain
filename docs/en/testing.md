@@ -15,7 +15,7 @@ repository text uses explicit UTF-8 and LF; original transcript bytes remain unt
 `scripts/verify_platform.py tests --output /outside/checkout/evidence` runs full
 unittest discovery and reports the commit, executed tests, failures, errors and
 every skip. Only the named native macOS alias test may skip off macOS, and the
-eight named native Windows filesystem tests may skip off Windows. Their native
+ten named native Windows filesystem tests may skip off Windows. Their native
 jobs must execute them. Any other skip or expected failure fails acceptance.
 The `installation` phase checks help, doctor, documentation, package audit,
 synthetic creation/validation/state with Unicode and spaces, and exported hashes

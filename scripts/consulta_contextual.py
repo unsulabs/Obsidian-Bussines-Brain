@@ -107,7 +107,7 @@ def consulta(vault_path:Path, literal:str, *, tema:str|None=None,
         raw=path.read_bytes()
         front,body=split_frontmatter(raw.decode('utf8'))
         aliases={str(front.get('id','')),str(front.get('doc_id','')),path.stem,
-                 str(path.relative_to(vault).with_suffix(''))}
+                 path.relative_to(vault).with_suffix('').as_posix()}
         notes.append((path,raw,front,body,aliases))
         if front.get('estado_editorial') in REJECTED_STATES:
             rejected.update(aliases- {''})

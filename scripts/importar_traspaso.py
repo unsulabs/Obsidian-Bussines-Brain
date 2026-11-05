@@ -179,7 +179,7 @@ def import_package(manifest: Path, vault: Path, allow_real: bool = False) -> dic
     for p in changes:
         if root not in p.parents: raise ValueError('Ruta fuera de la bóveda')
         if p.exists():
-            rel = str(p.relative_to(root))
+            rel = p.relative_to(root).as_posix()
             if rel not in placeholders: raise FileExistsError('No sobrescribir destino ya existente: ' + str(p))
             old = p.read_text(encoding='utf-8')
             if rel == '00_Mapas/Relaciones_de_conocimiento.md':

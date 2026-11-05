@@ -117,7 +117,7 @@ class QueueTests(unittest.TestCase):
         self.assertEqual(len(list((self.bank / "results").rglob("result.txt"))), 1)
 
     def test_two_processes_only_one_claim(self):
-        ctx = multiprocessing.get_context("fork")
+        ctx = multiprocessing.get_context("spawn" if sys.platform == "win32" else "fork")
         barrier = ctx.Barrier(2)
         output = ctx.Queue()
         processes = [ctx.Process(target=competing_claim, args=(str(self.bank), owner, barrier, output)) for owner in ("worker-a", "worker-b")]

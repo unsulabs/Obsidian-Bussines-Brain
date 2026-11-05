@@ -212,9 +212,14 @@ class CLITests(unittest.TestCase):
 
     def test_equivalent_relative_bank_and_symlink_rejection(self):
         actual = self.bank
-        # cwd is the product checkout; the bank is outside, reached through .. .
-        self.bank = Path(os.path.relpath(actual, Path.cwd()))
-        code, out = self.run_cli("estado")
+        # Use a synthetic cwd on the same volume: Windows hosted checkouts and
+        # temporary directories can be on different drives (no relative path).
+        from contextlib import chdir
+        working = self.root / 'work'
+        working.mkdir()
+        with chdir(working):
+            self.bank = Path(os.path.relpath(actual, Path.cwd()))
+            code, out = self.run_cli("estado")
         self.assertEqual(code, 0, out)
         link = self.root / "linked-bank"
         actual.mkdir()
