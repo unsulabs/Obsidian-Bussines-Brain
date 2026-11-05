@@ -267,7 +267,7 @@ def run(args):
             raise ValueError('El grafo debe guardarse dentro de la propia bóveda')
         data=graph(vault)
         out.parent.mkdir(parents=True,exist_ok=True)
-        out.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+        out.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf8', newline='\n')
         return {'salida':str(out),'nodos':len(data['nodos']),'aristas':len(data['aristas'])}
     if cmd=='tipos':
         types=load_registry()

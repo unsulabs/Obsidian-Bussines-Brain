@@ -19,6 +19,7 @@ import stat
 from uuid import uuid4
 
 import yaml
+from platform_fs import private_directory
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = ROOT / "plantilla_boveda" / "90_Sistema" / "Vistas"
@@ -165,9 +166,7 @@ def apply(vault_path: Path, backup_dir: Path, *, expected_plan_sha: str | None =
         raise ValueError("Respaldo debe estar fuera de la bóveda y de Git")
     run = backup_root / ("bases-" + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
                          + "-" + uuid4().hex[:8])
-    run.mkdir(mode=0o700, parents=True, exist_ok=False)
-    if stat.S_IMODE(run.stat().st_mode) & 0o077:
-        raise PermissionError("Respaldo no privado: requiere permisos 0700")
+    private_directory(run, exist_ok=False)
     changed = []
     meta = []
     snapshots = []
@@ -203,7 +202,7 @@ def apply(vault_path: Path, backup_dir: Path, *, expected_plan_sha: str | None =
                         "instantanea_vistas": snapshots,
                         "workspace_sha256": workspace_original,
                         "archivos": meta},
-                       ensure_ascii=False, indent=2) + "\n", encoding="utf8")
+                       ensure_ascii=False, indent=2) + "\n", encoding="utf8", newline='\n')
         baselines = release_baselines()
         for item in meta:
             rel = Path(item["archivo"])
@@ -254,7 +253,7 @@ def apply(vault_path: Path, backup_dir: Path, *, expected_plan_sha: str | None =
                     "instantanea_vistas": snapshots,
                     "workspace_sha256": workspace_original,
                     "archivos": meta}, ensure_ascii=False, indent=2)
-        + "\n", encoding="utf8")
+        + "\n", encoding="utf8", newline='\n')
     return {"resultado": "APLICADO", "actualizadas": len(changed),
             "filtros_sin_perder_personalizaciones":
                 sum(1 for x in meta if x["modo"] == "LISTO_FILTRO"),

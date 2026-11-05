@@ -158,7 +158,7 @@ class NoteRecoveryTests(unittest.TestCase):
         path.parent.mkdir(exist_ok=True)
         path.write_text(make_note({'id':name,'tipo':kind,'sensibilidad':'interno',
                          'estado_editorial':state,'fuentes':sources or [],'lectura':'leida_parcial'},
-                         '# Criterio\n\nINVESTIGACION_SINTETICA\n\n## CONTROL\nCONTROL_ONLY'))
+                         '# Criterio\n\nINVESTIGACION_SINTETICA\n\n## CONTROL\nCONTROL_ONLY'), encoding='utf-8', newline='\n')
         return path
 
     def test_investigation_all_business_types_control_and_rejected_derivatives(self):
@@ -177,7 +177,7 @@ class NoteRecoveryTests(unittest.TestCase):
         path=self.note('INV-SYNTH')
         original=module._entity_sections
         def raced(body,identity):
-            result=original(body,identity); path.write_text(path.read_text()+'\nchanged'); return result
+            result=original(body,identity); path.write_text(path.read_text(encoding='utf-8')+'\nchanged', encoding='utf-8', newline='\n'); return result
         with patch.object(module,'_entity_sections',raced),self.assertRaises(ValueError):
             module.consulta(self.vault,'INVESTIGACION_SINTETICA')
 

@@ -20,7 +20,7 @@ class BaseLinksTests(unittest.TestCase):
     def write(self, relative, text):
         path = self.vault / relative
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(text)
+        path.write_text(text, encoding='utf-8', newline='\n')
         return path
 
     def note(self, body):
@@ -99,7 +99,7 @@ class BaseLinksTests(unittest.TestCase):
         cli = subprocess.run([sys.executable, str(script), 'grafo', '--vault', str(self.vault)],
                              capture_output=True, text=True)
         self.assertEqual(cli.returncode, 0, cli.stdout + cli.stderr)
-        self.assertEqual(json.loads((self.vault / '90_Sistema/grafo.json').read_text())['nodos'], exported['nodos'])
+        self.assertEqual(json.loads((self.vault / '90_Sistema/grafo.json').read_text(encoding='utf-8'))['nodos'], exported['nodos'])
 
     def test_rename_preserves_explicit_markdown_type_and_base_link(self):
         from nombres_legibles import _rewrite_wiki

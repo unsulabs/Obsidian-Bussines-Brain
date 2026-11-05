@@ -41,7 +41,7 @@ def check(root: Path) -> list[str]:
     root = root.resolve()
     errors = []
     try:
-        inventory = json.loads((root / 'docs/documentation-map.json').read_text())
+        inventory = json.loads((root / 'docs/documentation-map.json').read_text(encoding='utf-8'))
         pairs = inventory['pairs']
         if inventory.get('version') != 1 or inventory.get('primary_language') != 'en' or not isinstance(pairs, list) or not pairs:
             raise ValueError('expected version 1, English primary, and nonempty pairs')

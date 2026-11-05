@@ -91,7 +91,7 @@ class RequestReadTests(unittest.TestCase):
     def test_added_analysis_rejected_even_if_no_original_changed(self):
         def mutate(candidate):
             (self.bank/'analisis').mkdir(exist_ok=True)
-            (self.bank/'analisis'/'new.json').write_text('{}')
+            (self.bank/'analisis'/'new.json').write_text('{}', encoding='utf-8', newline='\n')
             return [candidate]
         with self.assertRaisesRegex(ModelError, 'SNAPSHOT_CHANGED'):
             search(self.bank, 'criterio', **self.access, candidate_filter=mutate)
@@ -102,7 +102,7 @@ class RequestReadTests(unittest.TestCase):
         self.assertIsNone(_active.get())
         self.assertTrue(self.query()['candidates'])
         ledger = next((self.bank/'permissions').glob('*.json'))
-        ledger.write_text('{}')
+        ledger.write_text('{}', encoding='utf-8', newline='\n')
         with self.assertRaises(ModelError):
             self.query()
 

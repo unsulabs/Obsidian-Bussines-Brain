@@ -66,7 +66,7 @@ class IntegrationTests(unittest.TestCase):
     def write(self, c):
         path = self.vault / c["path"]
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(c["content"])
+        path.write_text(c["content"], encoding='utf-8', newline='\n')
 
     def prepare(self, candidates=None):
         candidates = copy.deepcopy(candidates or [self.new])
@@ -88,17 +88,17 @@ class IntegrationTests(unittest.TestCase):
         other = self.vault / "ajeno.bin"
         self.apply(m)
         self.apply(m)
-        self.assertEqual((self.vault / self.new["path"]).read_text(), self.new["content"])
+        self.assertEqual((self.vault / self.new["path"]).read_text(encoding='utf-8'), self.new["content"])
         other.write_bytes(b"Conservar")
         ti.rollback_batch(m)
         ti.rollback_batch(m)
-        self.assertEqual((self.vault / self.old["path"]).read_text(), self.old["content"])
+        self.assertEqual((self.vault / self.old["path"]).read_text(encoding='utf-8'), self.old["content"])
         self.assertEqual(other.read_bytes(), b"Conservar")
 
     def test_stale_sha_preflight_no_partial_writes(self):
         c2 = self.second()
         m = self.prepare([c2, self.new])
-        (self.vault / self.old["path"]).write_text("edición humana")
+        (self.vault / self.old["path"]).write_text("edición humana", encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError, "Conflicto"):
             self.apply(m)
         self.assertFalse((self.vault / c2["path"]).exists())
@@ -131,16 +131,16 @@ class IntegrationTests(unittest.TestCase):
                 ti.rollback_batch(m)
         ti.rollback_batch(m)
         self.assertFalse((self.vault / c2["path"]).exists())
-        self.assertEqual((self.vault / self.old["path"]).read_text(), self.old["content"])
+        self.assertEqual((self.vault / self.old["path"]).read_text(encoding='utf-8'), self.old["content"])
 
     def test_rollback_preserves_later_edit(self):
         m = self.prepare()
         self.apply(m)
         p = self.vault / self.old["path"]
-        p.write_text("human later")
+        p.write_text("human later", encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError, "posterior"):
             ti.rollback_batch(m)
-        self.assertEqual(p.read_text(), "human later")
+        self.assertEqual(p.read_text(encoding='utf-8'), "human later")
 
     def test_duplicate_ids_versions_and_missing_link(self):
         for c in (self.source("Otro", "F-1", "Otra", "V2"),
@@ -153,7 +153,7 @@ class IntegrationTests(unittest.TestCase):
         for folder in ("uno", "dos"):
             p = self.vault / folder / "Mismo.md"
             p.parent.mkdir()
-            p.write_text(make_note({"id": folder, "tipo": "entidad"}, "# Otra"))
+            p.write_text(make_note({"id": folder, "tipo": "entidad"}, "# Otra"), encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError, "ambiguo"):
             self.prepare([self.source("[[Mismo]]")])
         entity = self.entity(fuentes=[])
@@ -213,7 +213,7 @@ class IntegrationTests(unittest.TestCase):
         m = self.prepare([c])
         self.apply(m)
         ti.rollback_batch(m)
-        self.assertEqual((self.vault / old["path"]).read_text(), old["content"])
+        self.assertEqual((self.vault / old["path"]).read_text(encoding='utf-8'), old["content"])
 
     def navigation_manifest(self):
         old = make_note({"id": "HOME", "tipo": "inicio"}, "# Inicio\nManual propio\n")
@@ -269,21 +269,21 @@ class IntegrationTests(unittest.TestCase):
     def test_navigation_concurrent_edit_and_postedit_rollback(self):
         m, old = self.navigation_manifest()
         p = self.vault / "Inicio.md"
-        p.write_text(old + "Owner edit\n")
+        p.write_text(old + "Owner edit\n", encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError, "Conflicto"):
             self.apply(m)
-        self.assertEqual(p.read_text(), old + "Owner edit\n")
-        p.write_text(old)
+        self.assertEqual(p.read_text(encoding='utf-8'), old + "Owner edit\n")
+        p.write_text(old, encoding='utf-8', newline='\n')
         def edit(stage, path):
             if stage == "intent_saved":
-                p.write_text(old + "Concurrent edit\n")
+                p.write_text(old + "Concurrent edit\n", encoding='utf-8', newline='\n')
         with patch.object(ti, "_checkpoint", edit):
             with self.assertRaisesRegex(ValueError, "Conflicto concurrente"):
                 self.apply(m)
-        self.assertEqual(p.read_text(), old + "Concurrent edit\n")
-        p.write_text(old)
+        self.assertEqual(p.read_text(encoding='utf-8'), old + "Concurrent edit\n")
+        p.write_text(old, encoding='utf-8', newline='\n')
         self.apply(m, 2)
-        p.write_text(p.read_text() + "Later edit\n")
+        p.write_text(p.read_text(encoding='utf-8') + "Later edit\n", encoding='utf-8', newline='\n')
         before = p.read_bytes()
         with self.assertRaisesRegex(ValueError, "Edición posterior"):
             ti.rollback_batch(m)
@@ -355,7 +355,7 @@ class IntegrationTests(unittest.TestCase):
                         self.apply(m, token * 2)
                 self.apply(m, token * 2 + 1)
                 self.apply(m, token * 2 + 1)
-                self.assertEqual(path.read_text(), candidate["content"])
+                self.assertEqual(path.read_text(encoding='utf-8'), candidate["content"])
                 ti.rollback_batch(m)
                 ti.rollback_batch(m)
                 self.assertFalse(path.exists())
@@ -365,7 +365,7 @@ class IntegrationTests(unittest.TestCase):
         self.write(home)
         existing = self.vault / "90_Sistema" / "Vistas" / "Existente.base"
         existing.parent.mkdir(parents=True)
-        existing.write_text("views: [mis ajustes]\n")
+        existing.write_text("views: [mis ajustes]\n", encoding='utf-8', newline='\n')
         nav = {**home, "kind": "navigation_append", "id": "HOME",
                "expected_sha256": ti._sha(home["content"].encode()),
                "content": home["content"] + "\n[[50_Fuentes/Conversación]]\n"}
@@ -373,9 +373,9 @@ class IntegrationTests(unittest.TestCase):
                 "content": 'filters:\n  and:\n    - tipo == "fuente"\n    - transcripcion_id != null\nviews:\n  - type: table\n    name: Transcripciones\n'}
         m = self.prepare([nav, base])
         self.apply(m)
-        self.assertEqual(existing.read_text(), "views: [mis ajustes]\n")
+        self.assertEqual(existing.read_text(encoding='utf-8'), "views: [mis ajustes]\n")
         ti.rollback_batch(m)
-        self.assertEqual((self.vault / "Inicio.md").read_text(), home["content"])
+        self.assertEqual((self.vault / "Inicio.md").read_text(encoding='utf-8'), home["content"])
         nav["content"] = nav["content"].replace("Manual propio", "Modificado")
         with self.assertRaisesRegex(ValueError, "append"):
             self.prepare([nav])
@@ -402,7 +402,7 @@ class IntegrationTests(unittest.TestCase):
             oldpath.unlink()
         consolidate_analysis(self.fixture.bank, self.fixture.submission(), **self.fixture.scope, commit=True)
         home = make_note({"id": "HOME", "tipo": "inicio"}, "# Inicio\nManual propio\n")
-        (self.vault / "Inicio.md").write_text(home)
+        (self.vault / "Inicio.md").write_text(home, encoding='utf-8', newline='\n')
         snapshot = {"Inicio.md": home}
         rendered = render_source(self.fixture.tr, "RUN-fixture", {
             "bank": self.fixture.bank, **self.fixture.scope, "vault_snapshot": snapshot,
@@ -513,7 +513,7 @@ class IntegrationTests(unittest.TestCase):
                 m2 = self.prepare([updated])
                 self.apply(m2, number * 2 + 2)
                 ti.rollback_batch(m2)
-                self.assertEqual((self.vault / c["path"]).read_text(), c["content"])
+                self.assertEqual((self.vault / c["path"]).read_text(encoding='utf-8'), c["content"])
                 ti.rollback_batch(m)
                 self.assertEqual(before, ti._inventory(self.vault))
 
@@ -589,7 +589,7 @@ class IntegrationTests(unittest.TestCase):
         forged["manifest_sha"] = ti._sha(ti._json({k: v for k, v in forged.items() if k != "manifest_sha"}))
         with self.assertRaises(ValueError):
             self.apply(forged)
-        self.assertEqual((self.vault / candidate["path"]).read_text(), approved["content"])
+        self.assertEqual((self.vault / candidate["path"]).read_text(encoding='utf-8'), approved["content"])
         self.write(candidate)
         forged = self.forged_entity(m, tipo="mapa")
         forged["entries"][0]["kind"] = "navigation"

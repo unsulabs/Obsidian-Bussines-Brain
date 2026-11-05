@@ -35,7 +35,7 @@ class EvolutionTests(unittest.TestCase):
 
     def render(self, run):
         return render_source(self.fixture.tr, run, dict(bank=self.bank, **self.fixture.scope,
-            vault_snapshot={p.relative_to(self.vault).as_posix(): p.read_text() for p in self.vault.rglob('*.md')},
+            vault_snapshot={p.relative_to(self.vault).as_posix(): p.read_text(encoding='utf-8') for p in self.vault.rglob('*.md')},
             source_sensitivity={self.fixture.tr: 'interno'}))
 
     def apply(self, manifest, token=2):
@@ -85,9 +85,9 @@ class EvolutionTests(unittest.TestCase):
 
     def test_new_version_preserves_identity_views_customizations_and_exact_rollback(self):
         source_file = self.vault / self.source_path
-        fm, body = split_frontmatter(source_file.read_text()); fm['tags'] = ['revision-propia']
-        source_file.write_text(make_note(fm, body + '\n## Anotación propia\nConservar este destino del equipo.\n'))
-        (self.vault / self.old_view).write_text((self.vault / self.old_view).read_text() + '\nAnotación de vista anterior.\n')
+        fm, body = split_frontmatter(source_file.read_text(encoding='utf-8')); fm['tags'] = ['revision-propia']
+        source_file.write_text(make_note(fm, body + '\n## Anotación propia\nConservar este destino del equipo.\n'), encoding='utf-8', newline='\n')
+        (self.vault / self.old_view).write_text((self.vault / self.old_view).read_text(encoding='utf-8') + '\nAnotación de vista anterior.\n', encoding='utf-8', newline='\n')
         before = integration._inventory(self.vault)
         self.new_analysis()
         output = self.render('RUN-next'); source = output['candidates'][0]
@@ -104,7 +104,7 @@ class EvolutionTests(unittest.TestCase):
         self.apply(manifest); self.apply(manifest)
         self.assertEqual(sha256_bytes((self.vault / self.old_view).read_bytes()), before[self.old_view])
         next_render = self.render('RUN-next')
-        self.assertEqual(next_render['candidates'][0]['content'], (self.vault / self.source_path).read_text())
+        self.assertEqual(next_render['candidates'][0]['content'], (self.vault / self.source_path).read_text(encoding='utf-8'))
         self.assertNotIn('source_transition', next_render['candidates'][0])
         integration.rollback_batch(manifest)
         self.assertEqual(before, integration._inventory(self.vault))
@@ -115,7 +115,7 @@ class EvolutionTests(unittest.TestCase):
         manifest = integration.prepare_batch(output['candidates'], self.snapshot)
         before = integration._inventory(self.vault)
         self.apply(manifest)
-        self.assertEqual(split_frontmatter((self.vault / self.source_path).read_text())[0]['version_id'], self.first_version)
+        self.assertEqual(split_frontmatter((self.vault / self.source_path).read_text(encoding='utf-8'))[0]['version_id'], self.first_version)
         integration.rollback_batch(manifest)
         self.assertEqual(before, integration._inventory(self.vault))
 
@@ -154,7 +154,7 @@ class EvolutionTests(unittest.TestCase):
     def test_concurrent_note_or_historical_view_edit_is_not_overwritten(self):
         self.new_analysis(); output = self.render('RUN-next')
         manifest = integration.prepare_batch(output['candidates'], self.snapshot)
-        (self.vault / self.old_view).write_text((self.vault / self.old_view).read_text() + '\nEdición posterior.\n')
+        (self.vault / self.old_view).write_text((self.vault / self.old_view).read_text(encoding='utf-8') + '\nEdición posterior.\n', encoding='utf-8', newline='\n')
         before = integration._inventory(self.vault)
         with self.assertRaises(ValueError): self.apply(manifest)
         self.assertEqual(before, integration._inventory(self.vault))
@@ -166,7 +166,7 @@ class EvolutionTests(unittest.TestCase):
         truncated = deepcopy(output['candidates']); truncated[0]['source_transition']['history_views'] = []
         with self.assertRaisesRegex(ModelError, 'HISTORICAL_VIEW_MISSING'):
             integration.prepare_batch(truncated, self.snapshot)
-        path = self.vault / self.source_path; path.write_text(path.read_text().replace('estado_editorial: borrador', 'estado_editorial: aprobado'))
+        path = self.vault / self.source_path; path.write_text(path.read_text(encoding='utf-8').replace('estado_editorial: borrador', 'estado_editorial: aprobado'), encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ModelError, 'EDITORIAL_INVALID'): self.render('RUN-next')
 
     def test_transition_requires_exact_history_entry_and_preserved_chain(self):
@@ -220,17 +220,17 @@ class EvolutionTests(unittest.TestCase):
         self.new_analysis(); output = self.render('RUN-next')
         manifest = integration.prepare_batch(output['candidates'], self.snapshot); self.apply(manifest)
         new_view = next(c['path'] for c in output['candidates'] if c['kind'] == 'transcript_view')
-        path = self.vault / new_view; path.write_text(path.read_text() + '\nEdición posterior en vista nueva.\n')
+        path = self.vault / new_view; path.write_text(path.read_text(encoding='utf-8') + '\nEdición posterior en vista nueva.\n', encoding='utf-8', newline='\n')
         before = integration._inventory(self.vault)
         with self.assertRaises(ValueError): integration.rollback_batch(manifest)
         self.assertEqual(before, integration._inventory(self.vault))
 
     def test_legacy_without_markers_keeps_entire_body_as_history(self):
         path = self.vault / self.source_path
-        meta, body = split_frontmatter(path.read_text())
+        meta, body = split_frontmatter(path.read_text(encoding='utf-8'))
         meta.pop('view_path')
         legacy_body = body.replace(START, '').replace(END, '') + '\nAnotación legacy irremplazable.\n'
-        path.write_text(make_note(meta, legacy_body))
+        path.write_text(make_note(meta, legacy_body), encoding='utf-8', newline='\n')
         before = integration._inventory(self.vault)
         self.new_analysis(); output = self.render('RUN-next')
         self.assertIn(legacy_body, output['candidates'][0]['content'])

@@ -29,7 +29,7 @@ def check(path:Path):
         if p.is_absolute() or '..' in p.parts or not p.parts:
             errors.append(f'UNSAFE PATH {context}: {rel}');return None
         target=(root/p).resolve()
-        if not str(target).startswith(str(root)+'/'):
+        if root not in target.parents:
             errors.append(f'ESCAPE PATH {context}: {rel}');return None
         if not target.is_file():errors.append(f'MISSING FILE {context}: {rel}');return None
         return target

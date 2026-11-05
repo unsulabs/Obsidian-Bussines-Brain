@@ -23,6 +23,7 @@ from lib_ce import (
 )
 from operacion import ROOT, local_sources, safe_vault, utcnow
 from validar_boveda import validate
+from platform_fs import private_directory
 
 DOC_RE = re.compile(r"^(?:D0[1-7]|X0[1-7]-[A-Za-z0-9][A-Za-z0-9_-]{2,63})$")
 ITEM_RE = re.compile(r"^(?:PRDX|REVDX)-[A-F0-9]{12}$")
@@ -149,9 +150,7 @@ def preparar(vault_path: Path, doc_id: str, input_file: Path,
         raise ValueError("Borrador cambió durante la preparación")
     pid="PRDX-"+uuid4().hex[:12].upper()
     base=vault/PROPOSALS
-    base.mkdir(mode=0o700,parents=True,exist_ok=True)
-    if stat.S_IMODE(base.stat().st_mode)&0o077:
-        raise ValueError("El almacén de propuestas debe ser privado para el propietario")
+    private_directory(base)
     directory=base/pid
     directory.mkdir(mode=0o700,exist_ok=False)
     try:
@@ -159,7 +158,7 @@ def preparar(vault_path: Path, doc_id: str, input_file: Path,
         packet={**preview,"propuesta_id":pid,"creada_en":utcnow(),
                 "tipo":"propuesta_revision_documental",
                 "estado":"pendiente_autorizacion"}
-        (directory/"propuesta.json").write_text(json.dumps(packet,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
+        (directory/"propuesta.json").write_text(json.dumps(packet,ensure_ascii=False,indent=2)+"\n",encoding="utf8", newline='\n')
     except Exception:
         for item in directory.iterdir(): item.unlink()
         directory.rmdir()
@@ -207,6 +206,10 @@ def _backup_root(vault: Path, backup_dir: Path) -> Path:
 
 
 def _write_atomic(path: Path, contents: bytes) -> None:
+    if os.name == 'nt':
+        from windows_fs import atomic_write
+        atomic_write(path.parent, path.name, contents, immutable=False, preserve_acl=True)
+        return
     temp=path.with_name("."+path.name+".tmp-"+uuid4().hex[:8])
     try:
         mode=stat.S_IMODE(path.stat().st_mode) if path.exists() else 0o600
@@ -230,7 +233,7 @@ def _publish(vault: Path, path: Path, meta: dict, content: str, *,
     lock_folder.mkdir(parents=True,exist_ok=True)
     lock=lock_folder/(str(meta["doc_id"])+".lock")
     try:
-        with lock.open("x",encoding="utf8") as handle:
+        with lock.open("x",encoding="utf8", newline='\n') as handle:
             handle.write("Operación en curso: "+utcnow()+"\n")
     except FileExistsError as exc:
         raise ValueError("Documento bloqueado por otra revisión; no borrar lock sin comprobar procesos") from exc
@@ -241,13 +244,9 @@ def _publish(vault: Path, path: Path, meta: dict, content: str, *,
         nextrev=_next_revision(str(meta["revision"]))
         entry="REVDX-"+uuid4().hex[:12].upper()
         backroot=_backup_root(vault,backup_dir)
-        backroot.mkdir(mode=0o700,parents=True,exist_ok=True)
-        if stat.S_IMODE(backroot.stat().st_mode)&0o077:
-            raise ValueError("La carpeta de respaldo externo debe tener permisos de propietario solamente")
+        private_directory(backroot)
         history_root=vault/HISTORY
-        history_root.mkdir(mode=0o700,parents=True,exist_ok=True)
-        if stat.S_IMODE(history_root.stat().st_mode)&0o077:
-            raise ValueError("El almacén de versiones debe tener permisos de propietario")
+        private_directory(history_root)
         history=history_root/str(meta["doc_id"])/entry
         history.mkdir(mode=0o700,parents=True,exist_ok=False)
         external=backroot/str(meta["doc_id"])/entry
@@ -349,7 +348,7 @@ def aplicar(vault_path: Path, proposal_id: str, *,
     plan["estado"]="aplicada"
     plan["resultado_historial_id"]=result["historial_id"]
     plan_path=vault/PROPOSALS/proposal_id/"propuesta.json"
-    plan_path.write_text(json.dumps(plan,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
+    plan_path.write_text(json.dumps(plan,ensure_ascii=False,indent=2)+"\n",encoding="utf8", newline='\n')
     return result
 
 

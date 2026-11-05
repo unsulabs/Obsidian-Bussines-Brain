@@ -18,13 +18,26 @@ MACOS_ONLY = (
     'test_documentos.DocumentosTest.test_actual_darwin_system_aliases_if_present',
     'Requiere ejecución nativa sobre macOS',
 )
+WINDOWS_ONLY = {
+    ('test_windows_fs.WindowsFilesystemTests.' + name, 'native Windows filesystem backend')
+    for name in (
+        'test_private_acl_is_real_and_existing_broad_acl_is_rejected',
+        'test_write_read_immutable_conflict_and_mutable_replace',
+        'test_permission_preserving_replace',
+        'test_restrictive_but_unprotected_acl_is_rejected',
+        'test_windows_aliases_and_streams_rejected',
+        'test_pinned_directory_cannot_be_renamed',
+        'test_junction_ancestor_rejected',
+        'test_native_lock_blocks_and_releases_on_process_death',
+    )
+}
 
 
 def write_report(output, name, report):
     report['commit'] = subprocess.check_output(
         ['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip()
     text = json.dumps(report, ensure_ascii=False, indent=2) + '\n'
-    (output / (name + '.json')).write_text(text, encoding='utf-8')
+    (output / (name + '.json')).write_text(text, encoding='utf-8', newline='\n')
     print(json.dumps(report, ensure_ascii=True, indent=2))
 
 
@@ -32,10 +45,12 @@ def run_tests(output):
     # Same discovery, fixtures, result and execution semantics as the documented
     # `python -m unittest discover -s tests -v`; only reporting/skip policy differs.
     suite = unittest.defaultTestLoader.discover(str(ROOT / 'tests'))
-    with (output / 'tests.log').open('w', encoding='utf-8') as log:
+    with (output / 'tests.log').open('w', encoding='utf-8', newline='\n') as log:
         result = unittest.TextTestRunner(stream=log, verbosity=2).run(suite)
     skipped = [(test.id(), reason) for test, reason in result.skipped]
     allowed = {MACOS_ONLY} if sys.platform != 'darwin' else set()
+    if sys.platform != 'win32':
+        allowed |= WINDOWS_ONLY
     unexpected_skips = [entry for entry in skipped if entry not in allowed]
     passed = (result.wasSuccessful() and result.testsRun > 0
               and not unexpected_skips and not result.expectedFailures)
@@ -50,8 +65,8 @@ def run_tests(output):
         'expected_failures': len(result.expectedFailures),
         'unexpected_successes': len(result.unexpectedSuccesses),
         'skipped': skipped, 'unexpected_skips': unexpected_skips,
-        'skip_policy': 'Only the native macOS alias test may skip off macOS; '
-                       'the macOS matrix job must execute it.',
+        'skip_policy': 'The macOS alias test and eight named Windows backend tests '
+                       'may skip only off their native OS; their matrix job must execute them.',
     }
     write_report(output, 'tests', report)
     if not passed:

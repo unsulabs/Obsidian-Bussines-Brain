@@ -24,7 +24,7 @@ STOPWORDS={
     "quien", "quienes", "se", "ser", "si", "su", "sus", "un", "una", "y",
 }
 ELIGIBLE_TYPES = {r['tipo'] for r in json.loads(
-    (Path(__file__).resolve().parents[1]/'modelo/tipos_entidad.json').read_text())['tipos']} | {'documento'}
+    (Path(__file__).resolve().parents[1]/'modelo/tipos_entidad.json').read_text(encoding='utf-8'))['tipos']} | {'documento'}
 REJECTED_STATES = {'rechazado', 'legado_rechazado', 'retirado', 'rejected'}
 
 

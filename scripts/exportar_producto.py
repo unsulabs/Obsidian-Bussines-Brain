@@ -16,7 +16,7 @@ DIRECTORIES = {
     'recursos', 'scripts', 'tests',
 }
 FILES = {
-    '.gitignore', 'AGENTS.md', 'README.md', 'EMPIEZA_AQUI.md',
+    '.gitignore', '.gitattributes', 'AGENTS.md', 'README.md', 'EMPIEZA_AQUI.md',
     'CHANGELOG.md', 'PROMPT_INICIO_CODEX.md',
     'PROMPT_RECUPERAR_EMPRESA_EXISTENTE_CODEX.md',
     'PROMPT_SUBIR_A_GITHUB.md', 'LICENSE', 'CONTRIBUTING.md',

@@ -6,6 +6,31 @@ Usa el entorno Python 3.11+ verificado de [preparación](onboarding.md). Ejecuta
 
 ## Comprobaciones automáticas
 
+El workflow `Platform installation` de GitHub Actions usa runners estándar de
+Ubuntu 24.04, Windows Server 2022 y macOS 15 con Python 3.11. Cada checkout nuevo
+crea y activa `.venv` con los mismos comandos por plataforma de ambos README y
+después instala `requirements.txt`. No requiere forzar UTF-8 mediante variables
+de entorno: el texto del producto usa UTF-8 y LF explícitos; los bytes originales
+de las transcripciones permanecen intactos.
+
+`scripts/verify_platform.py tests --output /fuera/del/checkout/evidencia` ejecuta
+toda la suite unittest y registra commit, pruebas, fallos, errores y cada omisión.
+Sólo la prueba nativa de alias macOS puede omitirse fuera de macOS, y las ocho
+pruebas nativas identificadas del filesystem Windows fuera de Windows. Sus jobs
+nativos deben ejecutarlas. Cualquier otra omisión o fallo esperado rechaza la
+aceptación. La fase `installation` verifica ayuda, doctor, documentación,
+auditoría, creación/validación/estado sintéticos con Unicode y espacios, hashes y
+exclusiones privadas del exportado. Los artefactos contienen sólo informes y logs
+sintéticos. Estas pruebas sin interfaz gráfica no acreditan GUI/Bases ni aceptación empresarial.
+
+El backend del banco en Windows requiere una ruta local NTFS/ReFS; rechaza rutas
+UNC/dispositivo, streams alternativos y reparse points. Las carpetas privadas
+exigen una DACL protegida limitada al propietario, SYSTEM y administradores;
+rechaza ACL amplias existentes sin cambiarlas silenciosamente. POSIX conserva
+sus controles de descriptores de directorio, permisos y flock. Windows usa
+handles nativos, locks liberados al morir el proceso, flush de archivo y rename
+write-through; no afirma equivalencia con fsync de directorios POSIX.
+
 ```bash
 python scripts/cerebro.py doctor
 python -m unittest discover -s tests -v

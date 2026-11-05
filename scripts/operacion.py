@@ -158,7 +158,7 @@ def create_ficha(vault: Path, tipo: str, title: str, *, resumen: str = '',
         developed, _ = _read_input(content_file, vault)
         body = developed
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open('x', encoding='utf8') as f:
+    with path.open('x', encoding='utf8', newline='\n') as f:
         f.write(make_note(fm, body))
     if content_file is not None:
         try:
@@ -198,7 +198,7 @@ def create_source(vault: Path, sid: str, title: str, locator: str, kind: str, *,
             '**Límites y permisos de uso:** pendiente de autorización o verificación explícita.\n\n'
             '> Solo se registra procedencia, no se copia el documento original.\n')
     p.parent.mkdir(parents=True,exist_ok=True)
-    with p.open('x', encoding='utf8') as f:
+    with p.open('x', encoding='utf8', newline='\n') as f:
         f.write(make_note(fm,body))
     return {'id':sid,'ruta':str(p),'estado_lectura':read_status,'copia_original':False}
 
@@ -231,7 +231,7 @@ def propose_change(vault: Path, nid: str, reason: str, candidate: str, *, author
           '- [ ] Obtener aprobación de decisor facultado\n'
           '- [ ] Revalidar huella antes de escribir, archivar versión anterior, revalidar al terminar\n')
     out.parent.mkdir(parents=True,exist_ok=True)
-    with out.open('x',encoding='utf8') as f: f.write(make_note(front,body))
+    with out.open('x',encoding='utf8', newline='\n') as f: f.write(make_note(front,body))
     return {'propuesta':pid,'archivo':str(out),'modificacion_del_objetivo':False,'objetivo_sha256':raw_hash}
 
 
@@ -252,7 +252,7 @@ def save_continuity(vault: Path, *, summary: str, next_step: str, reviewer: str=
           f'## Próximo paso\n\n{next_step.strip()}\n\n'
           '> Este resumen es una pista para recuperar las fuentes, no es autoridad de hechos no verificados.\n')
     target.parent.mkdir(parents=True,exist_ok=True)
-    with target.open('x',encoding='utf8') as f: f.write(make_note(fm,text))
+    with target.open('x',encoding='utf8', newline='\n') as f: f.write(make_note(fm,text))
     return {'id':sid,'ruta':str(target),'revisado_por':reviewer}
 
 

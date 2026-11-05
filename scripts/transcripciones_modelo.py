@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import contextlib
 import datetime as dt
-import fcntl
 import hashlib
 import json
 import os
@@ -11,6 +10,10 @@ from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import uuid
+
+if os.name != 'nt':
+    import fcntl
+from platform_fs import is_link_or_reparse
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -46,7 +49,7 @@ def safe_id(value):
 def _parts(relative):
     value = str(relative)
     parts = value.split("/")
-    if not value or PurePosixPath(value).is_absolute() or any(p in ("", ".", "..") for p in parts) or "\\" in value or "\x00" in value:
+    if not value or PurePosixPath(value).is_absolute() or any(p in ("", ".", "..") for p in parts) or "\\" in value or ":" in value or "\x00" in value:
         raise ModelError("UNSAFE_PATH")
     return parts
 
@@ -55,11 +58,11 @@ def safe_path(root, relative):
     """Validate without resolving away symlinks. IO helpers also use dir_fd/O_NOFOLLOW."""
     path = Path(os.path.abspath(root))
     for candidate in [*reversed(path.parents), path]:
-        if candidate.is_symlink():
+        if is_link_or_reparse(candidate):
             raise ModelError("UNSAFE_PATH")
     for part in _parts(relative):
         path = path / part
-        if path.is_symlink():
+        if is_link_or_reparse(path):
             raise ModelError("UNSAFE_PATH")
     return path
 
@@ -132,6 +135,9 @@ def _directory(path, create=False):
 
 
 def read_bytes(root, relative):
+    if os.name == 'nt':
+        from windows_fs import read_bytes as native_read_bytes
+        return native_read_bytes(root, relative)
     path = safe_path(root, relative)
     with _directory(path.parent) as parent:
         try:
@@ -165,6 +171,9 @@ def load_json(path):
 
 
 def atomic_write(root, relative, data, *, immutable=True):
+    if os.name == 'nt':
+        from windows_fs import atomic_write as native_atomic_write
+        return native_atomic_write(root, relative, data, immutable=immutable)
     path = safe_path(root, relative)
     with _directory(path.parent, create=True) as parent:
         name = f".tmp-{uuid.uuid4().hex}"
@@ -196,6 +205,12 @@ def bank_lock(bank):
     """One OS lock shared by every consolidator; released automatically on process death."""
     from transcripciones_lectura import live_reads
     validate_bank_location(bank)
+    if os.name == 'nt':
+        from windows_fs import ensure_private_directory, file_lock
+        ensure_private_directory(bank)
+        with live_reads(), file_lock(Path(bank) / '.writer.lock'):
+            yield
+        return
     with live_reads(), _directory(bank, create=True) as parent:
         fd = os.open(".writer.lock", os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600, dir_fd=parent)
         try:
@@ -212,7 +227,7 @@ def validate_record(kind, record, resolver=None):
     schema_path = SCHEMAS / f"{kind}.schema.json"
     if not schema_path.is_file():
         raise ModelError("SCHEMA_UNKNOWN")
-    validator = Draft202012Validator(json.loads(schema_path.read_text()), format_checker=FormatChecker())
+    validator = Draft202012Validator(json.loads(schema_path.read_text(encoding='utf-8')), format_checker=FormatChecker())
     errors = sorted(validator.iter_errors(record), key=lambda e: str(list(e.path)))
     if errors:
         # Schema errors often interpolate private values: expose only structural location.

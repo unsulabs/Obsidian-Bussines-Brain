@@ -17,8 +17,8 @@ class EntregaTest(unittest.TestCase):
         self.assertTrue(v.is_dir())
         self.assertEqual(validate(v)['errores'],[])
         self.assertTrue((v/'00_Mapas/Mapa_de_relaciones.canvas').is_file())
-        self.assertEqual(yaml.safe_load((v/'90_Sistema/config_empresa.yaml').read_text())['company_id'],'BRISA-SINTETICA')
-        manifest=json.loads((v/'90_Sistema/Traspasos/BRISA-SINTETICA/manifest.json').read_text())
+        self.assertEqual(yaml.safe_load((v/'90_Sistema/config_empresa.yaml').read_text(encoding='utf-8'))['company_id'],'BRISA-SINTETICA')
+        manifest=json.loads((v/'90_Sistema/Traspasos/BRISA-SINTETICA/manifest.json').read_text(encoding='utf-8'))
         self.assertTrue(manifest['company']['synthetic'])
 
     def test_skills_triggers_and_content(self):
@@ -50,13 +50,13 @@ class EntregaTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / '.venv').mkdir()
-            (root / '.venv/tool.txt').write_text('synthetic')
+            (root / '.venv/tool.txt').write_text('synthetic', encoding='utf-8', newline='\n')
             def venv_errors():
                 return [x for x in audit(root)['problemas'] if '.venv' in x]
             self.assertTrue(venv_errors())  # A package must reject it.
             subprocess.run(['git', 'init', '-q', str(root)], check=True)
             self.assertTrue(venv_errors())  # An unignored checkout must reject it.
-            (root / '.gitignore').write_text('.venv/\n')
+            (root / '.gitignore').write_text('.venv/\n', encoding='utf-8', newline='\n')
             self.assertEqual(venv_errors(), [])
             subprocess.run(['git', '-C', str(root), 'add', '-f', '.venv/tool.txt'], check=True)
             self.assertTrue(venv_errors())  # Force-tracking does not bypass the audit.

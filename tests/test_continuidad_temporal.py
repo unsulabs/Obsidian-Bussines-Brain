@@ -27,7 +27,7 @@ class UltimaContinuidadTest(unittest.TestCase):
             "id":nid, "tipo":"continuidad", "empresa_id":"EMPRESA-SINTETICA",
             "estado_editorial":"borrador", "sensibilidad":"interno",
             "registrado_en":timestamp,
-        }, f"# Sesión sintética {nid}\n"),encoding="utf8")
+        }, f"# Sesión sintética {nid}\n"),encoding="utf8", newline='\n')
         return path
 
     def test_second_same_day_does_not_use_lexicographic_id(self):

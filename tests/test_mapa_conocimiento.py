@@ -32,7 +32,7 @@ class MapaConocimientoTest(unittest.TestCase):
             "<!-- kb:id=D01-B001 -->\n"
             "Una organización de prueba estudia prioridades con su equipo y "
             "distingue qué trabajo acuerda realizar de sus propuestas internas.\n\n"
-            "## CONTROL\n\nEjemplo inventado.\n",encoding="utf8")
+            "## CONTROL\n\nEjemplo inventado.\n",encoding="utf8", newline='\n')
         a=create_document(self.vault,"D01","Dirección ficticia",draft,
                           sources=["F-MAPA-001"],tags=["direccion/modelo-valor"])
         developed=self.work/"proceso.md"
@@ -40,7 +40,7 @@ class MapaConocimientoTest(unittest.TestCase):
             "# Flujo del equipo ficticio\n\n## Trabajo\n\n"
             "Un responsable registra una solicitud y consulta con el equipo "
             "antes de asignar una actividad que produzca resultados verificables.\n",
-            encoding="utf8")
+            encoding="utf8", newline='\n')
         b=create_ficha(self.vault,"proceso","Flujo operativo",content_file=developed,
                        sources=["F-MAPA-001"],tags=["operacion/procesos"])
         self.originals={x:Path(x).read_bytes() for x in [a["ruta"],b["ruta"]]}
@@ -83,13 +83,13 @@ class MapaConocimientoTest(unittest.TestCase):
         self.assertFalse((self.vault/MAP_MD).exists())
         x=publicar(self.vault,**self.approval(r))
         self.assertEqual(x["resultado"],"APLICADO")
-        canvas=json.loads((self.vault/MAP_CANVAS).read_text())
+        canvas=json.loads((self.vault/MAP_CANVAS).read_text(encoding='utf-8'))
         self.assertEqual(canvas["edges"][0]["label"],"refiere_a (propuesta)")
         self.assertTrue(any(n["id"]=="nota-sistema-mapa" and n["type"]=="text"
                             for n in canvas["nodes"]))
         self.assertTrue(all(n["type"]=="file" for n in canvas["nodes"]
                             if n["id"]!="nota-sistema-mapa"))
-        md=(self.vault/MAP_MD).read_text()
+        md=(self.vault/MAP_MD).read_text(encoding='utf-8')
         self.assertIn("[[10_Conocimiento/Dirección ficticia|Dirección ficticia]]",md)
         self.assertIn("[[",md)
         self.assertIn("operacion/procesos",md)
@@ -113,9 +113,9 @@ class MapaConocimientoTest(unittest.TestCase):
         draft=previsualizar(self.vault)
         result=publicar(self.vault,**self.approval(draft))
         self.assertEqual(result["resultado"],"APLICADO")
-        canvas=json.loads((self.vault/MAP_CANVAS).read_text())
+        canvas=json.loads((self.vault/MAP_CANVAS).read_text(encoding='utf-8'))
         self.assertIn("(revisión)",canvas["edges"][0]["label"])
-        self.assertIn("validada_por_revisor",(self.vault/MAP_MD).read_text())
+        self.assertIn("validada_por_revisor",(self.vault/MAP_MD).read_text(encoding='utf-8'))
 
     def test_source_changed_after_preview_requires_new_SHA(self):
         r=previsualizar(self.vault)
@@ -128,10 +128,10 @@ class MapaConocimientoTest(unittest.TestCase):
 
     def test_does_not_overwrite_non_generated_user_map(self):
         path=self.vault/MAP_MD
-        path.write_text("---\nid: SYS-MAPA-DERIVADO\ntipo: mapa\n---\n# Mapa manual\n")
+        path.write_text("---\nid: SYS-MAPA-DERIVADO\ntipo: mapa\n---\n# Mapa manual\n", encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError,"no sobrescribir"):
             previsualizar(self.vault)
-        self.assertEqual((self.vault/MAP_MD).read_text().splitlines()[-1],"# Mapa manual")
+        self.assertEqual((self.vault/MAP_MD).read_text(encoding='utf-8').splitlines()[-1],"# Mapa manual")
 
     def test_rewrite_requires_matching_existing_SHA(self):
         initial=previsualizar(self.vault)
@@ -165,7 +165,7 @@ class MapaConocimientoTest(unittest.TestCase):
             edge["fromSide"]="right"
             edge["toSide"]="left"
         native=json.dumps(canvas,ensure_ascii=False,separators=(",",":"))
-        canvas_path.write_text(native,encoding="utf8")
+        canvas_path.write_text(native,encoding="utf8", newline='\n')
 
         preview=previsualizar(self.vault)
         self.assertTrue(preview["sin_cambios"])
@@ -173,12 +173,12 @@ class MapaConocimientoTest(unittest.TestCase):
         self.assertEqual(canvas_path.read_text(encoding="utf8"),native)
 
         canvas["edges"][0]["label"]="relación distinta"
-        canvas_path.write_text(json.dumps(canvas,ensure_ascii=False),encoding="utf8")
+        canvas_path.write_text(json.dumps(canvas,ensure_ascii=False),encoding="utf8", newline='\n')
         self.assertFalse(previsualizar(self.vault)["sin_cambios"])
 
         canvas["edges"][0]["label"]="refiere_a (propuesta)"
         canvas["nodes"][1]["x"]+=25
-        canvas_path.write_text(json.dumps(canvas,ensure_ascii=False),encoding="utf8")
+        canvas_path.write_text(json.dumps(canvas,ensure_ascii=False),encoding="utf8", newline='\n')
         self.assertFalse(previsualizar(self.vault)["sin_cambios"])
 
     def test_cli_preview(self):

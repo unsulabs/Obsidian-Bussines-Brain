@@ -141,7 +141,7 @@ class CustodyTests(unittest.TestCase):
 
     def test_duplicate_json_keys_rejected(self):
         path = capture(self.root)
-        path.write_text('{"schema_version":"capture-manifest.v1","schema_version":"x"}')
+        path.write_text('{"schema_version":"capture-manifest.v1","schema_version":"x"}', encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ModelError, "INVALID_JSON"):
             custody.register_capture(self.bank, path)
 

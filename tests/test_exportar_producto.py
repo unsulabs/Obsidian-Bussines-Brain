@@ -57,7 +57,7 @@ class ExportarProductoTest(unittest.TestCase):
                 path = repo / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text('SECRETO_EMPRESARIAL' if 'material_privado' in name
-                                else 'producto', encoding='utf8')
+                                else 'producto', encoding='utf8', newline='\n')
             for cmd in (('init', '-q'), ('config', 'user.name', 'Prueba'),
                         ('config', 'user.email', 'test@example.invalid'),
                         ('add', '.'), ('commit', '-qm', 'base')):

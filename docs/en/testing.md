@@ -6,6 +6,29 @@ Use the verified Python 3.11+ environment from [onboarding](onboarding.md). Run 
 
 ## Automated checks
 
+The `Platform installation` GitHub Actions workflow uses standard Ubuntu 24.04,
+Windows Server 2022 and macOS 15 runners with Python 3.11. Each fresh checkout
+creates and activates `.venv` using the same platform commands in both READMEs,
+then installs `requirements.txt`. No UTF-8 environment override is required:
+repository text uses explicit UTF-8 and LF; original transcript bytes remain untouched.
+
+`scripts/verify_platform.py tests --output /outside/checkout/evidence` runs full
+unittest discovery and reports the commit, executed tests, failures, errors and
+every skip. Only the named native macOS alias test may skip off macOS, and the
+eight named native Windows filesystem tests may skip off Windows. Their native
+jobs must execute them. Any other skip or expected failure fails acceptance.
+The `installation` phase checks help, doctor, documentation, package audit,
+synthetic creation/validation/state with Unicode and spaces, and exported hashes
+and privacy boundaries. Artifacts contain synthetic reports and test logs only.
+These headless checks do not establish Obsidian GUI/Bases or business acceptance.
+
+The Windows bank backend requires a local NTFS/ReFS path; it rejects UNC/device
+paths, alternate data streams and reparse points. Private directories require a
+protected DACL restricted to the owner, SYSTEM and administrators; existing broad
+ACLs are rejected rather than silently changed. POSIX keeps its directory-handle,
+mode-bit and flock controls. Windows uses native handles, process-death locks,
+file flushes and write-through rename; it does not claim POSIX directory-fsync semantics.
+
 ```bash
 python scripts/cerebro.py doctor
 python -m unittest discover -s tests -v

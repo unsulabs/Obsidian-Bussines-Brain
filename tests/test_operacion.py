@@ -48,13 +48,13 @@ class OperacionTest(unittest.TestCase):
         self.assertEqual(validate(self.vault)['errores'],[])
         self.assertEqual(list((self.vault/'20_Entidades').glob('*.md')),[])
         self.assertFalse((self.vault/'30_Registros').exists())
-        self.assertIn('no un formulario', (self.vault/'Inicio.md').read_text())
+        self.assertIn('no un formulario', (self.vault/'Inicio.md').read_text(encoding='utf-8'))
 
     def test_create_ficha_draft_with_source(self):
         self.source()
         result=create_ficha(self.vault,'consultoria','Diagnóstico técnico de proyectos',sources=['F-TEST-01'])
         p=Path(result['ruta']); self.assertTrue(p.exists())
-        props,body=__import__('lib_ce').split_frontmatter(p.read_text())
+        props,body=__import__('lib_ce').split_frontmatter(p.read_text(encoding='utf-8'))
         self.assertEqual(props['estado_conocimiento'],'pendiente')
         self.assertEqual(props['estado_editorial'],'borrador')
         self.assertEqual(props['vigencia'],'sin_verificar')
@@ -64,7 +64,7 @@ class OperacionTest(unittest.TestCase):
 
     def test_new_ficha_without_source_never_approved(self):
         result=create_ficha(self.vault,'oferta','Oferta aún no aprobada')
-        text=Path(result['ruta']).read_text()
+        text=Path(result['ruta']).read_text(encoding='utf-8')
         self.assertIn('sin_verificar',text)
         self.assertIn('fuentes: []',text)
         self.assertIn('pendiente',text)
@@ -93,7 +93,7 @@ class OperacionTest(unittest.TestCase):
     def test_sources_are_references_not_originals_and_no_overwrite(self):
         src=self.source();self.assertTrue(Path(src['ruta']).exists())
         self.assertFalse(src['copia_original'])
-        self.assertNotIn('documento original íntegro',Path(src['ruta']).read_text())
+        self.assertNotIn('documento original íntegro',Path(src['ruta']).read_text(encoding='utf-8'))
         with self.assertRaises(FileExistsError):self.source()
 
     def test_protected_source_rejected(self):
@@ -124,8 +124,8 @@ class OperacionTest(unittest.TestCase):
 
     def test_continuity_records_not_as_authority(self):
         r=save_continuity(self.vault,summary='Se evaluó una oferta sintética.',next_step='Recuperar fuente real antes de aprobar',reviewer='por_validar')
-        self.assertEqual(summary(self.vault)['ultima_continuidad'],str(Path(r['ruta']).resolve().relative_to(self.vault.resolve())))
-        self.assertIn('no es autoridad',Path(r['ruta']).read_text())
+        self.assertEqual(summary(self.vault)['ultima_continuidad'],Path(r['ruta']).resolve().relative_to(self.vault.resolve()).as_posix())
+        self.assertIn('no es autoridad',Path(r['ruta']).read_text(encoding='utf-8'))
         self.assertEqual(validate(self.vault)['errores'],[])
 
     def test_continuity_requires_next_step(self):
@@ -160,10 +160,10 @@ class OperacionTest(unittest.TestCase):
         files=list((REPO/'plantilla_boveda'/'90_Sistema'/'Vistas').glob('*.base'))
         self.assertGreaterEqual(len(files),12)
         for p in files:
-            obj=yaml.safe_load(p.read_text())
+            obj=yaml.safe_load(p.read_text(encoding='utf-8'))
             self.assertIn('filters',obj);self.assertIn('views',obj)
             self.assertTrue(all('type' in v and 'name' in v for v in obj['views']))
-        docs=json.loads((REPO/'modelo/clases_documentales.json').read_text())['clases']
+        docs=json.loads((REPO/'modelo/clases_documentales.json').read_text(encoding='utf-8'))['clases']
         self.assertEqual({d['id'] for d in docs},{f'{p}{i:02}' for p in ('D','X') for i in range(1,8)})
         for doc in docs:
             self.assertTrue(any((REPO/'plantilla_boveda/90_Sistema/Plantillas').glob(doc['id']+'_*')))
@@ -189,14 +189,14 @@ class OperacionTest(unittest.TestCase):
 
     def test_oferta_never_assumes_country_or_currency(self):
         x=create_ficha(self.vault,'oferta','Oferta ficticia internacional')
-        fm,_=__import__('lib_ce').split_frontmatter(Path(x['ruta']).read_text())
+        fm,_=__import__('lib_ce').split_frontmatter(Path(x['ruta']).read_text(encoding='utf-8'))
         self.assertEqual(fm['moneda'],'por_definir')
         self.assertEqual(fm['precio_sistema_fuente'],'')
         self.assertEqual(fm['estado_editorial'],'borrador')
 
     def test_approval_not_inferred_from_text(self):
         x=create_ficha(self.vault,'decision','Aprobamos la venta según alguien dijo',resumen='aprobado aprobado aprobado')
-        fm,_=__import__('lib_ce').split_frontmatter(Path(x['ruta']).read_text())
+        fm,_=__import__('lib_ce').split_frontmatter(Path(x['ruta']).read_text(encoding='utf-8'))
         self.assertEqual(fm['estado_editorial'],'borrador')
         self.assertEqual(fm['estado_conocimiento'],'pendiente')
 

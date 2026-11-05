@@ -19,13 +19,13 @@ class RegistroBovedaCodexTest(unittest.TestCase):
         self.root = Path(temp.name)
         self.vault = self.root / "Empresa ficticia"
         (self.vault / "90_Sistema").mkdir(parents=True)
-        (self.vault / "90_Sistema" / "Como_usar.md").write_text("# Uso\n")
-        (self.vault / "Inicio.md").write_text("# Inicio\n")
+        (self.vault / "90_Sistema" / "Como_usar.md").write_text("# Uso\n", encoding='utf-8', newline='\n')
+        (self.vault / "Inicio.md").write_text("# Inicio\n", encoding='utf-8', newline='\n')
         self.native = self.root / "obsidian.json"
         self.registry = self.root / "vaults.json"
         self.project = canonical(self.root / "Proyecto Codex")
         self.project.mkdir()
-        self.native.write_text(json.dumps({"vaults": {"abc123": {"path": str(self.vault)}}}))
+        self.native.write_text(json.dumps({"vaults": {"abc123": {"path": str(self.vault)}}}), encoding='utf-8', newline='\n')
 
     def call_register(self):
         return register(self.vault, "Empresa ficticia", "EMP-FIC", self.registry,
@@ -42,7 +42,7 @@ class RegistroBovedaCodexTest(unittest.TestCase):
         self.assertEqual(json.loads(before)["vaults"][0]["aliases"], ["EMP-FIC"])
 
     def test_native_registration_required(self):
-        self.native.write_text(json.dumps({"vaults": {}}))
+        self.native.write_text(json.dumps({"vaults": {}}), encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError, "Abre primero"):
             self.call_register()
         self.assertFalse(self.registry.exists())
@@ -51,24 +51,24 @@ class RegistroBovedaCodexTest(unittest.TestCase):
         self.registry.write_text(json.dumps({"format": "codex-obsidian-vaults/1",
                                              "vaults": [{"name": "Otra empresa", "id": "xyz",
                                                          "aliases": ["EMP-FIC"],
-                                                         "path": str(self.root / "Otra")}]}) + "\n")
+                                                         "path": str(self.root / "Otra")}]}) + "\n", encoding='utf-8', newline='\n')
         before = self.registry.read_bytes()
         with self.assertRaisesRegex(ValueError, "colisiona"):
             self.call_register()
         self.assertEqual(before, self.registry.read_bytes())
 
     def test_existing_registry_is_backed_up(self):
-        self.registry.write_text('{"format":"codex-obsidian-vaults/1","vaults":[]}\n')
+        self.registry.write_text('{"format":"codex-obsidian-vaults/1","vaults":[]}\n', encoding='utf-8', newline='\n')
         before = self.registry.read_bytes()
         result = self.call_register()
         self.assertEqual(Path(result["respaldo"]).read_bytes(), before)
-        self.assertEqual(len(json.loads(self.registry.read_text())["vaults"]), 1)
+        self.assertEqual(len(json.loads(self.registry.read_text(encoding='utf-8'))["vaults"]), 1)
 
     def test_new_vault_is_associated_with_exact_project(self):
         result = register(self.vault, "Empresa ficticia", "EMP-FIC", self.registry,
                           self.native, "90_Sistema/Como_usar.md", "Inicio.md", self.project)
         self.assertEqual(result["status"], "registrada")
-        self.assertEqual(json.loads(self.registry.read_text())["vaults"][0]["projects"],
+        self.assertEqual(json.loads(self.registry.read_text(encoding='utf-8'))["vaults"][0]["projects"],
                          [str(self.project)])
         before = self.registry.read_bytes()
         repeated = register(self.vault, "Empresa ficticia", "EMP-FIC", self.registry,
@@ -83,7 +83,7 @@ class RegistroBovedaCodexTest(unittest.TestCase):
                           self.native, "90_Sistema/Como_usar.md", "Inicio.md", self.project)
         self.assertEqual(result["status"], "proyecto_asociado")
         self.assertEqual(Path(result["respaldo"]).read_bytes(), before)
-        self.assertEqual(json.loads(self.registry.read_text())["vaults"][0]["projects"],
+        self.assertEqual(json.loads(self.registry.read_text(encoding='utf-8'))["vaults"][0]["projects"],
                          [str(self.project)])
 
     def test_project_collision_does_not_rewrite_registry(self):
@@ -91,7 +91,7 @@ class RegistroBovedaCodexTest(unittest.TestCase):
                  "path": str(self.root / "Otra"),
                  "projects": [str(self.project)]}
         self.registry.write_text(json.dumps({"format": "codex-obsidian-vaults/1",
-                                             "vaults": [other]}) + "\n")
+                                             "vaults": [other]}) + "\n", encoding='utf-8', newline='\n')
         before = self.registry.read_bytes()
         with self.assertRaisesRegex(ValueError, "colisiona"):
             register(self.vault, "Empresa ficticia", "EMP-FIC", self.registry,

@@ -177,7 +177,7 @@ def apply(vault_path: Path, spec: Path, backup_dir: Path, expected_sha: str) -> 
             dest = backup / p.relative_to(vault)
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes(data)
-        (backup / 'manifest.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')
+        (backup / 'manifest.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n', encoding='utf-8', newline='\n')
         for p, data in old_bytes.items():
             if p.read_bytes() != data:
                 raise ValueError('Cambio concurrente antes de aplicar: '+str(p.relative_to(vault)))

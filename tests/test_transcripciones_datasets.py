@@ -135,7 +135,7 @@ class DatasetTests(unittest.TestCase):
     def test_excluded_candidate_annotations_are_not_exported(self):
         self.selection['candidates'][0]['task']='PRIVATE-ANNOTATION'
         output=self.export('training',commit=True)
-        self.assertNotIn('PRIVATE-ANNOTATION',(self.bank/output['outputs'][0]['path']).read_text())
+        self.assertNotIn('PRIVATE-ANNOTATION',(self.bank/output['outputs'][0]['path']).read_text(encoding='utf-8'))
 
     def test_identity_cannot_be_changed_to_evade_previous_split(self):
         self.export(commit=True)
@@ -252,9 +252,9 @@ class DatasetTests(unittest.TestCase):
         self.assertFalse((self.bank/'datasets').exists())
         preview=self.export()
         path=self.bank/preview['outputs'][0]['path']
-        path.parent.mkdir();path.write_text('{}')
+        path.parent.mkdir();path.write_text('{}', encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ModelError,'SCHEMA_INVALID'): self.export(commit=True)
-        self.assertEqual(path.read_text(),'{}')
+        self.assertEqual(path.read_text(encoding='utf-8'),'{}')
 
     def test_reject_derived_payloads_duplicate_ids_and_product_destination(self):
         self.selection['candidates'][0]['run_id']='untrusted-old-analysis'

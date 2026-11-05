@@ -34,7 +34,7 @@ class ContextualQueryTest(unittest.TestCase):
             "sin confundir pruebas técnicas con aprobación comercial.\n\n"
             "## CONTROL — fuente y límites\n\n"
             "SOLO_CONTROL_TEST: este texto no debe confundirse con conocimiento empresarial.\n",
-            encoding="utf8")
+            encoding="utf8", newline='\n')
         result=create_document(self.vault,"D01","Modelo ficticio",self.body,
                                editorial="en_revision",sources=["F-SINTET-01"])
         self.doc=Path(result["ruta"])
@@ -60,7 +60,7 @@ class ContextualQueryTest(unittest.TestCase):
             "# Reparaciones de prueba\n\n"
             "## Urgencias\n\nLa dueña decide si una urgencia adelanta el turno.\n\n"
             "## Mantenimiento\n\nNo hay precio ni acuerdo de mantenimiento mensual.\n\n"
-            "## CONTROL\n\nSECRETO_CONTROL_NO_BUSCAR.\n",encoding="utf8")
+            "## CONTROL\n\nSECRETO_CONTROL_NO_BUSCAR.\n",encoding="utf8", newline='\n')
         created=create_document(self.vault,"X02","Reparaciones de prueba",content,
                                 doc_id="X02-REPARACIONES-TEST",editorial="en_revision",
                                 sources=["F-SINTET-01"])
@@ -81,10 +81,10 @@ class ContextualQueryTest(unittest.TestCase):
         self.assertFalse(r["respuesta_semantica_generada"])
 
     def test_date_scope_excludes_expired_and_future_docs(self):
-        meta,body=split_frontmatter(self.doc.read_text())
+        meta,body=split_frontmatter(self.doc.read_text(encoding='utf-8'))
         meta["valid_from"]="2026-10-10"
         meta["valid_to"]="2026-10-30"
-        self.doc.write_text(make_note(meta,body))
+        self.doc.write_text(make_note(meta,body), encoding='utf-8', newline='\n')
         early=consulta(self.vault,"asignaciones",fecha="2026-10-09")
         inside=consulta(self.vault,"asignaciones",fecha="2026-10-28")
         late=consulta(self.vault,"asignaciones",fecha="2026-10-31")
@@ -94,9 +94,9 @@ class ContextualQueryTest(unittest.TestCase):
         self.assertEqual(early["documentos_fuera_vigencia_explicita"],1)
 
     def test_restricted_document_is_not_returned(self):
-        meta,body=split_frontmatter(self.doc.read_text())
+        meta,body=split_frontmatter(self.doc.read_text(encoding='utf-8'))
         meta["sensibilidad"]="restringido"
-        self.doc.write_text(make_note(meta,body))
+        self.doc.write_text(make_note(meta,body), encoding='utf-8', newline='\n')
         r=consulta(self.vault,"asignaciones")
         self.assertEqual(r["total_coincidencias"],0)
 
@@ -108,7 +108,7 @@ class ContextualQueryTest(unittest.TestCase):
             "la tarifa actual no está decidida.\n\n"
             "## CONTROL — fuentes\n\n"
             "SOLO_CONTROL_OFERTA: este localizador no es texto comercial.\n",
-            encoding="utf8")
+            encoding="utf8", newline='\n')
         item=create_ficha(self.vault,"oferta","Oferta imaginaria",
                           content_file=content,sources=["F-SINTET-01"])
         row=consulta(self.vault,"precio histórico")["candidatos"][0]
@@ -140,15 +140,15 @@ class ContextualQueryTest(unittest.TestCase):
         self.assertFalse(r["respuesta_semantica_generada"])
 
     def test_orientation_keeps_scope_and_permissions(self):
-        meta,body=split_frontmatter(self.doc.read_text())
+        meta,body=split_frontmatter(self.doc.read_text(encoding='utf-8'))
         meta["valid_from"]="2026-10-10"
         meta["valid_to"]="2026-10-30"
-        self.doc.write_text(make_note(meta,body))
+        self.doc.write_text(make_note(meta,body), encoding='utf-8', newline='\n')
         q="¿Quién autoriza una excepción en las asignaciones?"
         self.assertEqual(consulta(self.vault,q,orientar=True,fecha="2026-10-09")["total_coincidencias"],0)
         self.assertGreater(consulta(self.vault,q,orientar=True,fecha="2026-10-28")["total_coincidencias"],0)
         meta["sensibilidad"]="restringido"
-        self.doc.write_text(make_note(meta,body))
+        self.doc.write_text(make_note(meta,body), encoding='utf-8', newline='\n')
         self.assertEqual(consulta(self.vault,q,orientar=True,fecha="2026-10-28")["total_coincidencias"],0)
 
     def test_cli_orients_a_question_without_claiming_semantics(self):

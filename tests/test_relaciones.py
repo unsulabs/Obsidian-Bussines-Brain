@@ -31,7 +31,7 @@ class RelacionesTest(unittest.TestCase):
             "# Empresa ficticia\n\n## Actividades\n\n<!-- kb:id=D01-B001 -->\n"
             "El proceso de ejemplo organiza solicitudes internas y distingue el "
             "trabajo realizado de los compromisos aprobados.\n\n"
-            "## CONTROL\n\nDocumento sintético para test de relaciones.\n",encoding="utf8")
+            "## CONTROL\n\nDocumento sintético para test de relaciones.\n",encoding="utf8", newline='\n')
         create_document(self.vault,"D01","Modelo de trabajo",self.body,
                         sources=["F-DEMORL-01"],editorial="en_revision")
         self.kw={"fuentes":["F-DEMORL-01"],"ambito":"documentación de un proceso ficticio",
@@ -89,9 +89,9 @@ class RelacionesTest(unittest.TestCase):
     def test_tampered_relations_detected_by_validator(self):
         record=self.make()
         path=Path(record["ruta"])
-        data=json.loads(path.read_text())
+        data=json.loads(path.read_text(encoding='utf-8'))
         data["destino_id"]="NOTA-INVENTADA"
-        path.write_text(json.dumps(data))
+        path.write_text(json.dumps(data), encoding='utf-8', newline='\n')
         result=validate(self.vault)
         self.assertTrue(any("Relación" in x for x in result["errores"]))
         with self.assertRaises(ValueError): query(self.vault)

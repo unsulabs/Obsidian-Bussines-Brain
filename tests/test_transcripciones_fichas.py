@@ -135,9 +135,9 @@ class FichaTests(unittest.TestCase):
 
     def test_semantic_review_exact_external_binding_no_approval(self):
         submission = self.bank.parent / 'sealed-submission.json'
-        submission.write_text(json.dumps(self.submission), encoding='utf-8')
+        submission.write_text(json.dumps(self.submission), encoding='utf-8', newline='\n')
         review = self.bank.parent / 'review.md'
-        review.write_text('Synthetic independent review: all five subjects inspected. Not business ratification.')
+        review.write_text('Synthetic independent review: all five subjects inspected. Not business ratification.', encoding='utf-8', newline='\n')
         self.profile['semantic_review'] = dict(run_id='RUN-fixture', reviewer='Synthetic independent reviewer',
             status='reviewed', submission_path=str(submission), review_path=str(review),
             submission_file_sha256=sha256_bytes(submission.read_bytes()),
@@ -149,7 +149,7 @@ class FichaTests(unittest.TestCase):
         with self.assertRaisesRegex(ModelError, 'SEMANTIC_REVIEW_UNBOUND'):
             self.render()
         self.profile['semantic_review']['submission_sha256'] = sha256_bytes(json_bytes(self.submission))
-        review.write_text('Changed')
+        review.write_text('Changed', encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ModelError, 'SEMANTIC_REVIEW_CHANGED'):
             self.render()
 

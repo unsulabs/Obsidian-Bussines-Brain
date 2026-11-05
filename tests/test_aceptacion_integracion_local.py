@@ -31,7 +31,7 @@ class IntegracionLocalTest(unittest.TestCase):
             "# Ficticia\n\n## Negocio\n\n<!-- kb:id=D01-B001 -->\n"
             "La empresa de prueba evalúa necesidades y registra sus procesos "
             "sin afirmar ventas ni acuerdos que no se hayan observado.\n",
-            encoding="utf8")
+            encoding="utf8", newline='\n')
         create_document(self.vault,"D01","Modelo",file,
                         sources=["F-TEST-001"],editorial="en_revision")
         self.before={p.relative_to(self.vault):p.read_bytes()

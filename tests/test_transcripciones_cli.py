@@ -15,7 +15,7 @@ class CLITests(unittest.TestCase):
         self.root = Path(self.temp.name).resolve()
         self.bank = self.root / "bank"
         self.profile = self.root / "profile.json"
-        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["custody"], "bank": str(self.bank)}))
+        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["custody"], "bank": str(self.bank)}), encoding='utf-8', newline='\n')
 
     def tearDown(self):
         self.temp.cleanup()
@@ -55,10 +55,10 @@ class CLITests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertEqual(out["errors"][0]["code"], "PURPOSE_DENIED")
         report = self.root / "report.json"
-        report.write_text("keep")
+        report.write_text("keep", encoding='utf-8', newline='\n')
         code, out = self.run_cli("estado", "--output", str(report))
         self.assertEqual(code, 2)
-        self.assertEqual(report.read_text(), "keep")
+        self.assertEqual(report.read_text(encoding='utf-8'), "keep")
         self.assertFalse(self.bank.exists())
 
     def test_no_future_commands_advertised(self):
@@ -74,20 +74,20 @@ class CLITests(unittest.TestCase):
         snapshot["account"]["id"] = "local"
         snapshot["meetings"][0]["id"] = "s1"
         path = self.root / "inventory.json"
-        path.write_text(json.dumps(snapshot))
+        path.write_text(json.dumps(snapshot), encoding='utf-8', newline='\n')
         self.assertTrue(self.run_cli("inventario-validar", "--snapshot", str(path))[1]["evidence"]["valid"])
         self.assertFalse(self.run_cli("conciliar", "--snapshot", str(path))[1]["evidence"]["download_complete"])
         (self.root / "first.txt").write_bytes(b"first\n")
         (self.root / "second.txt").write_bytes(b"second\n")
         parts = self.root / "parts.json"
-        parts.write_text(json.dumps({"parts": [{"number": 2, "path": "second.txt"}, {"number": 1, "path": "first.txt"}], "expected_parts": 2, "closed": True}))
+        parts.write_text(json.dumps({"parts": [{"number": 2, "path": "second.txt"}, {"number": 1, "path": "first.txt"}], "expected_parts": 2, "closed": True}), encoding='utf-8', newline='\n')
         code, out = self.run_cli("ingresar", "--parts-manifest", str(parts), "--account-id", "local", "--source-id", "s1", "--attempt-id", "a1", "--commit")
         self.assertEqual(code, 0, out)
         report = self.root / "result.json"
         code, out = self.run_cli("conciliar", "--snapshot", str(path), "--output", str(report))
         self.assertEqual(code, 0, out)
         self.assertTrue(out["evidence"]["download_complete"])
-        self.assertEqual(json.loads(report.read_text()), out)
+        self.assertEqual(json.loads(report.read_text(encoding='utf-8')), out)
 
     def test_analysis_cli_and_private_context_output(self):
         from test_transcripciones_pipeline import PipelineTests
@@ -95,17 +95,17 @@ class CLITests(unittest.TestCase):
         fixture.setUp()
         self.addCleanup(fixture.tearDown)
         self.bank = fixture.bank
-        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["custody", "local_analysis", "internal_query"], "bank": str(self.bank)}))
+        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["custody", "local_analysis", "internal_query"], "bank": str(self.bank)}), encoding='utf-8', newline='\n')
         submission = fixture.submission()
         path = self.root / "submission.json"
-        path.write_text(json.dumps(submission))
+        path.write_text(json.dumps(submission), encoding='utf-8', newline='\n')
         code, out = self.run_cli("analizar", "--input", str(path), "--audience", "internal", "--commit", purpose="local_analysis")
         self.assertEqual(code, 0, out)
         code, out = self.run_cli("cobertura", "--tr-id", fixture.tr, "--run", "RUN-fixture", "--audience", "internal", purpose="local_analysis")
         self.assertEqual(code, 0, out)
         self.assertFalse(out["evidence"]["ratified"])
         query = self.root / "query.json"
-        query.write_text(json.dumps({"query": "descuentos", "company": "synthetic", "audience": "internal", "purpose": "internal_query"}))
+        query.write_text(json.dumps({"query": "descuentos", "company": "synthetic", "audience": "internal", "purpose": "internal_query"}), encoding='utf-8', newline='\n')
         code, out = self.run_cli("buscar", "--request", str(query), purpose="internal_query")
         self.assertEqual(out["errors"][0]["code"], "PRIVATE_OUTPUT_REQUIRED")
         destination = self.root / "context.json"
@@ -113,7 +113,7 @@ class CLITests(unittest.TestCase):
         self.assertEqual(code, 0, out)
         self.assertNotIn("descuentos", json.dumps(out))
         self.assertGreater(out["evidence"]["candidate_count"], 0)
-        package = json.loads(destination.read_text())["evidence"]["context"]
+        package = json.loads(destination.read_text(encoding='utf-8'))["evidence"]["context"]
         self.assertIn("descuentos", json.dumps(package))
         self.assertTrue(package["abstention"])
         code, out = self.run_cli("indexar", "--snapshot", "current", "--audience", "internal", purpose="local_analysis")
@@ -123,9 +123,9 @@ class CLITests(unittest.TestCase):
     def test_search_report_cannot_enter_git(self):
         repo = self.root / "product"
         subprocess.run(["git", "init", "-q", str(repo)], check=True)
-        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["internal_query"], "bank": str(self.bank)}))
+        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["internal_query"], "bank": str(self.bank)}), encoding='utf-8', newline='\n')
         query = self.root / "query.json"
-        query.write_text(json.dumps({"query": "secret", "company": "synthetic", "audience": "internal", "purpose": "internal_query"}))
+        query.write_text(json.dumps({"query": "secret", "company": "synthetic", "audience": "internal", "purpose": "internal_query"}), encoding='utf-8', newline='\n')
         output = repo / "context.json"
         code, out = self.run_cli("buscar", "--request", str(query), "--output", str(output), purpose="internal_query")
         self.assertEqual(code, 2)
@@ -138,7 +138,7 @@ class CLITests(unittest.TestCase):
         fixture = PipelineTests(); fixture.setUp()
         self.addCleanup(fixture.tearDown)
         self.bank = fixture.bank
-        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["internal_query"], "bank": str(self.bank)}))
+        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["internal_query"], "bank": str(self.bank)}), encoding='utf-8', newline='\n')
         first = fixture.submission()
         first["global_reconciliation"]["open_conflicts"] = ["OLD-PRIVATE-CONFLICT"]
         for claim in first["claims"]:
@@ -163,12 +163,12 @@ class CLITests(unittest.TestCase):
             request = dict(base, **changes)
             path = self.root / f"request-{counter}.json"
             output = self.root / f"context-{counter}.json"
-            path.write_text(json.dumps(request))
+            path.write_text(json.dumps(request), encoding='utf-8', newline='\n')
             code, stdout = self.run_cli("buscar", "--request", str(path), "--output", str(output), purpose="internal_query")
             self.assertNotIn("PRIVATE TASK", json.dumps(stdout))
             self.assertNotIn("descuentos", json.dumps(stdout))
             self.assertNotIn("OLD-PRIVATE-CONFLICT", json.dumps(stdout))
-            return code, stdout, json.loads(output.read_text())
+            return code, stdout, json.loads(output.read_text(encoding='utf-8'))
         code, _, report = search()
         self.assertEqual(code, 0, report)
         current = report["evidence"]["context"]
@@ -204,7 +204,7 @@ class CLITests(unittest.TestCase):
             self.assertTrue(stdout["errors"])
 
     def test_profile_bank_mismatch(self):
-        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["custody"], "bank": str(self.root / "other")}))
+        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["custody"], "bank": str(self.root / "other")}), encoding='utf-8', newline='\n')
         code, out = self.run_cli("estado")
         self.assertEqual(code, 2)
         self.assertEqual(out["errors"][0]["code"], "BANK_PROFILE_MISMATCH")
@@ -224,7 +224,7 @@ class CLITests(unittest.TestCase):
         self.assertEqual(code, 2, out)
         self.assertEqual(out["errors"][0]["code"], "UNSAFE_PATH")
         self.bank = actual
-        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["custody"], "bank": str(link)}))
+        self.profile.write_text(json.dumps({"company_id": "synthetic", "allowed_purposes": ["custody"], "bank": str(link)}), encoding='utf-8', newline='\n')
         code, out = self.run_cli("estado")
         self.assertEqual(code, 2, out)
         self.assertEqual(out["errors"][0]["code"], "UNSAFE_PATH")
@@ -234,7 +234,7 @@ class CLITests(unittest.TestCase):
         code, out = self.run_cli("estado", "--output", str(report), purpose="denied")
         self.assertEqual(code, 2)
         self.assertEqual(out["status"], "BLOCKED")
-        self.assertEqual(json.loads(report.read_text()), out)
+        self.assertEqual(json.loads(report.read_text(encoding='utf-8')), out)
         prior = report.read_bytes()
         self.run_cli("estado", "--output", str(report), purpose="other")
         self.assertEqual(report.read_bytes(), prior)
@@ -251,7 +251,7 @@ class CLITests(unittest.TestCase):
             profile = {"company_id": "synthetic", "allowed_purposes": ["custody"], "bank": str(bank)}
             if declared_vault:
                 profile["vault"] = str(declared_vault)
-            self.profile.write_text(json.dumps(profile))
+            self.profile.write_text(json.dumps(profile), encoding='utf-8', newline='\n')
             code, out = self.run_cli("estado")
             self.assertEqual(code, 2, out)
             self.assertIn(out["errors"][0]["code"], ("BANK_INSIDE_GIT", "BANK_INSIDE_VAULT"))

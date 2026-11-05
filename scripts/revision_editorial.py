@@ -15,6 +15,7 @@ import stat
 
 from documentos import _is_symlinked
 from lib_ce import BLOCK_RE
+from platform_fs import private_directory
 from operacion import safe_vault, utcnow
 from revisiones_dx import (
     _context, _hash, _publish, _authorization, _backup_root,
@@ -103,9 +104,7 @@ def registrar_evaluacion(vault_path:Path, doc_id:str, act_path:Path, *,
     act,act_sha=_read_act(act_path,vault)
     checked=_validate_act(act,doc_id,expected_sha,body,str(meta.get("cobertura","parcial")))
     root=vault/ALLOWED_PREFIX
-    root.mkdir(parents=True,exist_ok=True,mode=0o700)
-    if stat.S_IMODE(root.stat().st_mode)&0o077:
-        raise ValueError("Carpeta de evaluaciones no es privada")
+    private_directory(root)
     folder=root/doc_id
     folder.mkdir(parents=True,exist_ok=True,mode=0o700)
     eid="EVALDX-"+uuid4().hex[:12].upper()
@@ -117,7 +116,7 @@ def registrar_evaluacion(vault_path:Path, doc_id:str, act_path:Path, *,
             "documento_modificado":False,
             "limite":"Declaración humana registrada, no identidad autenticada ni comprobación autónoma de G1–G7"}
     target=folder/(eid+".json")
-    with target.open("x",encoding="utf8") as f:
+    with target.open("x",encoding="utf8", newline='\n') as f:
         f.write(json.dumps(record,ensure_ascii=False,indent=2)+"\n")
     return {"evaluacion_id":eid,"ruta":str(target),"doc_id":doc_id,
             "decision":checked["decision"],"documento_modificado":False}

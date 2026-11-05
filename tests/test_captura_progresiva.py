@@ -26,7 +26,7 @@ class CapturaTest(unittest.TestCase):
             "## Interpretación provisional\nSe desconoce qué empresa hizo el trabajo.\n\n"
             "## Pendiente\nConfirmar la atribución antes de utilizarlo en una oferta.",
             encoding="utf8"
-        )
+        , newline='\n')
 
     def test_provisional_record_with_no_fake_case(self):
         result = capture_discovery(self.vault, "Exploración inicial", self.note)
@@ -53,10 +53,10 @@ class CapturaTest(unittest.TestCase):
             capture_discovery(self.vault, "Mal", self.note, sources=["F-DESCONOCIDA"])
 
     def test_empty_and_secret_rejected(self):
-        self.note.write_text("   ", encoding="utf8")
+        self.note.write_text("   ", encoding="utf8", newline='\n')
         with self.assertRaises(ValueError):
             capture_discovery(self.vault, "Vacía", self.note)
-        self.note.write_text("-----BEGIN PRIVATE KEY-----\nEjemplo no válido", encoding="utf8")
+        self.note.write_text("-----BEGIN PRIVATE KEY-----\nEjemplo no válido", encoding="utf8", newline='\n')
         with self.assertRaises(ValueError):
             capture_discovery(self.vault, "Secreta", self.note)
 

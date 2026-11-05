@@ -34,7 +34,7 @@ class PilotPreflightTest(unittest.TestCase):
             "El equipo ficticio documenta cómo revisa el trabajo que realiza y"
             " conserva criterios para que otras personas comprendan las decisiones."
             "\n\n## CONTROL\n\nEste es un contenido sintético sin resultados comerciales.",
-            encoding="utf8")
+            encoding="utf8", newline='\n')
         create_document(self.vault,"D01","Empresa sintética",text,editorial="en_revision")
         result=preflight(self.vault)
         self.assertEqual(result["estado_tecnico"],"APTO_PARA_PILOTO_LOCAL")
@@ -44,7 +44,7 @@ class PilotPreflightTest(unittest.TestCase):
 
     def test_vista_regresada_detected(self):
         base=self.vault/"90_Sistema"/"Vistas"/"Ofertas.base"
-        base.write_text('filters:\n  or:\n    - tipo == "oferta"\nviews:\n  - type: table\n    name: Tabla\n')
+        base.write_text('filters:\n  or:\n    - tipo == "oferta"\nviews:\n  - type: table\n    name: Tabla\n', encoding='utf-8', newline='\n')
         result=preflight(self.vault)
         self.assertEqual(result["gates"]["bases_sin_falsos_registros"],"PENDIENTE_MIGRACION_O_VALIDACION")
         self.assertEqual(result["estado_tecnico"],"REQUIERE_ATENCION")

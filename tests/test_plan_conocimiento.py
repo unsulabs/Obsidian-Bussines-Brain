@@ -29,7 +29,7 @@ class DistribucionTest(unittest.TestCase):
                         "<!-- kb:id=D01-B001 -->\nEl grupo ficticio identifica "
                         "situaciones de trabajo y analiza el valor aportado "
                         "por decisiones compartidas en sus proyectos.\n\n"
-                        "## CONTROL\n\nMaterial sintético de prueba.\n",encoding="utf8")
+                        "## CONTROL\n\nMaterial sintético de prueba.\n",encoding="utf8", newline='\n')
         doc=create_document(self.vault,"D01","Dirección",body,
                             editorial="en_revision",sources=["F-DEMO-001"])
         self.doc=Path(doc["ruta"])
@@ -54,7 +54,7 @@ class DistribucionTest(unittest.TestCase):
         }
 
     def save(self,data):
-        self.input.write_text(json.dumps(data,ensure_ascii=False),encoding="utf8")
+        self.input.write_text(json.dumps(data,ensure_ascii=False),encoding="utf8", newline='\n')
 
     def test_plan_connected_and_read_only(self):
         self.save(self.sample())
@@ -139,15 +139,15 @@ class DistribucionTest(unittest.TestCase):
     def test_tag_properties_on_new_notes(self):
         fiche=create_ficha(self.vault,"proceso","Proceso sintético",
                            sources=["F-DEMO-001"],tags=["operacion/procesos"])
-        fm,_=split_frontmatter(Path(fiche["ruta"]).read_text())
+        fm,_=split_frontmatter(Path(fiche["ruta"]).read_text(encoding='utf-8'))
         self.assertEqual(fm["tags"],["operacion/procesos"])
         text=self.root/"d02.md"
         text.write_text("# Mercado ficticio\n\n## Situación\n\n"
                         "La organización sintética explora una necesidad "
                         "con distintos compradores y registra hipótesis de investigación.",
-                        encoding="utf8")
+                        encoding="utf8", newline='\n')
         d=create_document(self.vault,"D02","Mercado ficticio",text,tags=["mercado/investigacion"])
-        fm,_=split_frontmatter(Path(d["ruta"]).read_text())
+        fm,_=split_frontmatter(Path(d["ruta"]).read_text(encoding='utf-8'))
         self.assertEqual(fm["tags"],["mercado/investigacion"])
         with self.assertRaisesRegex(ValueError,"Etiquetas"):
             create_ficha(self.vault,"oferta","No usar",tags=["Nombre completo"])
@@ -158,11 +158,11 @@ class DistribucionTest(unittest.TestCase):
                  "Cuando ocurre una solicitud ficticia, el equipo registra "
                  "los responsables y confirma el objetivo del trabajo antes "
                  "de ajustar las herramientas e iniciar las revisiones.\n")
-        file.write_text(content,encoding="utf8")
+        file.write_text(content,encoding="utf8", newline='\n')
         out=create_ficha(self.vault,"proceso","Operación sintética",
                          content_file=file,sources=["F-DEMO-001"],
                          tags=["operacion/procesos"])
-        meta,body=split_frontmatter(Path(out["ruta"]).read_text())
+        meta,body=split_frontmatter(Path(out["ruta"]).read_text(encoding='utf-8'))
         self.assertEqual(body,content)
         self.assertTrue(out["nota_desarrollada"])
         self.assertEqual(meta["tags"],["operacion/procesos"])
@@ -201,7 +201,7 @@ class DistribucionTest(unittest.TestCase):
         from lib_ce import make_note
         fm,body=split_frontmatter(self.doc.read_text(encoding="utf8"))
         fm["id"]="ID-DIRECCION-CANONICA"
-        self.doc.write_text(make_note(fm,body),encoding="utf8")
+        self.doc.write_text(make_note(fm,body),encoding="utf8", newline='\n')
         p=self.sample()
         p["unidades"][0].update({"accion":"crear","id_existente":None})
         self.save(p)

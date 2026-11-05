@@ -33,7 +33,7 @@ class CicloRevisionTest(unittest.TestCase):
             "## Identidad\n\n<!-- kb:id=D01-B001 -->\n"
             "El proceso sintético organiza las solicitudes de trabajo en un registro "
             "y permite que el equipo compruebe quién las recibe y cuándo.\n\n"
-            "## CONTROL\n\nMaterial ficticio para prueba de cambios.\n",encoding="utf8")
+            "## CONTROL\n\nMaterial ficticio para prueba de cambios.\n",encoding="utf8", newline='\n')
         create_source(self.vault,"F-DEMO-001","Fuente sintética","urn:demo:001","nota")
         self.record=create_document(self.vault,"D01","Dirección sintética",self.original,
                                     sources=["F-DEMO-001"],editorial="en_revision")
@@ -41,10 +41,10 @@ class CicloRevisionTest(unittest.TestCase):
         self.before=self.doc.read_bytes()
         self.next=self.work/"borrador_v2.md"
         self.next.write_text(
-            self.original.read_text().replace(
+            self.original.read_text(encoding='utf-8').replace(
                 "organiza las solicitudes de trabajo en un registro",
                 "organiza las solicitudes de trabajo en un registro de tareas auditables"
-            ),encoding="utf8")
+            ),encoding="utf8", newline='\n')
 
     def prepare(self):
         return preparar(self.vault,"D01",self.next)
@@ -78,6 +78,16 @@ class CicloRevisionTest(unittest.TestCase):
 
     def test_preserve_document_permissions_and_protect_history(self):
         import stat
+        if sys.platform == 'win32':
+            from windows_fs import security_descriptor, is_private_directory
+            original = security_descriptor(self.doc)
+            p = self.prepare()
+            self.assertTrue(is_private_directory(self.vault/'90_Sistema'/'Propuestas_DX'))
+            out = self.apply(p)
+            self.assertEqual(security_descriptor(self.doc), original)
+            self.assertTrue(is_private_directory(self.vault/'90_Sistema'/'Historial_DX'))
+            self.assertTrue(Path(out['historial']).is_dir())
+            return
         self.doc.chmod(0o600)
         p=self.prepare()
         self.assertEqual(stat.S_IMODE((self.vault/"90_Sistema"/"Propuestas_DX").stat().st_mode),0o700)
@@ -91,7 +101,7 @@ class CicloRevisionTest(unittest.TestCase):
         out=self.apply(p)
         self.assertEqual(out["revision"],"0.2")
         self.assertFalse(out["aprobado"])
-        meta,body=split_frontmatter(self.doc.read_text())
+        meta,body=split_frontmatter(self.doc.read_text(encoding='utf-8'))
         self.assertEqual(meta["revision"],"0.2")
         self.assertEqual(meta["estado_editorial"],"en_revision")
         self.assertEqual(meta["doc_id"],"D01")
@@ -106,8 +116,8 @@ class CicloRevisionTest(unittest.TestCase):
 
     def test_corrective_source_is_reviewed_and_added_to_properties(self):
         create_source(self.vault,"F-DEMO-002","Corrección sintética","urn:demo:002","nota")
-        self.next.write_text(self.next.read_text()+
-            "\nCorrección sustentada por [[50_Fuentes/Corrección sintética|F-DEMO-002]].\n",encoding="utf8")
+        self.next.write_text(self.next.read_text(encoding='utf-8')+
+            "\nCorrección sustentada por [[50_Fuentes/Corrección sintética|F-DEMO-002]].\n",encoding="utf8", newline='\n')
         p=preparar(self.vault,"D01",self.next,sources=["F-DEMO-002"])
         self.assertEqual(self.doc.read_bytes(),self.before)
         self.assertEqual(p["fuentes_adicionales"],["F-DEMO-002"])
@@ -117,7 +127,7 @@ class CicloRevisionTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Huella de fuentes"):
             self.apply(p,source_sha="0"*64)
         out=self.apply(p,source_sha=p["sha_fuentes"])
-        meta,_=split_frontmatter(self.doc.read_text())
+        meta,_=split_frontmatter(self.doc.read_text(encoding='utf-8'))
         self.assertEqual(meta["revision"],"0.2")
         self.assertEqual(meta["estado_editorial"],"en_revision")
         self.assertEqual(len(meta["fuentes"]),2)
@@ -128,7 +138,7 @@ class CicloRevisionTest(unittest.TestCase):
                            responsable="operador de prueba",
                            referencia_autorizacion="restauración sintética",
                            backup_dir=self.backup)
-        meta,_=split_frontmatter(self.doc.read_text())
+        meta,_=split_frontmatter(self.doc.read_text(encoding='utf-8'))
         self.assertEqual(restored["revision"],"0.3")
         self.assertEqual(meta["fuentes"],["[[50_Fuentes/Fuente sintética]]"])
 
@@ -155,7 +165,7 @@ class CicloRevisionTest(unittest.TestCase):
                                        "--respaldo",str(self.backup)],
                                capture_output=True,text=True,check=True)
         self.assertEqual(json.loads(applied.stdout)["revision"],"0.2")
-        meta,_=split_frontmatter(self.doc.read_text())
+        meta,_=split_frontmatter(self.doc.read_text(encoding='utf-8'))
         self.assertIn("[[50_Fuentes/Corrección sintética]]",meta["fuentes"])
 
     def test_restore_creates_forward_revision_and_keeps_history(self):
@@ -167,7 +177,7 @@ class CicloRevisionTest(unittest.TestCase):
                           referencia_autorizacion="restaurar demo-002",
                           backup_dir=self.backup)
         self.assertEqual(restored["revision"],"0.3")
-        meta,body=split_frontmatter(self.doc.read_text())
+        meta,body=split_frontmatter(self.doc.read_text(encoding='utf-8'))
         self.assertEqual(meta["revision"],"0.3")
         self.assertEqual(meta["estado_editorial"],"en_revision")
         self.assertNotIn("auditables",body)
@@ -200,17 +210,17 @@ class CicloRevisionTest(unittest.TestCase):
         self.assertEqual(self.doc.read_bytes(),self.before)
 
     def test_approved_document_cannot_be_rewritten(self):
-        meta,body=split_frontmatter(self.doc.read_text())
+        meta,body=split_frontmatter(self.doc.read_text(encoding='utf-8'))
         meta["estado_editorial"]="aprobado"
-        self.doc.write_text(make_note(meta,body))
+        self.doc.write_text(make_note(meta,body), encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError):
             previsualizar(self.vault,"D01",self.next)
 
     def test_does_not_remove_block_ids_or_bypass_links(self):
-        self.next.write_text("# Documento falso\n\n"+("contenido sin bloques. "*10)+"\n")
+        self.next.write_text("# Documento falso\n\n"+("contenido sin bloques. "*10)+"\n", encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError):
             self.prepare()
-        self.next.write_text(self.original.read_text()+"\n[[NOTA-QUE-NO-EXISTE]]\n")
+        self.next.write_text(self.original.read_text(encoding='utf-8')+"\n[[NOTA-QUE-NO-EXISTE]]\n", encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError):
             self.prepare()
         self.assertEqual(self.doc.read_bytes(),self.before)
@@ -230,6 +240,20 @@ class CicloRevisionTest(unittest.TestCase):
         self.assertEqual(validate(self.vault)["errores"],[])
 
     def test_external_backup_is_owner_private_and_rejects_world_readable(self):
+        if sys.platform == 'win32':
+            from windows_fs import ensure_private_directory, security_descriptor, set_security_descriptor
+            ensure_private_directory(self.backup)
+            original = security_descriptor(self.backup)
+            try:
+                set_security_descriptor(self.backup, 'D:P(A;OICI;FA;;;WD)')
+                p = self.prepare()
+                with self.assertRaises(ValueError):
+                    self.apply(p)
+                self.assertEqual(self.doc.read_bytes(), self.before)
+            finally:
+                set_security_descriptor(self.backup, original)
+            self.assertEqual(self.apply(p)['revision'], '0.2')
+            return
         self.backup.mkdir(mode=0o755)
         self.backup.chmod(0o755)
         p=self.prepare()
@@ -242,16 +266,16 @@ class CicloRevisionTest(unittest.TestCase):
     def test_restoration_can_remove_block_added_in_intermediate_revision(self):
         self.next.write_text(self.next.read_text(encoding="utf8")+
                              "\n<!-- kb:id=D01-B002 -->\nBloque adicional creado durante la revisión.\n",
-                             encoding="utf8")
+                             encoding="utf8", newline='\n')
         modified=self.apply(self.prepare())
-        self.assertIn("D01-B002",self.doc.read_text())
+        self.assertIn("D01-B002",self.doc.read_text(encoding='utf-8'))
         current_hash=hashlib.sha256(self.doc.read_bytes()).hexdigest()
         result=restaurar(self.vault,"D01",modified["historial_id"],
                          expected_sha=current_hash,responsable="revisor autorizado",
                          referencia_autorizacion="Restauración sintética validada",
                          backup_dir=self.backup)
         self.assertEqual(result["revision"],"0.3")
-        self.assertNotIn("D01-B002",self.doc.read_text())
+        self.assertNotIn("D01-B002",self.doc.read_text(encoding='utf-8'))
         self.assertEqual(validate(self.vault)["errores"],[])
 
     def test_manifest_completion_failure_restores_original(self):

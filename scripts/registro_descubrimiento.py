@@ -50,7 +50,7 @@ def capture_discovery(vault_path: Path, title: str, content_file: Path,
         "- [ ] Revisar con el propietario antes de integrar como D/X o entidad.\n"
     )
     target.parent.mkdir(parents=True, exist_ok=True)
-    with target.open("x", encoding="utf8") as handle:
+    with target.open("x", encoding="utf8", newline='\n') as handle:
         handle.write(make_note(front, body))
     return {"id": nid, "ruta": str(target), "estado": "borrador_no_autoritativo",
             "fuentes": sources or [], "aprobado": False,

@@ -208,7 +208,7 @@ def entregar(report: dict, output: Path) -> dict:
     output.mkdir(mode=0o700, parents=True, exist_ok=False)
     json_file = output / "REPORTE_INTEGRACION_SANEADO.json"
     summary_file = output / "RESUMEN_INTEGRACION.md"
-    json_file.write_text(json.dumps(report, ensure_ascii=False, indent=2)+"\n", encoding="utf8")
+    json_file.write_text(json.dumps(report, ensure_ascii=False, indent=2)+"\n", encoding="utf8", newline='\n')
     lines = [
         "# Informe de integración local (sin documentos empresariales)",
         "",
@@ -227,7 +227,7 @@ def entregar(report: dict, output: Path) -> dict:
         "la segunda computadora y la aprobación empresarial no son comprobadas por este script.",
         "Nada fue migrado, editado ni publicado en la bóveda.",
     ]
-    summary_file.write_text("\n".join(lines)+"\n", encoding="utf8")
+    summary_file.write_text("\n".join(lines)+"\n", encoding="utf8", newline='\n')
     archive = output / "CE_INTEGRACION_LOCAL_SANEADA.zip"
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as z:
         z.write(json_file, "REPORTE_INTEGRACION_SANEADO.json")

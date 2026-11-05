@@ -1,0 +1,2 @@
+# Versioned text and hashed synthetic fixtures have identical bytes on every OS.
+* text=auto eol=lf

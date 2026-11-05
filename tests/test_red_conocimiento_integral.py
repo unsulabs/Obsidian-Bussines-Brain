@@ -28,7 +28,7 @@ class RedPortableIntegralTest(unittest.TestCase):
         private=Path(temp.name)
         vault=create("NEGOCIO-PORTABLE","Empresa hipotética",private/"empresa")
         self.assertEqual(validate(vault)["errores"],[])
-        config=(vault/"90_Sistema"/"config_empresa.yaml").read_text()
+        config=(vault/"90_Sistema"/"config_empresa.yaml").read_text(encoding='utf-8')
         self.assertIn("0.4.0-rc.1",config)
         vista=(vault/"90_Sistema"/"Vistas"/"Ofertas.base")
         original_vista=vista.read_bytes()
@@ -40,7 +40,7 @@ class RedPortableIntegralTest(unittest.TestCase):
             "## Modelo y criterios\n\n<!-- kb:id=D01-B001 -->\n"
             "La organización ficticia decide cuáles actividades priorizar y "
             "cómo transmitir las decisiones del equipo que atiende sus proyectos.\n\n"
-            "## CONTROL\n\nNo existen ventas reales en este ejemplo.\n",encoding="utf8")
+            "## CONTROL\n\nNo existen ventas reales en este ejemplo.\n",encoding="utf8", newline='\n')
         d01=create_document(vault,"D01","Dirección ficticia",direction,
                             tags=["direccion/modelo-valor"],sources=["F-TEST-001"],
                             editorial="en_revision")
@@ -69,7 +69,7 @@ class RedPortableIntegralTest(unittest.TestCase):
                 {"origen":"direccion","destino":"proceso","predicado":"refiere_a",
                  "ambito":"trabajo operativo","fundamento":"La síntesis dirige al procedimiento de ejecución sin reescribirlo."}]}
         plan_file=private/"plan.json"
-        plan_file.write_text(json.dumps(plan,ensure_ascii=False))
+        plan_file.write_text(json.dumps(plan,ensure_ascii=False), encoding='utf-8', newline='\n')
         tracked=set(vault.rglob("*.md"))
         plan_result=planificar(vault,plan_file)
         self.assertTrue(plan_result["plan_consistente"])
@@ -89,7 +89,7 @@ class RedPortableIntegralTest(unittest.TestCase):
              ["operacion/procesos"])
         ]:
             content=private/(typ+".md")
-            content.write_text(text,encoding="utf8")
+            content.write_text(text,encoding="utf8", newline='\n')
             item=create_ficha(vault,typ,title,content_file=content,
                              sources=["F-TEST-001"],tags=tags)
             paths.append(item)
@@ -120,10 +120,10 @@ class RedPortableIntegralTest(unittest.TestCase):
         self.assertEqual(validate(vault)["errores"],[])
         self.assertEqual(Path(d01["ruta"]).read_bytes(),original_d01)
         self.assertEqual(vista.read_bytes(),original_vista)
-        markdown=(vault/MAP_MD).read_text()
+        markdown=(vault/MAP_MD).read_text(encoding='utf-8')
         self.assertIn("Servicio imaginario",markdown)
         self.assertIn("comercial/ofertas",markdown)
-        canvas=json.loads((vault/MAP_CANVAS).read_text())
+        canvas=json.loads((vault/MAP_CANVAS).read_text(encoding='utf-8'))
         self.assertEqual(len(canvas["edges"]),2)
 
         # Simulación de otra sesión/otro proceso recuperando desde archivos, no del chat.

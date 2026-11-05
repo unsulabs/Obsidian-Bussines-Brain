@@ -48,14 +48,14 @@ class BasesMigrationTest(unittest.TestCase):
         self.simulate_previous_release()
         altered = self.vault / "90_Sistema" / "Vistas" / "Ofertas.base"
         altered.write_text(
-            altered.read_text().replace('tipo == "oferta"', 'tipo == "otro_tipo"')
-            + "\n# filtro empresarial diferente\n", encoding="utf8")
+            altered.read_text(encoding='utf-8').replace('tipo == "oferta"', 'tipo == "otro_tipo"')
+            + "\n# filtro empresarial diferente\n", encoding="utf8", newline='\n')
         p = plan(self.vault)
         self.assertEqual(p["estado"], "BLOQUEADO")
         self.assertEqual(p["bloqueadas"], 1)
         with self.assertRaises(ValueError):
             apply(self.vault, self.work / "respaldos")
-        self.assertIn("# filtro empresarial diferente", altered.read_text())
+        self.assertIn("# filtro empresarial diferente", altered.read_text(encoding='utf-8'))
         self.assertFalse((self.work / "respaldos").exists())
 
     def test_safe_filter_only_migration_preserves_custom_layout(self):
@@ -64,13 +64,13 @@ class BasesMigrationTest(unittest.TestCase):
         docs = self.vault/"90_Sistema"/"Vistas"/"Documentos.base"
         offers = self.vault/"90_Sistema"/"Vistas"/"Ofertas.base"
         # Cambios sintéticos de presentación; mismo filtro 0.2, sin información real.
-        docs.write_text(docs.read_text().replace(
+        docs.write_text(docs.read_text(encoding='utf-8').replace(
             """- 'tipo == "documento"'""", '- tipo == "documento"'
-        ).replace('name: "Documentos"', 'name: Documentos'), encoding="utf8")
-        data = yaml.safe_load(offers.read_text())
+        ).replace('name: "Documentos"', 'name: Documentos'), encoding="utf8", newline='\n')
+        data = yaml.safe_load(offers.read_text(encoding='utf-8'))
         data["views"][1]["groupBy"]["property"]="tipo"
         offers.write_text(yaml.safe_dump(data,allow_unicode=True,sort_keys=False),
-                          encoding="utf8")
+                          encoding="utf8", newline='\n')
         original_docs=docs.read_bytes()
         original_offers=offers.read_bytes()
         suffix_docs=original_docs.split(b"views:\n",1)[1]
@@ -88,7 +88,7 @@ class BasesMigrationTest(unittest.TestCase):
         self.assertEqual(result["filtros_sin_perder_personalizaciones"],2)
         self.assertEqual(docs.read_bytes().split(b"views:\n",1)[1],suffix_docs)
         self.assertEqual(offers.read_bytes().split(b"views:\n",1)[1],suffix_offers)
-        self.assertEqual(yaml.safe_load(offers.read_text())["views"][1]["groupBy"]["property"],"tipo")
+        self.assertEqual(yaml.safe_load(offers.read_text(encoding='utf-8'))["views"][1]["groupBy"]["property"],"tipo")
         # Las dos personalizadas son funcionalmente actuales aunque no idénticas en bytes.
         refreshed=plan(self.vault)
         self.assertEqual(refreshed["estado"],"AL_DIA")
@@ -111,11 +111,11 @@ class BasesMigrationTest(unittest.TestCase):
                     group["property"]=group["property"].replace("note.","")
             file.write_text(yaml.safe_dump(
                 data,allow_unicode=True,sort_keys=False)
-                + "\n# reserializacion_de_GUI_sintetica\n",encoding="utf8")
+                + "\n# reserializacion_de_GUI_sintetica\n",encoding="utf8", newline='\n')
         before={p.name:p.read_bytes().split(b"views:\n",1)[1] for p in views.glob("*.base")}
         workspace=self.vault/".obsidian"/"workspace.json"
         workspace.parent.mkdir(exist_ok=True)
-        workspace.write_text('{"synthetic":"gui_state"}',encoding="utf8")
+        workspace.write_text('{"synthetic":"gui_state"}',encoding="utf8", newline='\n')
         prior_workspace=workspace.read_bytes()
         plan_data=plan(self.vault)
         self.assertEqual(plan_data["estado"],"LISTO")
@@ -131,7 +131,7 @@ class BasesMigrationTest(unittest.TestCase):
             self.assertEqual(before[p.name],p.read_bytes().split(b"views:\n",1)[1])
         self.assertEqual(workspace.read_bytes(),prior_workspace)
         backup=Path(result["respaldo"])
-        meta=json.loads((backup/"manifiesto.json").read_text())
+        meta=json.loads((backup/"manifiesto.json").read_text(encoding='utf-8'))
         self.assertEqual(len(meta["instantanea_vistas"]),16)
         self.assertEqual(meta["sha_plan"],plan_data["sha_plan"])
         self.assertEqual((backup/".obsidian"/"workspace.json").read_bytes(),prior_workspace)

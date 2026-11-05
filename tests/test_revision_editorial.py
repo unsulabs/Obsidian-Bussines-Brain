@@ -35,7 +35,7 @@ class EvaluacionDXTest(unittest.TestCase):
             "La revisión sintética exige explicar quién decide y por qué,"
             " sin simular contratos ni ingresos.\n\n"
             "## CONTROL\n\nEsta demostración no afirma datos de ninguna empresa real.\n",
-            encoding="utf8")
+            encoding="utf8", newline='\n')
         result=create_document(self.vault,"D01","Dirección ficticia",self.body,
                                sources=["F-PRUEBA-01"],editorial="en_revision")
         self.file=Path(result["ruta"])
@@ -46,7 +46,7 @@ class EvaluacionDXTest(unittest.TestCase):
     def set_coverage(self,coverage):
         fm,body=split_frontmatter(self.file.read_text(encoding="utf8"))
         fm["cobertura"]=coverage
-        self.file.write_text(make_note(fm,body),encoding="utf8")
+        self.file.write_text(make_note(fm,body),encoding="utf8", newline='\n')
 
     def sha(self):
         return hashlib.sha256(self.file.read_bytes()).hexdigest()
@@ -61,7 +61,7 @@ class EvaluacionDXTest(unittest.TestCase):
              "revisor":"Responsable ficticio",
              "referencia_decision":"Acta interna sintética con revisión del alcance",
              "alcance_bloques":scope,"gates":gates}
-        self.act.write_text(json.dumps(act,ensure_ascii=False),encoding="utf8")
+        self.act.write_text(json.dumps(act,ensure_ascii=False),encoding="utf8", newline='\n')
         return act
 
     def test_gates_create_audit_not_approval(self):
@@ -97,9 +97,9 @@ class EvaluacionDXTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             registrar_evaluacion(self.vault,"D01",self.act,expected_sha=self.sha())
         self.write_act()
-        obj=json.loads(self.act.read_text())
+        obj=json.loads(self.act.read_text(encoding='utf-8'))
         del obj["gates"]["G7"]
-        self.act.write_text(json.dumps(obj))
+        self.act.write_text(json.dumps(obj), encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError):
             registrar_evaluacion(self.vault,"D01",self.act,expected_sha=self.sha())
 
@@ -135,9 +135,9 @@ class EvaluacionDXTest(unittest.TestCase):
         eid=registrar_evaluacion(self.vault,"D01",self.act,
                                  expected_sha=self.sha())["evaluacion_id"]
         oldsha=self.sha()
-        fm,body=split_frontmatter(self.file.read_text())
+        fm,body=split_frontmatter(self.file.read_text(encoding='utf-8'))
         fm["fecha_corte"]="2026-10-27"
-        self.file.write_text(make_note(fm,body))
+        self.file.write_text(make_note(fm,body), encoding='utf-8', newline='\n')
         before=self.file.read_bytes()
         with self.assertRaises(ValueError):
             aprobar_documento(self.vault,eid,expected_sha=oldsha,

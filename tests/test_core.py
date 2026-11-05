@@ -45,7 +45,7 @@ class CoreTest(unittest.TestCase):
         self.assertEqual(result['errores'], [])
         self.assertEqual(result['traspasos'], 1)
         self.assertEqual(result['bloques'], 5)
-        canvas = json.loads((self.vault / '00_Mapas' / 'Mapa_de_relaciones.canvas').read_text())
+        canvas = json.loads((self.vault / '00_Mapas' / 'Mapa_de_relaciones.canvas').read_text(encoding='utf-8'))
         self.assertEqual(len(canvas['nodes']), 6)
         self.assertGreaterEqual(len(canvas['edges']), 4)
         g = graph(self.vault)
@@ -54,7 +54,7 @@ class CoreTest(unittest.TestCase):
         self.assertIn('sustentado_por', preds)
         self.assertIn('pertenece_a', preds)
         self.assertIn('autoridad_en_precio_modulo_estandar', preds)
-        self.assertIn('no_ejecutada', (self.vault / '90_Sistema' / 'Pruebas_de_recuperacion.md').read_text())
+        self.assertIn('no_ejecutada', (self.vault / '90_Sistema' / 'Pruebas_de_recuperacion.md').read_text(encoding='utf-8'))
 
     def test_non_destructive(self):
         import_package(MANIFEST, self.vault)
@@ -65,7 +65,7 @@ class CoreTest(unittest.TestCase):
 
     def test_broken_link_detected(self):
         note = self.vault / '00_Mapas' / 'Mapa_de_empresa.md'
-        note.write_text(note.read_text()+'\n[[No_existe_este_documento]]\n')
+        note.write_text(note.read_text(encoding='utf-8')+'\n[[No_existe_este_documento]]\n', encoding='utf-8', newline='\n')
         self.assertTrue(any('enlace roto' in e for e in validate(self.vault)['errores']))
 
     def test_company_isolation(self):
@@ -80,7 +80,7 @@ class CoreTest(unittest.TestCase):
         import shutil
         base = Path(self.temp.name) / 'tampered'
         shutil.copytree(MANIFEST.parent, base)
-        (base/'Ejemplo_sintetico'/'D03_Portafolio.md').write_text('alterado')
+        (base/'Ejemplo_sintetico'/'D03_Portafolio.md').write_text('alterado', encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError) as ctx: import_package(base/'manifest.json', self.vault)
         self.assertIn('HASH document', str(ctx.exception))
         self.assertEqual(list((self.vault/'10_Conocimiento').glob('*.md')), [])
@@ -90,9 +90,9 @@ class CoreTest(unittest.TestCase):
         base = Path(self.temp.name) / 'sensitive'
         shutil.copytree(MANIFEST.parent, base)
         manifest = base / 'manifest.json'
-        obj = json.loads(manifest.read_text())
+        obj = json.loads(manifest.read_text(encoding='utf-8'))
         obj['sources'][0]['access'] = 'restringido'
-        manifest.write_text(json.dumps(obj, ensure_ascii=False))
+        manifest.write_text(json.dumps(obj, ensure_ascii=False), encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError) as ctx:
             import_package(manifest, self.vault)
         self.assertIn('no tiene ACL', str(ctx.exception))
@@ -103,7 +103,7 @@ class CoreTest(unittest.TestCase):
         create('ACME-TEST', "Compañía O'Connor", other)
         from lib_ce import split_frontmatter
         import yaml
-        company = yaml.safe_load((other / '90_Sistema' / 'config_empresa.yaml').read_text())
+        company = yaml.safe_load((other / '90_Sistema' / 'config_empresa.yaml').read_text(encoding='utf-8'))
         self.assertEqual(company['company_name'], "Compañía O'Connor")
         self.assertEqual(validate(other)['errores'], [])
 

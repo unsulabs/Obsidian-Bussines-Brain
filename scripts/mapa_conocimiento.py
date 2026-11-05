@@ -16,6 +16,7 @@ import stat
 
 from documentos import _is_symlinked
 from lib_ce import notes_in_vault, split_frontmatter
+from platform_fs import private_directory
 from operacion import safe_vault, utcnow
 from relaciones import query as query_relations
 from revisiones_dx import _backup_root, _write_atomic
@@ -272,7 +273,7 @@ def publicar(vault_path:Path,*,sha_actual:str,sha_propuesto:str,
     if _is_symlinked(lock) or _is_symlinked(locks):
         raise ValueError("Bloqueo enlazado: operación rechazada")
     try:
-        with lock.open("x",encoding="utf8") as handle:
+        with lock.open("x",encoding="utf8", newline='\n') as handle:
             handle.write("Generación de mapa: "+utcnow()+"\n")
     except FileExistsError as exc:
         raise ValueError("Otra generación de mapa sigue en curso") from exc
@@ -284,9 +285,7 @@ def publicar(vault_path:Path,*,sha_actual:str,sha_propuesto:str,
         if old and all(_same_projection(n,old[n],new[n]) for n in new):
             return {"resultado":"SIN_CAMBIOS","nodos":len(report["nodos"])}
         root=_backup_root(vault,backup_dir)
-        root.mkdir(mode=0o700,parents=True,exist_ok=True)
-        if stat.S_IMODE(root.stat().st_mode)&0o077:
-            raise ValueError("Respaldo externo no es privado (permisos >0700)")
+        private_directory(root)
         dest=root/("mapa-"+uuid4().hex[:12])
         dest.mkdir(mode=0o700,parents=True,exist_ok=False)
         for name,content in old.items():
@@ -295,7 +294,7 @@ def publicar(vault_path:Path,*,sha_actual:str,sha_propuesto:str,
                   "rutas":list(new),"sha_original":observed,
                   "sha_nuevo":sha_propuesto,"registrado_en":utcnow()}
         (dest/"manifest.json").write_text(
-            json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
+            json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf8", newline='\n')
         changed=[]
         try:
             for name,data in new.items():
@@ -313,7 +312,7 @@ def publicar(vault_path:Path,*,sha_actual:str,sha_propuesto:str,
                     raise ValueError("Huella posterior no coincide: "+name)
             manifest["estado"]="aplicado"
             (dest/"manifest.json").write_text(
-                json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
+                json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf8", newline='\n')
         except Exception:
             failures=[]
             for name in reversed(changed):

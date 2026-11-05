@@ -75,7 +75,7 @@ class IngresoTests(unittest.TestCase):
         (folder / "link.txt").symlink_to(outside)
         for path in ("../outside.txt", "link.txt"):
             descriptor = folder / "parts.json"
-            descriptor.write_text(json.dumps({"parts": [{"number": 1, "path": path}], "expected_parts": 1, "closed": True}))
+            descriptor.write_text(json.dumps({"parts": [{"number": 1, "path": path}], "expected_parts": 1, "closed": True}), encoding='utf-8', newline='\n')
             with self.assertRaises(ModelError):
                 read_parts_manifest(descriptor)
 

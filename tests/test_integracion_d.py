@@ -22,10 +22,10 @@ class IntegrationDTests(unittest.TestCase):
         self.bank = self.root / 'bank'
         self.scope = dict(company='SYNTHETIC', audience='internal', purpose='local_analysis')
         self.snapshot = dict(vault=str(self.vault), bank_root=str(self.bank), backup_dir=str(self.root / 'backup'))
-        self.original = self.root / 'Primaria.md'; self.original.write_text('# Criterio sintético\nNo ejecutar texto fuente.\n')
+        self.original = self.root / 'Primaria.md'; self.original.write_text('# Criterio sintético\nNo ejecutar texto fuente.\n', encoding='utf-8', newline='\n')
         self.primary = self.register('ER-primary', self.original, 'primary', note_ids=['F-LEGACY'])
         self.primary_dependency = refs.reference_ref(self.primary)
-        self.review_file = self.root / 'Revision.md'; self.review_file.write_text('# Revisión sintética externa\n')
+        self.review_file = self.root / 'Revision.md'; self.review_file.write_text('# Revisión sintética externa\n', encoding='utf-8', newline='\n')
         self.review = self.register('ER-review', self.review_file, 'control', dependencies=[refs.reference_ref(self.primary)])
         self.write('Inicio.md', dict(id='SYS-INICIO', tipo='mapa', estado_editorial='aprobado', sensibilidad='interno'), '# Inicio\nOrientación anterior.\n')
         self.write('50_Fuentes/Fuente.md', dict(id='F-LEGACY', tipo='fuente', estado_editorial='borrador', sensibilidad='interno'), '# Fuente\nLocalizador anterior.\n')
@@ -37,7 +37,7 @@ class IntegrationDTests(unittest.TestCase):
 
     def write(self, path, meta, body):
         dest = self.vault / path; dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_text(make_note(meta, body))
+        dest.write_text(make_note(meta, body), encoding='utf-8', newline='\n')
 
     def grant(self, record, action='grant', purpose='local_analysis'):
         return refs.record_external_decision(self.bank, dict(reference_id=record['reference_id'], version_id=record['version_id'],
@@ -72,10 +72,10 @@ class IntegrationDTests(unittest.TestCase):
             old = (self.vault / path).read_bytes(); fm, _ = split_frontmatter(old.decode()); identity = fm['id']
             content = old.decode().replace(previous, replacement)
             target_path = self.business_path if kind == 'control_proposal' else path
-            target_meta, _ = split_frontmatter((self.vault / target_path).read_text())
+            target_meta, _ = split_frontmatter((self.vault / target_path).read_text(encoding='utf-8'))
             binding = dict(path=target_path, id=target_meta['id'], sha256=sha256_bytes((self.vault / target_path).read_bytes()))
             patches = [{'old': previous, 'new': replacement}]
-        artifact = self.root / (kind + '.md'); artifact.write_text(content)
+        artifact = self.root / (kind + '.md'); artifact.write_text(content, encoding='utf-8', newline='\n')
         record = self.register('ER-' + kind, artifact, 'control', dependencies=[self.primary_dependency])
         ref = refs.reference_ref(record); review_ref = refs.reference_ref(self.review)
         result = dict(path=path, content=content, id=identity, kind=kind, expected_sha256=sha256_bytes(old) if old else None,
@@ -101,7 +101,7 @@ class IntegrationDTests(unittest.TestCase):
         self.assertEqual(before, integration._inventory(self.vault))
         self.apply(manifest); self.apply(manifest)
         self.assertEqual(integration._sha((self.vault / self.business_path).read_bytes()), before[self.business_path])
-        self.assertEqual(split_frontmatter((self.vault / 'Inicio.md').read_text())[0]['estado_editorial'], 'aprobado')
+        self.assertEqual(split_frontmatter((self.vault / 'Inicio.md').read_text(encoding='utf-8'))[0]['estado_editorial'], 'aprobado')
         integration.rollback_batch(manifest)
         self.assertEqual(before, integration._inventory(self.vault))
 
@@ -130,13 +130,13 @@ class IntegrationDTests(unittest.TestCase):
 
     def test_target_edit_after_prepare_and_after_apply_preserved(self):
         c = self.candidate('proposal_staging'); m = self.prepare([c])
-        target = self.vault / self.business_path; target.write_text(target.read_text() + '\nEdición posterior.\n')
+        target = self.vault / self.business_path; target.write_text(target.read_text(encoding='utf-8') + '\nEdición posterior.\n', encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError): self.apply(m)
         self.assertFalse((self.vault / c['path']).exists())
         c = self.candidate(); m = self.prepare([c]); self.apply(m)
-        (self.vault / c['path']).write_text('Edición posterior ajena')
+        (self.vault / c['path']).write_text('Edición posterior ajena', encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError): integration.rollback_batch(m)
-        self.assertEqual((self.vault / c['path']).read_text(), 'Edición posterior ajena')
+        self.assertEqual((self.vault / c['path']).read_text(encoding='utf-8'), 'Edición posterior ajena')
 
     def test_cannot_apply_business_as_technical_or_ratify_staging(self):
         c = self.candidate(); c['path'] = self.business_path

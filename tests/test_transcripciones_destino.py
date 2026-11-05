@@ -32,7 +32,7 @@ class DestinationTests(unittest.TestCase):
         self.bind()
 
     def bind(self):
-        self.policy_path.write_text(json.dumps(self.policy))
+        self.policy_path.write_text(json.dumps(self.policy), encoding='utf-8', newline='\n')
         self.binding = dict(path=str(self.policy_path), sha256=ti._sha(self.policy_path.read_bytes()))
         self.profile = dict(self.f.profile, destination_profile=self.binding, vault=str(self.vault))
         self.snapshot = dict(vault=str(self.vault), backup_dir=str(self.root / 'backup'),
@@ -76,7 +76,7 @@ class DestinationTests(unittest.TestCase):
             destination(self.binding, self.vault, dict(self.f.fixture.scope, purpose='export'))
         m = ti.prepare_batch(candidates, self.snapshot)
         self.policy['active'] = False
-        self.policy_path.write_text(json.dumps(self.policy))
+        self.policy_path.write_text(json.dumps(self.policy), encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError, 'DESTINATION_POLICY_CHANGED'):
             self.apply(m)
         self.assertEqual(ti._inventory(self.vault), {})
@@ -116,10 +116,10 @@ class DestinationTests(unittest.TestCase):
         m = ti.prepare_batch(candidates, self.snapshot)
         self.apply(m)
         path = self.vault / candidates[0]['path']
-        path.write_text(path.read_text() + '\nManual edit\n')
+        path.write_text(path.read_text(encoding='utf-8') + '\nManual edit\n', encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError, 'Edición posterior'):
             ti.rollback_batch(m)
-        self.assertTrue(path.read_text().endswith('Manual edit\n'))
+        self.assertTrue(path.read_text(encoding='utf-8').endswith('Manual edit\n'))
 
     def test_existing_generic_base_is_not_rewritten(self):
         candidates = self.candidates()
@@ -127,14 +127,14 @@ class DestinationTests(unittest.TestCase):
         old = base['content'].replace('sensibilidad: restringido', 'sensibilidad: interno') + 'custom: preserved\n'
         path = self.vault / base['path']
         path.parent.mkdir(parents=True)
-        path.write_text(old)
+        path.write_text(old, encoding='utf-8', newline='\n')
         self.profile['vault_snapshot'] = {base['path']: old}
         m = ti.prepare_batch(self.candidates(), self.snapshot)
         self.apply(m)
-        self.assertIn('custom: preserved', path.read_text())
-        self.assertEqual(path.read_text(), old)
+        self.assertIn('custom: preserved', path.read_text(encoding='utf-8'))
+        self.assertEqual(path.read_text(encoding='utf-8'), old)
         ti.rollback_batch(m)
-        self.assertEqual(path.read_text(), old)
+        self.assertEqual(path.read_text(encoding='utf-8'), old)
 
     def test_partial_apply_and_revoked_policy_rollback(self):
         m = ti.prepare_batch(self.candidates(), self.snapshot)
@@ -143,25 +143,25 @@ class DestinationTests(unittest.TestCase):
                 raise RuntimeError('Synthetic crash')
         with patch('transcripciones_integracion._checkpoint', side_effect=crash), self.assertRaises(RuntimeError):
             self.apply(m)
-        self.policy_path.write_text('{}')
+        self.policy_path.write_text('{}', encoding='utf-8', newline='\n')
         ti.rollback_batch(m)
         self.assertEqual(ti._inventory(self.vault), {})
 
     def test_navigation_append_preserves_body_and_upgrades_metadata(self):
         text = '---\nid: NAV-start\ntipo: manual\nsensibilidad: interno\n---\n# Existing\n'
-        (self.vault / 'Inicio.md').write_text(text)
+        (self.vault / 'Inicio.md').write_text(text, encoding='utf-8', newline='\n')
         self.profile['vault_snapshot'] = {'Inicio.md': text}
         m = ti.prepare_batch(self.candidates(), self.snapshot)
         self.apply(m)
-        result = (self.vault / 'Inicio.md').read_text()
+        result = (self.vault / 'Inicio.md').read_text(encoding='utf-8')
         self.assertIn('sensibilidad: restringido', result)
         self.assertIn('# Existing\n', result)
         ti.rollback_batch(m)
-        self.assertEqual((self.vault / 'Inicio.md').read_text(), text)
+        self.assertEqual((self.vault / 'Inicio.md').read_text(encoding='utf-8'), text)
 
     def test_private_navigation_resealed_manifest_cannot_erase_or_change_body(self):
         text = '---\nid: NAV-start\ntipo: manual\nsensibilidad: interno\n---\n# Existing\nKeep instructions.\n'
-        (self.vault / 'Inicio.md').write_text(text)
+        (self.vault / 'Inicio.md').write_text(text, encoding='utf-8', newline='\n')
         self.profile['vault_snapshot'] = {'Inicio.md': text}
         manifest = ti.prepare_batch(self.candidates(), self.snapshot)
         before = ti._inventory(self.vault)

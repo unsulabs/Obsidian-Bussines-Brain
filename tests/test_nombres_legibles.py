@@ -36,12 +36,12 @@ class NombresLegiblesTest(unittest.TestCase):
         body = self.root/'documento.md'
         body.write_text('# Dirección del taller\n\n## Actividad\n\n'
                         'El taller ficticio registra necesidades y comprueba las decisiones '
-                        'antes de operar, usando la entrevista como fuente de trabajo.\n')
+                        'antes de operar, usando la entrevista como fuente de trabajo.\n', encoding='utf-8', newline='\n')
         self.document = create_document(self.vault, 'D01', 'Dirección del taller', body,
                                         sources=['F-DEMO-01'])
         capture = self.root/'captura.md'
         capture.write_text('El dueño dijo que el horario era lunes; luego corrigió a martes. '
-                           'Conservar la corrección como fuente primaria.', encoding='utf8')
+                           'Conservar la corrección como fuente primaria.', encoding='utf8', newline='\n')
         self.capture = capture_discovery(self.vault, 'Corrección del horario', capture,
                                          sources=['F-DEMO-01'])
         self.continuity = save_continuity(self.vault,
@@ -53,7 +53,7 @@ class NombresLegiblesTest(unittest.TestCase):
             {'id':self.capture['id'],'nombre':'Corrección del horario del taller'},
             {'id':'F-DEMO-01','nombre':'Entrevista sobre la operación del taller'},
             {'id':self.continuity['id'],'nombre':'2026 - Corrección del horario'},
-        ]}),encoding='utf8')
+        ]}),encoding='utf8', newline='\n')
 
     def test_plan_apply_preserves_ids_content_and_links(self):
         initial = {k:Path(v['ruta']).read_bytes() for k,v in
@@ -69,28 +69,28 @@ class NombresLegiblesTest(unittest.TestCase):
             p=path_by_id(self.vault,nid)
             self.assertIsNotNone(p)
             self.assertNotIn(nid,p.name)
-            fm,body=split_frontmatter(p.read_text())
+            fm,body=split_frontmatter(p.read_text(encoding='utf-8'))
             self.assertEqual(fm['id'],nid)
             self.assertTrue(body.strip())
             old_fm,old_body=split_frontmatter(initial[key].decode())
             self.assertEqual(old_fm['id'],fm['id'])
             self.assertEqual(old_body,body)
-        doc=path_by_id(self.vault,'D01').read_text()
+        doc=path_by_id(self.vault,'D01').read_text(encoding='utf-8')
         self.assertIn('[[50_Fuentes/Entrevista sobre la operación del taller]]',doc)
         self.assertTrue((self.root/'respaldo'/'manifest.json').is_file())
 
     def test_collision_and_stale_plan_do_not_write(self):
         another = self.root/'otra.md'
-        another.write_text('Segundo episodio sintético para probar una colisión de títulos.')
+        another.write_text('Segundo episodio sintético para probar una colisión de títulos.', encoding='utf-8', newline='\n')
         second = capture_discovery(self.vault,'Otra captura',another)
-        rows=json.loads(self.spec.read_text())
+        rows=json.loads(self.spec.read_text(encoding='utf-8'))
         rows['notas'].append({'id':second['id'],
                               'nombre':'Corrección del horario del taller'})
-        self.spec.write_text(json.dumps(rows))
+        self.spec.write_text(json.dumps(rows), encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError,'Colisión'):
             plan(self.vault,self.spec)
         rows['notas'][-1]['nombre']='Segunda captura distinta'
-        self.spec.write_text(json.dumps(rows))
+        self.spec.write_text(json.dumps(rows), encoding='utf-8', newline='\n')
         before=path_by_id(self.vault,'D01').read_bytes()
         with self.assertRaisesRegex(ValueError,'obsoleto'):
             apply(self.vault,self.spec,self.root/'respaldo','0'*64)
@@ -99,7 +99,7 @@ class NombresLegiblesTest(unittest.TestCase):
 
     def test_swap_of_existing_names_blocks_without_writing(self):
         second_input = self.root/'otra.md'
-        second_input.write_text('Segunda captura ficticia para probar intercambio de nombres.', encoding='utf8')
+        second_input.write_text('Segunda captura ficticia para probar intercambio de nombres.', encoding='utf8', newline='\n')
         second = capture_discovery(self.vault, 'Segunda captura', second_input)
         first_path = Path(self.capture['ruta'])
         second_path = Path(second['ruta'])
@@ -108,7 +108,7 @@ class NombresLegiblesTest(unittest.TestCase):
         spec.write_text(json.dumps({'notas':[
             {'id': self.capture['id'], 'nombre': second_path.stem},
             {'id': second['id'], 'nombre': first_path.stem},
-        ]}), encoding='utf8')
+        ]}), encoding='utf8', newline='\n')
         with self.assertRaisesRegex(ValueError, 'Destino ocupado'):
             plan(self.vault, spec)
         self.assertEqual(first_path.read_bytes(), first_bytes)
@@ -117,14 +117,14 @@ class NombresLegiblesTest(unittest.TestCase):
 
     def test_broken_link_blocks_plan(self):
         p=Path(self.capture['ruta'])
-        p.write_text(p.read_text()+'\n[[Nota inexistente]]\n')
+        p.write_text(p.read_text(encoding='utf-8')+'\n[[Nota inexistente]]\n', encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError,'Bóveda con errores previos'):
             plan(self.vault,self.spec)
 
     def test_markdown_link_to_old_path_blocks_plan(self):
         p=Path(self.capture['ruta'])
         old=Path(self.document['ruta']).relative_to(self.vault).as_posix()
-        p.write_text(p.read_text()+f'\n[Documento]({old})\n')
+        p.write_text(p.read_text(encoding='utf-8')+f'\n[Documento]({old})\n', encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ValueError,'Enlace Markdown a ruta antigua'):
             plan(self.vault,self.spec)
 

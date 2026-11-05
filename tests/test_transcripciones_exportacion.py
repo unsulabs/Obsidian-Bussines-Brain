@@ -32,14 +32,14 @@ class TranscripcionesExportacionTest(unittest.TestCase):
     def write(self, name, content):
         path = self.repo / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(content, encoding='utf8')
+        path.write_text(content, encoding='utf8', newline='\n')
 
     def git(self, *args):
         return subprocess.run(['git', '-C', str(self.repo), *args], check=True,
                               capture_output=True).stdout
 
     def test_git_ignores_private_containers_at_any_depth(self):
-        self.write('.gitignore', (ROOT / '.gitignore').read_text())
+        self.write('.gitignore', (ROOT / '.gitignore').read_text(encoding='utf-8'))
         self.git('init', '-q')
         for name in self.private:
             self.write(name, 'CORPUS_SINTETICO_PRIVADO')
@@ -55,7 +55,7 @@ class TranscripcionesExportacionTest(unittest.TestCase):
             self.write(name, 'producto')
         for name in private:
             self.write(name, 'CORPUS_SINTETICO_PRIVADO')
-        self.write('.gitignore', (ROOT / '.gitignore').read_text())
+        self.write('.gitignore', (ROOT / '.gitignore').read_text(encoding='utf-8'))
         self.git('init', '-q')
         self.git('config', 'user.name', 'Prueba')
         self.git('config', 'user.email', 'test@example.invalid')

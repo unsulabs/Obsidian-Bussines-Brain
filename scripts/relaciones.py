@@ -16,6 +16,7 @@ import stat
 from documentos import _is_symlinked
 from operacion import index_ids, local_sources, safe_vault, utcnow
 from lib_ce import split_frontmatter
+from platform_fs import private_directory
 
 RELROOT=Path("90_Sistema")/"Relaciones"
 REL_RE=re.compile(r"^REL-[A-F0-9]{12}$")
@@ -34,9 +35,7 @@ def _sha(data:bytes) -> str:
 def _private_dir(path:Path) -> None:
     if _is_symlinked(path):
         raise ValueError("Directorio con enlaces simbólicos no permitido")
-    path.mkdir(parents=True,exist_ok=True,mode=0o700)
-    if stat.S_IMODE(path.stat().st_mode)&0o077:
-        raise ValueError("El directorio de relaciones debe ser privado")
+    private_directory(path)
 
 
 def _notes(vault:Path) -> dict:
@@ -131,7 +130,7 @@ def propose(vault_path:Path, source_id:str, target_id:str, predicate:str, *,
     root=vault/RELROOT
     _private_dir(root)
     dest=root/(rid+".json")
-    with dest.open("x",encoding="utf8") as handle:
+    with dest.open("x",encoding="utf8", newline='\n') as handle:
         handle.write(json.dumps(entry,ensure_ascii=False,indent=2)+"\n")
     return {"relacion_id":rid,"ruta":str(dest),"estado":"propuesta","validada":False}
 
@@ -177,7 +176,7 @@ def confirm(vault_path:Path, relation_id:str, expected_sha:str, *,
             "registrado_en":utcnow(),"estado":"validada_por_revisor",
             "limite":"Declaración registrada; no verifica firma ni identidad del revisor"}
     out=vault/RELROOT/(vid+".json")
-    with out.open("x",encoding="utf8") as f:
+    with out.open("x",encoding="utf8", newline='\n') as f:
         f.write(json.dumps(record,ensure_ascii=False,indent=2)+"\n")
     return {"relacion_id":relation_id,"revision_id":vid,"estado":"validada_por_revisor",
             "autenticacion_externa":"NO_VERIFICADA"}

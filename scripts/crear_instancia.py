@@ -26,11 +26,11 @@ def create(company_id: str, name: str, dest: Path) -> Path:
                 if p.name == 'config_empresa.yaml':
                     config = yaml.safe_load(p.read_text(encoding='utf-8'))
                     config.update({'company_id': company_id, 'company_name': name})
-                    p.write_text(yaml.safe_dump(config, allow_unicode=True, sort_keys=False), encoding='utf-8')
+                    p.write_text(yaml.safe_dump(config, allow_unicode=True, sort_keys=False), encoding='utf-8', newline='\n')
                 else:
                     txt = p.read_text(encoding='utf-8')
                     txt = txt.replace('{{EMPRESA_ID}}', company_id).replace('{{EMPRESA_NOMBRE}}', name)
-                    p.write_text(txt, encoding='utf-8')
+                    p.write_text(txt, encoding='utf-8', newline='\n')
     except Exception:
         if dest.exists(): shutil.rmtree(dest)
         raise

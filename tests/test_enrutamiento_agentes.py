@@ -18,7 +18,7 @@ NEW_SKILLS = {
 
 
 def local_links(path):
-    for target in re.findall(r'\[[^\]]+\]\(([^)]+)\)', path.read_text()):
+    for target in re.findall(r'\[[^\]]+\]\(([^)]+)\)', path.read_text(encoding='utf-8')):
         if '://' not in target and not target.startswith('#'):
             yield target.split('#', 1)[0]
 
@@ -33,7 +33,7 @@ class EnrutamientoAgentesTests(unittest.TestCase):
     def test_skill_names_are_unique_and_discoverable(self):
         names = []
         for path in SKILLS.glob('*/SKILL.md'):
-            pieces = path.read_text().split('---', 2)
+            pieces = path.read_text(encoding='utf-8').split('---', 2)
             self.assertEqual(pieces[0], '')
             metadata = yaml.safe_load(pieces[1])
             self.assertEqual(metadata['name'], path.parent.name)
@@ -61,14 +61,14 @@ class EnrutamientoAgentesTests(unittest.TestCase):
     def test_reference_checker_rejects_missing_dependency(self):
         with tempfile.TemporaryDirectory() as folder:
             base = Path(folder)
-            (base / 'SKILL.md').write_text('[contrato](references/missing.md)\n')
+            (base / 'SKILL.md').write_text('[contrato](references/missing.md)\n', encoding='utf-8', newline='\n')
             self.assertEqual(missing_links(base), [('SKILL.md', 'references/missing.md')])
 
     def test_new_skills_have_contract_and_shared_boundary(self):
         # This asserts availability of a contract, not correctness of its reasoning.
         for name in NEW_SKILLS:
             path = SKILLS / name / 'SKILL.md'
-            text = path.read_text()
+            text = path.read_text(encoding='utf-8')
             for field in ('Trigger', 'Inputs', 'Outputs', 'Errores', 'Gate'):
                 self.assertIn('**' + field + ':**', text, (name, field))
             self.assertTrue(any(link.endswith('contrato-comun.md') for link in local_links(path)))
@@ -82,7 +82,7 @@ class EnrutamientoAgentesTests(unittest.TestCase):
         )
         for name, heading, acceptance_scope in contracts:
             with self.subTest(contract=name):
-                text = (ROOT / name).read_text()
+                text = (ROOT / name).read_text(encoding='utf-8')
                 self.assertIn(heading, text)
                 section = text.split(heading, 1)[1].split('\n## ', 1)[0]
                 paragraphs = section.split('\n\n')
@@ -98,7 +98,7 @@ class EnrutamientoAgentesTests(unittest.TestCase):
 
     def test_reception_template_resolves_from_external_bank_in_both_layouts(self):
         # Exercise the documented destination, not a new ingestion implementation.
-        text = (SKILLS / 'ce-extraer-meetgeek/references/recepcion-v1.md').read_text()
+        text = (SKILLS / 'ce-extraer-meetgeek/references/recepcion-v1.md').read_text(encoding='utf-8')
         template = re.search(r'Único destino de escritura del extractor: `([^`]+)`', text).group(1)
         with tempfile.TemporaryDirectory() as folder:
             base = Path(folder)

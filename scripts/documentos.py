@@ -52,8 +52,9 @@ def _trusted_macos_system_alias(part: Path) -> bool:
 def _is_symlinked(path: Path) -> bool:
     """Bloquea symlinks arbitrarios; admite sólo aliases fijos del SO."""
     item = path.expanduser().absolute()
+    from platform_fs import is_link_or_reparse
     for part in (item, *item.parents):
-        if part.is_symlink() and not _trusted_macos_system_alias(part):
+        if is_link_or_reparse(part) and not _trusted_macos_system_alias(part):
             return True
     return False
 
@@ -168,7 +169,7 @@ def create_document(
     # No interpretar el texto de entrada como un estado ya aprobado.
     new_content = make_note(metadata, body)
     target.parent.mkdir(parents=True, exist_ok=True)
-    with target.open("x", encoding="utf-8") as handle:
+    with target.open("x", encoding="utf-8", newline='\n') as handle:
         handle.write(new_content)
     try:
         post = validate(vault)

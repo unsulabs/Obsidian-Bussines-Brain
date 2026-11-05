@@ -22,7 +22,7 @@ class EstadoEmpresarialTest(unittest.TestCase):
         self.body.write_text('# Laboratorio sintético\n\n## Actividad\n\n'
                              'Diseñamos una forma de representar trabajo con criterios, '
                              'sin afirmar resultados no documentados.\n\n'
-                             '## CONTROL\n\nEsta es una prueba ficticia para el producto.\n',encoding='utf8')
+                             '## CONTROL\n\nEsta es una prueba ficticia para el producto.\n',encoding='utf8', newline='\n')
 
     def test_empty_vault_has_infrastructure_not_business(self):
         r=summary(self.vault)

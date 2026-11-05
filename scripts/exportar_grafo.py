@@ -69,7 +69,7 @@ def main():
     a = ap.parse_args()
     obj = graph(a.vault)
     a.output.parent.mkdir(parents=True, exist_ok=True)
-    a.output.write_text(json.dumps(obj, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+    a.output.write_text(json.dumps(obj, ensure_ascii=False, indent=2)+'\n', encoding='utf-8', newline='\n')
     print(f'GRAFO: {len(obj["nodos"])} nodos / {len(obj["aristas"])} aristas: {a.output}')
 
 if __name__ == '__main__': main()

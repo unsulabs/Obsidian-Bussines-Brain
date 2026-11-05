@@ -48,7 +48,7 @@ class ExternalReferencesTests(unittest.TestCase):
         self.assertEqual(record, self.register())
         self.assertEqual(before, self.path.read_bytes())
         self.assertFalse((self.bank / 'originales').exists())
-        stored = (self.bank / refs._record_path(record['version_id'])).read_text()
+        stored = (self.bank / refs._record_path(record['version_id'])).read_text(encoding='utf-8')
         self.assertNotIn('No ejecutar', stored)
         self.path.write_bytes(b'Version nueva sin reemplazar registro anterior')
         later = self.register()
@@ -165,7 +165,7 @@ class ExternalReferencesTests(unittest.TestCase):
     def test_record_and_grant_chain_tampering_rejected(self):
         record = self.register(); self.grant(record)
         path = self.bank / refs._record_path(record['version_id'])
-        path.write_text(path.read_text().replace('Propietario sintético', 'Alterado'))
+        path.write_text(path.read_text(encoding='utf-8').replace('Propietario sintético', 'Alterado'), encoding='utf-8', newline='\n')
         with self.assertRaisesRegex(ModelError, 'RECORD_CHANGED'):
             self.verify(record)
         # Cadena completa se verifica incluso al consultar otra referencia.

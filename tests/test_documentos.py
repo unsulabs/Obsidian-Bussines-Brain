@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -16,6 +17,13 @@ from documentos import create_document
 from lib_ce import split_frontmatter
 from operacion import create_source
 from validar_boveda import validate
+
+# Simulated macOS paths use the host's absolute-path representation, so the
+# same alias policy is exercised on Windows rather than accidentally bypassed.
+SIMULATED_MAC_ALIASES = {
+    Path('/var').absolute(): ('private/var', '/private/var', Path('/private/var')),
+    Path('/tmp').absolute(): ('private/tmp', '/private/tmp', Path('/private/tmp')),
+}
 
 
 class DocumentosTest(unittest.TestCase):
@@ -33,7 +41,7 @@ class DocumentosTest(unittest.TestCase):
             "## CONTROL\n\n"
             "Fuente original pendiente; la estrategia no se ha aprobado.\n"
         )
-        self.draft.write_text(self.body, encoding="utf8")
+        self.draft.write_text(self.body, encoding="utf8", newline='\n')
 
     def source(self):
         return create_source(self.vault, "F-DEMO-001", "Fuente ficticia", "urn:synthetic:example", "nota")
@@ -90,7 +98,7 @@ class DocumentosTest(unittest.TestCase):
             "---\nid: D01-MANUAL\ndoc_id: D01\ntipo: documento\nclase: D01\n"
             "estado_editorial: borrador\n---\n# Contenido anterior\n",
             encoding="utf8"
-        )
+        , newline='\n')
         self.assertFalse(validate(self.vault)["errores"])
         with self.assertRaises(FileExistsError):
             create_document(self.vault, "D01", "Duplicado", self.draft)
@@ -102,7 +110,7 @@ class DocumentosTest(unittest.TestCase):
         other.write_text(
             "---\nid: ID-DISTINTO\ndoc_id: D01\ntipo: documento\n"
             "clase: D01\nestado_editorial: borrador\n---\n# Otro\n"
-        )
+        , encoding='utf-8', newline='\n')
         problems = validate(self.vault)["errores"]
         self.assertTrue(any("Doc_id duplicado D01" in x for x in problems))
         self.assertTrue(Path(doc["ruta"]).exists())
@@ -136,15 +144,15 @@ class DocumentosTest(unittest.TestCase):
         self.assertFalse((self.vault / "10_Conocimiento" / "D01.md").exists())
 
     def test_reject_private_key_and_untrusted_frontmatter(self):
-        self.draft.write_text("---\nid: APROBADO\n---\n" + self.body)
+        self.draft.write_text("---\nid: APROBADO\n---\n" + self.body, encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError):
             create_document(self.vault, "D01", "YAML no permitido", self.draft)
-        self.draft.write_text(self.body + "\n-----BEGIN PRIVATE KEY-----\n")
+        self.draft.write_text(self.body + "\n-----BEGIN PRIVATE KEY-----\n", encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError):
             create_document(self.vault, "D01", "Credencial", self.draft)
 
     def test_rollback_invalid_wikilink(self):
-        self.draft.write_text(self.body + "\n[[FUENTE-NO-EXISTENTE]]\n")
+        self.draft.write_text(self.body + "\n[[FUENTE-NO-EXISTENTE]]\n", encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError):
             create_document(self.vault, "D01", "Con enlace roto", self.draft)
         self.assertFalse((self.vault / "10_Conocimiento" / "D01.md").exists())
@@ -152,7 +160,7 @@ class DocumentosTest(unittest.TestCase):
 
     def test_reject_source_inside_vault_or_repo(self):
         internal = self.vault / "90_Sistema" / "borrador.md"
-        internal.write_text(self.body)
+        internal.write_text(self.body, encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError):
             create_document(self.vault, "D01", "Desde bóveda", internal)
         with self.assertRaises(ValueError):
@@ -170,6 +178,7 @@ class DocumentosTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             create_document(self.vault, "D01", "No leer alias de usuario", redirected)
 
+    @patch.dict('documentos._MACOS_SYSTEM_ALIASES', SIMULATED_MAC_ALIASES, clear=True)
     def test_only_verified_macos_var_alias_is_exempt(self):
         from documentos import _is_symlinked
         from unittest.mock import patch
@@ -178,10 +187,10 @@ class DocumentosTest(unittest.TestCase):
         original_resolve = Path.resolve
 
         def synthetic_symlink(p):
-            return str(p) == "/var" or original_is_symlink(p)
+            return p == Path('/var').absolute() or original_is_symlink(p)
 
         def synthetic_resolve(p, strict=False):
-            return Path("/private/var") if str(p) == "/var" else original_resolve(p, strict=strict)
+            return Path("/private/var") if p == Path('/var').absolute() else original_resolve(p, strict=strict)
 
         with patch("documentos.sys.platform", "darwin"), \
              patch.object(Path, "is_symlink", synthetic_symlink), \
@@ -196,6 +205,7 @@ class DocumentosTest(unittest.TestCase):
              patch.object(Path, "is_symlink", synthetic_symlink):
             self.assertTrue(_is_symlinked(candidate))
 
+    @patch.dict('documentos._MACOS_SYSTEM_ALIASES', SIMULATED_MAC_ALIASES, clear=True)
     def test_only_verified_macos_tmp_alias_is_exempt(self):
         from documentos import _is_symlinked
         from unittest.mock import patch
@@ -204,10 +214,10 @@ class DocumentosTest(unittest.TestCase):
         original_resolve = Path.resolve
 
         def synthetic_symlink(p):
-            return str(p) == "/tmp" or original_is_symlink(p)
+            return p == Path('/tmp').absolute() or original_is_symlink(p)
 
         def synthetic_resolve(p, strict=False):
-            return (Path("/private/tmp") if str(p) == "/tmp"
+            return (Path("/private/tmp") if p == Path('/tmp').absolute()
                     else original_resolve(p, strict=strict))
 
         with patch("documentos.sys.platform", "darwin"), \
@@ -223,6 +233,7 @@ class DocumentosTest(unittest.TestCase):
              patch.object(Path, "is_symlink", synthetic_symlink):
             self.assertTrue(_is_symlinked(candidate))
 
+    @patch.dict('documentos._MACOS_SYSTEM_ALIASES', SIMULATED_MAC_ALIASES, clear=True)
     def test_user_symlink_under_trusted_macos_tmp_stays_blocked(self):
         from documentos import _is_symlinked
         from unittest.mock import patch
@@ -230,7 +241,7 @@ class DocumentosTest(unittest.TestCase):
         original_is_symlink = Path.is_symlink
 
         def synthetic_symlink(p):
-            return str(p) in {"/tmp", "/tmp/user-created-alias"} or original_is_symlink(p)
+            return p in {Path('/tmp').absolute(), Path('/tmp/user-created-alias').absolute()} or original_is_symlink(p)
 
         with patch("documentos.sys.platform", "darwin"), \
              patch.object(Path, "is_symlink", synthetic_symlink), \

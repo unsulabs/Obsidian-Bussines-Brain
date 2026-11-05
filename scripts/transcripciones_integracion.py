@@ -9,7 +9,6 @@ import base64
 from contextlib import contextmanager
 import difflib
 from datetime import datetime
-import fcntl
 import hashlib
 import json
 import os
@@ -18,6 +17,10 @@ import shutil
 import tempfile
 from uuid import uuid4
 import yaml
+
+if os.name != 'nt':
+    import fcntl
+from platform_fs import is_link_or_reparse, private_directory
 
 from lib_ce import split_frontmatter, notes_in_vault, resolve_link, target_index, wiki_targets
 from revisiones_dx import _document, _next_revision, _check_body, _write_atomic
@@ -106,7 +109,7 @@ def _json(obj):
 
 def _safe(path):
     path = Path(path).expanduser()
-    if not path.is_absolute() or any(p.is_symlink() for p in (path, *path.parents)):
+    if not path.is_absolute() or any(is_link_or_reparse(p) for p in (path, *path.parents)):
         raise ValueError("Ruta absoluta sin symlinks requerida")
     return path.resolve()
 
@@ -147,7 +150,7 @@ def _backend_errors(vault):
     errors = validate(vault)["errores"]
     bases = list(vault.rglob("*.base"))
     for p in notes_in_vault(vault):
-        for target in wiki_targets(p.read_text()):
+        for target in wiki_targets(p.read_text(encoding='utf-8')):
             if not target.endswith(".base"):
                 continue
             matches = [b for b in bases if b.relative_to(vault).as_posix() == target]
@@ -240,7 +243,7 @@ def _access(candidate, bank, vault=None):
                 raise ValueError("Bundle analítico cambió desde render")
             if not coverage_report(bank, check["tr_id"], check["run_id"], **scope)["evidence"]["current"]:
                 raise ValueError("Análisis ya no vigente")
-            bundle = json.loads(runpath.read_text())
+            bundle = json.loads(runpath.read_text(encoding='utf-8'))
             if bundle["source_refs"] != refs:
                 raise ValueError("Dependencias analíticas alteradas")
             if check.get("semantic_review"):
@@ -277,9 +280,9 @@ def _validate_overlay(vault, entries):
             oldpath = _target(vault, e["path"])
             preserved_links = set()
             if (e["kind"] in {"legacy_source", "navigation_patch", "control_proposal"} or e.get("source_transition")) and oldpath.exists():
-                preserved_links = set(wiki_targets(oldpath.read_text()))
+                preserved_links = set(wiki_targets(oldpath.read_text(encoding='utf-8')))
             if e["kind"] in {"navigation", "navigation_append", "navigation_patch"} and oldpath.exists():
-                oldtext = oldpath.read_text()
+                oldtext = oldpath.read_text(encoding='utf-8')
                 if text.startswith(oldtext):
                     linked_text = text[len(oldtext):]
             checks = ([e] if "source_refs" in e else []) + e.get("access_checks", [])
@@ -293,7 +296,7 @@ def _validate_overlay(vault, entries):
                     continue
                 target = resolve_link(link, paths, names)
                 if target:
-                    linked_meta, _ = split_frontmatter(target.read_text())
+                    linked_meta, _ = split_frontmatter(target.read_text(encoding='utf-8'))
                     if linked_meta.get("tipo") == "fuente" and not permitted_source(linked_meta):
                         errors.append("Fuente enlazada no está cubierta por permisos/dependencias del candidato")
             if e["kind"] not in {"entity", "dx"}:
@@ -302,15 +305,15 @@ def _validate_overlay(vault, entries):
             for source in fm.get("fuentes", []):
                 links = wiki_targets(source)
                 target = resolve_link(links[0], paths, names) if len(links) == 1 else None
-                if target is None or split_frontmatter(target.read_text())[0].get("tipo") != "fuente":
+                if target is None or split_frontmatter(target.read_text(encoding='utf-8'))[0].get("tipo") != "fuente":
                     errors.append("Referencia fuentes no resuelve a una fuente")
                 else:
-                    source_meta, _ = split_frontmatter(target.read_text())
+                    source_meta, _ = split_frontmatter(target.read_text(encoding='utf-8'))
                     if not permitted_source(source_meta):
                         errors.append("Fuente enlazada no está cubierta por permisos/dependencias del candidato")
         versions = set()
         for p in notes_in_vault(copy):
-            fm, _ = split_frontmatter(p.read_text())
+            fm, _ = split_frontmatter(p.read_text(encoding='utf-8'))
             if fm.get("tipo") in {"fuente", "transcripcion"} and fm.get("transcripcion_id"):
                 identity = (fm["tipo"], fm["transcripcion_id"], fm.get("version_id"),
                             fm.get("view_variant") if fm["tipo"] == "transcripcion" else None)
@@ -364,7 +367,7 @@ def prepare_batch(candidates, vault_snapshot):
         raw = c["content"].encode() if isinstance(c["content"], str) else bytes(c["content"])
         meta, body = split_frontmatter(raw.decode("utf8"))
         if p.exists() and c.get('destination_profile'):
-            old_meta = yaml.safe_load(p.read_text()) if c['kind'] == 'base_view' else split_frontmatter(p.read_text())[0]
+            old_meta = yaml.safe_load(p.read_text(encoding='utf-8')) if c['kind'] == 'base_view' else split_frontmatter(p.read_text(encoding='utf-8'))[0]
             new_meta = yaml.safe_load(raw) if c['kind'] == 'base_view' else meta
             old_level = old_meta.get('sensibilidad', 'interno')
             if maximum([old_level, new_meta.get('sensibilidad', 'interno')]) != new_meta.get('sensibilidad', 'interno'):
@@ -537,6 +540,12 @@ def _manifest(m):
 def _lock(vault):
     # Ubicación estable por bóveda, independiente del directorio de backup.
     folder = _safe(vault.parent / (".ce-integracion-" + _sha(str(vault).encode())[:20]))
+    if os.name == 'nt':
+        from windows_fs import file_lock
+        private_directory(folder)
+        with file_lock(folder / 'writer.lock', blocking=False):
+            yield folder
+        return
     folder.mkdir(mode=0o700, exist_ok=True)
     lock = _safe(folder / "writer.lock")
     with lock.open("a+b") as handle:
@@ -550,6 +559,10 @@ def _lock(vault):
 def _save(path, obj):
     _safe(path)
     _write_atomic(path, _json(obj))
+    if os.name == 'nt':
+        from windows_fs import flush_directory
+        flush_directory(path.parent)
+        return
     fd = os.open(path.parent, os.O_RDONLY)
     try:
         os.fsync(fd)
@@ -566,7 +579,7 @@ def _journal(m, backup):
     path = _safe(directory / "journal.json")
     if not path.exists():
         return directory, path, None
-    journal = json.loads(path.read_text())
+    journal = json.loads(path.read_text(encoding='utf-8'))
     if journal.get("manifest_sha") != m["manifest_sha"]:
         raise ValueError("Journal pertenece a otro manifest")
     return directory, path, journal
@@ -586,7 +599,7 @@ def _check_evolution(vault, bank, entry, raw=None):
         raise ValueError("Transición no corresponde al análisis actual")
     if "base_sha" in entry and _sha(previous) != entry["base_sha"]:
         raise ValueError("Transición no corresponde al snapshot base")
-    snapshot = {v["path"]: _target(vault, v["path"]).read_text() for v in proof["history_views"]}
+    snapshot = {v["path"]: _target(vault, v["path"]).read_text(encoding='utf-8') for v in proof["history_views"]}
     candidate = raw if raw is not None else base64.b64decode(entry["content_b64"], validate=True)
     validate_transition(bank, proof, previous.decode(), candidate.decode(), snapshot, entry["scope"])
 
@@ -615,7 +628,7 @@ def apply_batch(manifest, authorization, fencing_token):
             if e["kind"] in KINDS_D:
                 _live_d(vault, _safe(m["bank_root"]), e)
         fencefile = _safe(lockroot / "fence.json")
-        fence = json.loads(fencefile.read_text()) if fencefile.exists() else {"token": 0}
+        fence = json.loads(fencefile.read_text(encoding='utf-8')) if fencefile.exists() else {"token": 0}
         if fencing_token < fence["token"] or (fencing_token == fence["token"] and fence.get("batch") != m["batch_id"]):
             raise ValueError("Fencing token obsoleto")
         _save(fencefile, {"token": fencing_token, "batch": m["batch_id"]})

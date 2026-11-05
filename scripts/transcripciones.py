@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Transcript custody and agent-authored analysis. Console output omits passages."""
 import argparse
+import json
 from collections import Counter
 from pathlib import Path
 import sys
@@ -203,7 +204,8 @@ def main(argv=None):
                                           "semantic_answer_generated": False})
         except (ModelError, OSError, ValueError, TypeError) as exc:
             output = _failure(args, exc)
-    print(json_bytes(output).decode("utf-8"), end="")
+    # JSON remains lossless even when Windows redirects stdout through cp1252.
+    print(json.dumps(output, ensure_ascii=True, sort_keys=True, indent=2))
     return 0 if output["status"] in ("DONE", "DONE_WITH_CONCERNS") else 2
 
 

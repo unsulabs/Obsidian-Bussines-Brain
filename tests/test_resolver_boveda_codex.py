@@ -21,11 +21,11 @@ class RoutingTest(unittest.TestCase):
         self.root = canonical(tmp.name)
         self.vault = self.root / 'Empresa Á con espacios'
         (self.vault / '90_Sistema').mkdir(parents=True)
-        (self.vault / '90_Sistema/Como_usar.md').write_text('# Synthetic instructions')
-        (self.vault / 'Inicio.md').write_text('# Synthetic home')
+        (self.vault / '90_Sistema/Como_usar.md').write_text('# Synthetic instructions', encoding='utf-8', newline='\n')
+        (self.vault / 'Inicio.md').write_text('# Synthetic home', encoding='utf-8', newline='\n')
         self.native = self.root / 'obsidian.json'
         self.registry = self.root / 'vaults.json'
-        self.native.write_text(json.dumps({'vaults': {'abc': {'path': str(self.vault)}}}))
+        self.native.write_text(json.dumps({'vaults': {'abc': {'path': str(self.vault)}}}), encoding='utf-8', newline='\n')
         register(self.vault, 'Empresa Á', 'EMP-A', self.registry, self.native,
                  '90_Sistema/Como_usar.md', 'Inicio.md', self.root)
 
@@ -33,9 +33,9 @@ class RoutingTest(unittest.TestCase):
         return resolve(self.registry, self.native, **(kwargs or {'selector': 'EMP-A'}))
 
     def change_entry(self, **kwargs):
-        obj = json.loads(self.registry.read_text())
+        obj = json.loads(self.registry.read_text(encoding='utf-8'))
         obj['vaults'][0].update(kwargs)
-        self.registry.write_text(json.dumps(obj))
+        self.registry.write_text(json.dumps(obj), encoding='utf-8', newline='\n')
 
     def test_selectors_project_and_read_only(self):
         before = {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
@@ -48,18 +48,18 @@ class RoutingTest(unittest.TestCase):
 
     def test_missing_ambiguous_malformed(self):
         with self.assertRaises(ValueError): self.run_resolve(selector='unknown')
-        obj = json.loads(self.registry.read_text())
+        obj = json.loads(self.registry.read_text(encoding='utf-8'))
         obj['vaults'].append(dict(obj['vaults'][0]))
-        self.registry.write_text(json.dumps(obj))
+        self.registry.write_text(json.dumps(obj), encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError): self.run_resolve()
         with self.assertRaises(ValueError): self.run_resolve(project=self.root)
-        self.registry.write_text('{')
+        self.registry.write_text('{', encoding='utf-8', newline='\n')
         with self.assertRaises(ValueError): self.run_resolve()
         self.registry.unlink()
         with self.assertRaises(ValueError): self.run_resolve()
 
     def test_native_mismatch_precedes_instruction_lookup(self):
-        self.native.write_text(json.dumps({'vaults': {'different': {'path': str(self.vault)}}}))
+        self.native.write_text(json.dumps({'vaults': {'different': {'path': str(self.vault)}}}), encoding='utf-8', newline='\n')
         self.change_entry(instructions='../secret.md')
         with self.assertRaisesRegex(ValueError, 'Native Obsidian'): self.run_resolve()
 
@@ -78,13 +78,13 @@ class RoutingTest(unittest.TestCase):
 
     def test_symlinks_rejected(self):
         secret = self.root / 'outside.md'
-        secret.write_text('not read')
+        secret.write_text('not read', encoding='utf-8', newline='\n')
         start = self.vault / 'Inicio.md'
         start.unlink()
         start.symlink_to(secret)
         with self.assertRaises(ValueError): self.run_resolve()
         start.unlink()
-        start.write_text('# Home')
+        start.write_text('# Home', encoding='utf-8', newline='\n')
         alias = self.root / 'linked'
         alias.symlink_to(self.root, target_is_directory=True)
         with self.assertRaises(ValueError):
