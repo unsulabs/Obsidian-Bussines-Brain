@@ -17,6 +17,8 @@ unittest discovery and reports the commit, executed tests, failures, errors and
 every skip. Only the named native macOS alias test may skip off macOS, and the
 twelve named native Windows filesystem tests may skip off Windows. Their native
 jobs must execute them. Any other skip or expected failure fails acceptance.
+Windows first runs the native filesystem tests as a preflight. A failed preflight
+leaves the job failed and the full suite unexecuted; it is never counted as a pass.
 The `installation` phase checks help, doctor, documentation, package audit,
 synthetic creation/validation/state with Unicode and spaces, and exported hashes
 and privacy boundaries. Artifacts contain synthetic reports and test logs only.
@@ -49,6 +51,9 @@ Choose other targeted tests by the changed behavior, then run the full suite for
 
 ## Installation regression checks (2026-11-05)
 
+This historical review predates the native multi-platform CI campaign and records
+its own candidate and scope. It is not a result for the latest checkout.
+
 Clean-clone review found three blockers: assisted onboarding required an unavailable external router; validation accepted a missing vault as zero notes without errors; and the package audit rejected the documented ignored local `.venv`. The product now includes a native-registry-verified router, rejects missing/non-directory validation targets, and excludes only an ignored, entirely untracked root `.venv` in a Git checkout from the local audit. A package or tracked environment remains rejected; exports exclude `.venv` at every depth. The doctor recommendation now matches Python 3.11+.
 
 Focused checks passed on macOS 26.5.1 arm64 with Python 3.11.15 using synthetic registries and temporary vaults:
@@ -67,7 +72,7 @@ Independent clean-clone review of candidate `4444224` ran **460 tests: 458 passe
 
 A separate fresh-clone/venv rehearsal passed creation, validation, state and negative cases. On this same macOS machine, already-installed Obsidian 1.15.0 opened the synthetic vault, displayed `Inicio` and the `Ofertas` Base, and assigned the native ID verified by the included registration/resolution commands using an isolated Codex registry. All 72 original vault files remained unchanged; Obsidian created 4 normal `.obsidian` files. The candidate ZIP contained 472 files with every manifest size/hash matching and no private or `.venv` contents.
 
-Limits: this did not test installing Obsidian from scratch, all Bases views, Windows/Linux installation, semantic business usefulness or owner acceptance. Linux/Windows default-path tests use mocks. The GUI observation covers one Base and a synthetic business; it does not establish those remaining gates.
+Limits of that earlier review: it did not test installing Obsidian from scratch, all Bases views, Windows/Linux installation, semantic business usefulness or owner acceptance. Its Linux/Windows default-path tests used mocks. The GUI observation covers one Base and a synthetic business; it does not establish those remaining gates.
 
 ## What requires separate evidence
 

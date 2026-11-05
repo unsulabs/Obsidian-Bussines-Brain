@@ -23,7 +23,18 @@ python scripts/cerebro.py doctor
 python scripts/cerebro.py --help
 ```
 
-También se admite un intérprete Python 3 posterior; comprueba su versión antes de crear el entorno. En Windows usa `py -3.11 -m venv .venv` y activa con `.venv\Scripts\Activate.ps1` en PowerShell en lugar de `source`. Tras activar, los comandos `python` son iguales.
+Puedes usar un intérprete Python 3 posterior; CI usa Python 3.11, por lo que debes verificar otra versión en tu entorno. En Windows, después de clonar y entrar en la carpeta, usa PowerShell:
+
+```powershell
+py -3.11 --version
+py -3.11 -m venv .venv
+. .venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python scripts/cerebro.py doctor
+python scripts/cerebro.py --help
+```
+
+En Windows usa una ruta local NTFS/ReFS para el banco de transcripciones. Elige un directorio nuevo para que el producto cree su ACL privada protegida; rechaza un directorio existente con permisos más amplios o heredados. Las rutas de red y junctions quedan fuera del almacenamiento admitido por este backend. Consulta [pruebas por plataforma y límites](testing.md#comprobaciones-automáticas).
 
 `doctor` es de solo lectura; no instala componentes faltantes. Si fallan imports, comprueba el intérprete y los entornos existentes antes de concluir que el producto no funciona. Este diagnóstico no verifica GUI ni utilidad empresarial.
 

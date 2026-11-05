@@ -23,6 +23,9 @@ auditoría, creación/validación/estado sintéticos con Unicode y espacios, has
 exclusiones privadas del exportado. Los artefactos contienen sólo informes y logs
 sintéticos. Estas pruebas sin interfaz gráfica no acreditan GUI/Bases ni aceptación empresarial.
 
+Windows ejecuta primero los tests nativos del filesystem como preflight. Si falla,
+el job queda fallido y la suite completa no se ejecuta; nunca se cuenta como aprobada.
+
 El backend del banco en Windows requiere una ruta local NTFS/ReFS; rechaza rutas
 UNC/dispositivo, streams alternativos y reparse points. Las carpetas privadas
 exigen una DACL protegida limitada al propietario, SYSTEM y administradores;
@@ -51,6 +54,9 @@ Elige otras pruebas dirigidas según el comportamiento cambiado y ejecuta suite 
 
 ## Regresiones de instalación (2026-11-05)
 
+Esta revisión histórica precede a la campaña CI nativa multiplataforma y registra
+su propio candidato y alcance. No es un resultado del checkout más reciente.
+
 La revisión desde clon limpio encontró tres bloqueos: el inicio asistido exigía un router externo no disponible; validar una bóveda inexistente devolvía cero notas sin errores; y la auditoría del paquete rechazaba el `.venv` local ignorado que recomienda la documentación. Ahora el producto incluye un router que verifica el registro nativo, rechaza destinos inexistentes o que no son directorios y excluye de la auditoría local sólo el `.venv` raíz ignorado y completamente fuera del índice Git. Un paquete o entorno versionado sigue siendo rechazado; las exportaciones excluyen `.venv` a cualquier profundidad. La recomendación de doctor coincide con Python 3.11+.
 
 Las pruebas dirigidas pasaron en macOS 26.5.1 arm64 con Python 3.11.15, usando registros sintéticos y bóvedas temporales:
@@ -69,7 +75,7 @@ La revisión independiente desde clon limpio del candidato `4444224` ejecutó **
 
 Otro ensayo con clon/venv nuevos pasó creación, validación, estado y casos negativos. En la misma máquina macOS, Obsidian 1.15.0 ya instalado abrió la bóveda sintética, mostró `Inicio` y la Base `Ofertas`, y asignó el ID nativo comprobado por los comandos incluidos de registro/resolución con un registro Codex aislado. Los 72 archivos originales de la bóveda quedaron intactos; Obsidian creó 4 archivos normales de `.obsidian`. El ZIP candidato contenía 472 archivos, con todos los tamaños/huellas del manifiesto coincidentes y sin contenido privado ni `.venv`.
 
-Límites: no se probó instalar Obsidian desde cero, todas las vistas Bases, instalación Windows/Linux, utilidad empresarial semántica ni aceptación del dueño. Las pruebas de rutas Linux/Windows usan simulaciones. La observación GUI cubre una Base y un negocio sintético; no acredita los gates restantes.
+Límites de aquella revisión: no se probó instalar Obsidian desde cero, todas las vistas Bases, instalación Windows/Linux, utilidad empresarial semántica ni aceptación del dueño. Sus pruebas de rutas Linux/Windows usaron simulaciones. La observación GUI cubre una Base y un negocio sintético; no acredita los gates restantes.
 
 ## Qué requiere evidencia separada
 

@@ -75,7 +75,18 @@ python scripts/cerebro.py doctor
 python scripts/cerebro.py --help
 ```
 
-A newer Python 3 interpreter is also supported; verify its version first. On Windows, use `py -3.11 -m venv .venv` and activate with `.venv\Scripts\Activate.ps1` in PowerShell instead of `source`. After activation, the `python` commands are the same. Package installation may access the network and requires applicable authorization.
+A newer Python 3 interpreter may be used; CI uses Python 3.11, so verify another version in your environment. On Windows, after cloning and entering the folder, use PowerShell:
+
+```powershell
+py -3.11 --version
+py -3.11 -m venv .venv
+. .venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python scripts/cerebro.py doctor
+python scripts/cerebro.py --help
+```
+
+Package installation may access the network and requires applicable authorization. See [platform checks and storage boundaries](docs/en/testing.md#automated-checks).
 
 `doctor` is read-only and does not install missing components. If imports fail, check the interpreter and existing environments. This quickstart prepares the toolkit; it does not create a vault or verify Obsidian GUI behavior or business usefulness.
 
