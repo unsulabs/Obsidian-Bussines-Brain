@@ -1,4 +1,21 @@
-# Prompt de continuidad para Codex — empresa que YA tiene bóveda
+# Continuar con Codex — bóveda existente
+
+[English](CONTINUE_WITH_CODEX.md) · [Guía de uso](docs/es/user-guide.md)
+
+## Continuidad cotidiana
+
+Copia este pedido para una tarea cotidiana:
+
+> Continúa mi instancia existente. Lee AGENTS.md y activa ce-continuidad, o ce-consulta para mi tarea concreta. Resuelve primero la bóveda mediante obsidian-router, verifica el registro nativo de Obsidian y sus instrucciones locales antes de leer dentro; después consulta Como_usar, Inicio y sólo el estado, las notas y los originales autorizados pertinentes. No crees otra bóveda, copies plantillas, repitas la entrevista inicial ni reescribas D01 por defecto.
+>
+> Recupera mis permisos y decisiones editoriales. Excluye textos rechazados, conserva incertidumbre y distingue fuentes, propuestas y conocimiento aprobado. Ante correcciones o evidencia nueva, revisa antecedentes y usa el flujo de cambios con IDs estables, versiones y respaldos. Muestra arquitectura antes de redactar varios asuntos y completa la integración autorizada sin repetir permisos rutinarios.
+>
+> Verifica la tarea real y las comprobaciones estructurales pertinentes. Informa qué cambió, qué se verificó, qué falta y cómo continuar. Continuar no autoriza por sí solo aceptación de instalación, migración, publicación de mapa, subida externa ni tareas recurrentes.
+
+## Aceptación de integración real
+
+El siguiente prompt conserva el alcance del prompt histórico de recuperación. Úsalo cuando el encargo sea aceptar una instalación, migración o cambio de integración, no para una consulta cotidiana.
+
 
 Continúa el Obsidian-Bussines-Brain que ya está instalado y conectado a esta empresa. Esta es una tarea de INTEGRACIÓN REAL del software con la bóveda existente, no de redacción ni instalación de una empresa nueva.
 

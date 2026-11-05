@@ -11,7 +11,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
 DIRECTORIES = {
-    '.agents', 'contratos', 'docs', 'ejemplos', 'guia',
+    '.agents', '.cursor', 'contratos', 'docs', 'ejemplos', 'guia',
     'investigacion', 'metodologia', 'modelo', 'plantilla_boveda',
     'recursos', 'scripts', 'tests',
 }
@@ -20,7 +20,8 @@ FILES = {
     'CHANGELOG.md', 'PROMPT_INICIO_CODEX.md',
     'PROMPT_RECUPERAR_EMPRESA_EXISTENTE_CODEX.md',
     'PROMPT_SUBIR_A_GITHUB.md', 'LICENSE', 'CONTRIBUTING.md',
-    'requirements.txt',
+    'requirements.txt', 'README.es.md', '.cursor-init.yaml', 'THIRD_PARTY_NOTICES.md',
+    'START_HERE.md', 'GET_STARTED_WITH_CODEX.md', 'CONTINUE_WITH_CODEX.md',
 }
 MANIFEST = 'PRODUCT_MANIFEST.json'
 # Se excluyen también bajo carpetas permitidas y aunque Git los haya admitido

@@ -74,19 +74,27 @@ class EnrutamientoAgentesTests(unittest.TestCase):
             self.assertTrue(any(link.endswith('contrato-comun.md') for link in local_links(path)))
 
     def test_acceptance_obligations_are_scoped_away_from_daily_continuity(self):
-        text = (ROOT / 'AGENTS.md').read_text()
-        section = text.split('## Dos entradas distintas:', 1)[1].split('\n## ', 1)[0]
-        paragraphs = section.split('\n\n')
-        continuity = next(p for p in paragraphs if '"continúa mi empresa"' in p)
-        self.assertIn('`ce-continuidad`', continuity)
-        self.assertIn('`ce-consulta`', continuity)
-        self.assertNotIn('ACEPTACION_REAL_CODEX_INSTANCIA_EXISTENTE.md', continuity)
-        self.assertNotIn('aceptacion_integracion_local.py', continuity)
-        obligations = [p for p in paragraphs if 'aceptacion_integracion_local.py' in p
-                       or 'ACEPTACION_REAL_CODEX_INSTANCIA_EXISTENTE.md' in p]
-        self.assertEqual(len(obligations), 1)
-        self.assertTrue(obligations[0].startswith(
-            'Sólo al aceptar una instalación, migración o cambio de integración'))
+        contracts = (
+            ('AGENTS.md', '## Two entry points:',
+             'Only when accepting an installation, migration or integration change'),
+            ('docs/es/agent-contract.md', '## Dos entradas distintas:',
+             'Sólo al aceptar una instalación, migración o cambio de integración'),
+        )
+        for name, heading, acceptance_scope in contracts:
+            with self.subTest(contract=name):
+                text = (ROOT / name).read_text()
+                self.assertIn(heading, text)
+                section = text.split(heading, 1)[1].split('\n## ', 1)[0]
+                paragraphs = section.split('\n\n')
+                continuity = next(p for p in paragraphs if '"continúa mi empresa"' in p)
+                self.assertIn('`ce-continuidad`', continuity)
+                self.assertIn('`ce-consulta`', continuity)
+                self.assertNotIn('ACEPTACION_REAL_CODEX_INSTANCIA_EXISTENTE.md', continuity)
+                self.assertNotIn('aceptacion_integracion_local.py', continuity)
+                obligations = [p for p in paragraphs if 'aceptacion_integracion_local.py' in p
+                               or 'ACEPTACION_REAL_CODEX_INSTANCIA_EXISTENTE.md' in p]
+                self.assertEqual(len(obligations), 1)
+                self.assertTrue(obligations[0].startswith(acceptance_scope))
 
     def test_reception_template_resolves_from_external_bank_in_both_layouts(self):
         # Exercise the documented destination, not a new ingestion implementation.

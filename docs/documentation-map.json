@@ -1,0 +1,418 @@
+{
+  "version": 1,
+  "primary_language": "en",
+  "pairs": [
+    {
+      "id": "readme",
+      "en": "README.md",
+      "es": "README.es.md"
+    },
+    {
+      "id": "contributing",
+      "en": "CONTRIBUTING.md",
+      "es": "docs/es/contributing.md"
+    },
+    {
+      "id": "changelog",
+      "en": "CHANGELOG.md",
+      "es": "docs/es/changelog.md"
+    },
+    {
+      "id": "start",
+      "en": "START_HERE.md",
+      "es": "EMPIEZA_AQUI.md"
+    },
+    {
+      "id": "get-started",
+      "en": "GET_STARTED_WITH_CODEX.md",
+      "es": "PROMPT_INICIO_CODEX.md"
+    },
+    {
+      "id": "continue",
+      "en": "CONTINUE_WITH_CODEX.md",
+      "es": "PROMPT_RECUPERAR_EMPRESA_EXISTENTE_CODEX.md"
+    },
+    {
+      "id": "agent-contract",
+      "en": "AGENTS.md",
+      "es": "docs/es/agent-contract.md"
+    },
+    {
+      "id": "README",
+      "en": "docs/en/README.md",
+      "es": "docs/es/README.md"
+    },
+    {
+      "id": "onboarding",
+      "en": "docs/en/onboarding.md",
+      "es": "docs/es/onboarding.md"
+    },
+    {
+      "id": "user-guide",
+      "en": "docs/en/user-guide.md",
+      "es": "docs/es/user-guide.md"
+    },
+    {
+      "id": "development",
+      "en": "docs/en/development.md",
+      "es": "docs/es/development.md"
+    },
+    {
+      "id": "architecture",
+      "en": "docs/en/architecture.md",
+      "es": "docs/es/architecture.md"
+    },
+    {
+      "id": "data-model",
+      "en": "docs/en/data-model.md",
+      "es": "docs/es/data-model.md"
+    },
+    {
+      "id": "cli-reference",
+      "en": "docs/en/cli-reference.md",
+      "es": "docs/es/cli-reference.md"
+    },
+    {
+      "id": "transcripts",
+      "en": "docs/en/transcripts.md",
+      "es": "docs/es/transcripts.md"
+    },
+    {
+      "id": "knowledge-workflow",
+      "en": "docs/en/knowledge-workflow.md",
+      "es": "docs/es/knowledge-workflow.md"
+    },
+    {
+      "id": "operations",
+      "en": "docs/en/operations.md",
+      "es": "docs/es/operations.md"
+    },
+    {
+      "id": "security",
+      "en": "docs/en/security.md",
+      "es": "docs/es/security.md"
+    },
+    {
+      "id": "testing",
+      "en": "docs/en/testing.md",
+      "es": "docs/es/testing.md"
+    },
+    {
+      "id": "methodology",
+      "en": "docs/en/methodology.md",
+      "es": "docs/es/methodology.md"
+    },
+    {
+      "id": "documentation-workflow",
+      "en": "docs/en/documentation-workflow.md",
+      "es": "docs/es/documentation-workflow.md"
+    },
+    {
+      "id": "adr/0001-local-first",
+      "en": "docs/en/adr/0001-local-first.md",
+      "es": "docs/es/adr/0001-local-first.md"
+    },
+    {
+      "id": "adr/0002-source-custody",
+      "en": "docs/en/adr/0002-source-custody.md",
+      "es": "docs/es/adr/0002-source-custody.md"
+    },
+    {
+      "id": "adr/0003-bilingual-documentation",
+      "en": "docs/en/adr/0003-bilingual-documentation.md",
+      "es": "docs/es/adr/0003-bilingual-documentation.md"
+    },
+    {
+      "id": "rfc/0000-template",
+      "en": "docs/en/rfc/0000-template.md",
+      "es": "docs/es/rfc/0000-template.md"
+    }
+  ],
+  "source_references": {
+    "language": "es",
+    "status": "Preserved original references; not included in the bilingual parity claim.",
+    "paths": [
+      "docs/*.md (excluding this inventory and localized trees)",
+      "guia/",
+      "metodologia/",
+      "investigacion/",
+      ".agents/skills/",
+      "contratos/"
+    ]
+  },
+  "preserved_documents": [
+    {
+      "path": "docs/ACTUALIZACIONES_Y_ROLLBACK.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/operations.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/ARQUITECTURA.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/architecture.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/ARQUITECTURA_CONOCIMIENTO_ANTES_DE_REDACTAR.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/knowledge-workflow.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/BASES_FILTROS_Y_ACTUALIZACION.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/operations.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/CAPTURA_PROGRESIVA.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/knowledge-workflow.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/CICLO_DOCUMENTAL_DX.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/knowledge-workflow.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/CICLO_EXPERTO_DESARROLLO_EMPRESARIAL.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/user-guide.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/CIERRE_DEL_PILOTO_0_3.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/testing.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/COBERTURA_EMPRESARIAL.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/user-guide.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/COMPATIBILIDAD_MACOS_RUTAS.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/operations.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/CONSULTA_CONTEXTUAL.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/knowledge-workflow.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/CRITERIOS_DE_ACEPTACION.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/testing.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/DECISIONES_ABIERTAS.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/development.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/DESTINO_PRIVADO_TRANSCRIPCIONES.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/transcripts.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/ESPECIFICACION_RED_CONOCIMIENTO_V0_4.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/architecture.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/ESTADO_REAL.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/testing.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/ESTANDARES_CONOCIMIENTO.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/data-model.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/EVOLUCION_FICHAS_TR.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/transcripts.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/FLUJO_EMPRESA_COMPLETA.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/user-guide.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/FUENTES_Y_LICENCIAS.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/security.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/GITHUB_Y_PRIVACIDAD.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/security.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/GOBIERNO_EDITORIAL_DX.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/knowledge-workflow.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/HOJA_DE_RUTA.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/development.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/INTEGRACION_D_PROPUESTAS.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/transcripts.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/MARKETING_EMPRESARIAL.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/user-guide.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/NOMBRES_LEGIBLES.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/data-model.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/PLAN_MEJORA_PRODUCTO_0_3.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/development.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/RECONSTRUCCION_EDITORIAL_Y_FUENTES.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/knowledge-workflow.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/REFERENCIAS_EXTERNAS_D.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/transcripts.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/RELACIONES_TIPADAS.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/data-model.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/REVISIONES_DX_CON_HISTORIAL.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/knowledge-workflow.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/SEGURIDAD_Y_DATOS.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/security.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/SINTESIS_EMPRESARIAL_CONSTRUCTIVA.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/user-guide.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/TRANSCRIPCIONES_DATASETS.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/transcripts.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/TRANSCRIPCIONES_FICHAS.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/transcripts.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/TRANSCRIPCIONES_INTEGRACION_C.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/transcripts.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/TRANSCRIPCIONES_PIPELINE_B.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/transcripts.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/TRANSCRIPCIONES_RENDIMIENTO_CONSULTA.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/transcripts.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    },
+    {
+      "path": "docs/TRANSCRIPCIONES_REPRESENTACIONES.md",
+      "language": "es",
+      "role": "source_reference",
+      "topic_guide": "docs/en/transcripts.md",
+      "note": "Topic navigation only; this guide is not a line-by-line translation or replacement."
+    }
+  ]
+}

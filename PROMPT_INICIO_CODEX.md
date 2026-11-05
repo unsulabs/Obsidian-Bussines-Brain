@@ -1,5 +1,9 @@
 # Iniciar o continuar el Obsidian-Bussines-Brain con Codex
 
+[English](GET_STARTED_WITH_CODEX.md) · [Preparación](docs/es/onboarding.md)
+
+Guías en español: [flujo de conocimiento](docs/es/knowledge-workflow.md) y [guía de uso](docs/es/user-guide.md). Los archivos de skills y `docs/FLUJO_EMPRESA_COMPLETA.md` / `docs/MARKETING_EMPRESARIAL.md` citados en el prompt siguiente son referencias operativas españolas preservadas para el agente; sus nombres no cambian.
+
 Quiero que instales o continúes el segundo cerebro de **mi empresa real** usando este repositorio y Obsidian. El resultado es una bóveda que organice cómo trabajamos y decidimos, convierta criterios y patrones repetibles en instrucciones utilizables por personas o agentes, y se actualice cuando te cuente algo nuevo o aparezcan archivos, clientes, decisiones y trabajos. Haz el recorrido completo; no cierres después de crear una primera nota o pasar pruebas técnicas.
 
 1. Lee `AGENTS.md` y activa `ce-instalacion` sólo si no existe instancia; si ya existe, `ce-continuidad`. Comprueba el estado real del checkout, Obsidian y bóveda. Reconoce cualquier autorización que ya te haya dado: no pidas de nuevo el mismo permiso. No crees otra bóveda ni edites a ciegas una existente.

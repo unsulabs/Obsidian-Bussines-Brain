@@ -1,9 +1,14 @@
-# Copia y pega esto en Codex después de abrir el repositorio
+# Empieza aquí
 
-Quiero instalar y comenzar a desarrollar el Obsidian-Bussines-Brain para mi negocio. No sé programar ni configurar Obsidian. **No desarrolles un sistema distinto; utiliza lo que ya existe en este repositorio.**
+[English](START_HERE.md) · [Documentación](docs/es/README.md)
 
-Lee `AGENTS.md`, `.agents/skills/ce-desarrollo-empresa/SKILL.md` y `guia/PRIMERA_EMPRESA_CON_CODEX.md`. Empieza con diagnóstico de solo lectura, indícame qué observaste realmente y propón las acciones pertinentes. Activa `ce-instalacion` sólo si no existe bóveda; si existe, entra por `ce-continuidad`. Pide permiso antes de instalar dependencias, descargar plugins o escribir fuera del repositorio cuando no esté autorizado en la conversación. Mantén el repositorio maestro separado de la bóveda privada de mi empresa; no subas mis datos a GitHub salvo autorización expresa.
+Abre este repositorio en Codex. Usa el producto existente para desarrollar conocimiento útil sobre tu negocio.
 
-Después de validar la instalación, usa `ce-descubrimiento` y el flujo de empresa completa: recupera información existente antes de hacer preguntas; no inventes nada, no me pidas 45 formularios y no crees documentos vacíos. Desarrolla conmigo piezas de conocimiento empresarial útiles con vNext-1.0R, comprueba su autoridad, fuentes y relaciones, y ayúdame a utilizarlas en Obsidian para una tarea real. La primera pieza es un incremento, no el cierre del cerebro.
+1. Lee la [preparación](docs/es/onboarding.md) para conocer requisitos y separación de almacenamiento.
+2. Si no existe bóveda del negocio, usa el [prompt de inicio](PROMPT_INICIO_CODEX.md).
+3. Si ya existe, usa [Continúa con Codex](PROMPT_RECUPERAR_EMPRESA_EXISTENTE_CODEX.md). No crees otra bóveda ni copies plantillas encima.
+4. Trabaja en una tarea real, revisa el conocimiento y deja un punto de continuidad. La instalación y una primera nota son incrementos, no prueba de un cerebro empresarial completo.
 
-Antes de terminar ejecuta pruebas estructurales, distingue lo probado de lo pendiente (incluida GUI y recuperación semántica), registra continuidad y dime qué puedo hacer en la siguiente sesión. Tu primera respuesta debe mostrar diagnóstico observado y las dos o tres siguientes acciones posibles, **no un documento genérico sobre mi empresa**.
+El agente comprueba primero entorno y permisos. Verifica el destino mediante la dependencia externa `obsidian-router` antes de acceder a una bóveda existente. Si falta routing, conserva el trabajo autorizado fuera de la bóveda y deja su acceso pendiente.
+
+La aceptación técnica tras instalar, migrar o cambiar una integración es distinta de la continuidad cotidiana. Elige la sección pertinente del prompt de continuidad.

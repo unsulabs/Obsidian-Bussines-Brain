@@ -1,0 +1,23 @@
+# Local adaptation; upstream version pinned in THIRD_PARTY_NOTICES.md.
+documentation:
+  core: {architecture: true, onboarding: true, adr: true}
+  data: {data_model: true, database_ops: false, data_security: true}
+  infrastructure: {deployment: false, dependencies: true, security: true}
+  development: {rfc: true, contributing: true, api_docs: false}
+project:
+  name: Obsidian Business Brain
+  preferences: {diagram_style: mermaid, documentation_style: professional}
+generation:
+  include_code_examples: true
+  include_diagrams: true
+  auto_generate_toc: false
+# These keys are a LOCAL extension interpreted by the bundled agent prompts.
+# Upstream does not implement this bilingual layout or a runtime parser.
+local_extension:
+  primary_language: en
+  languages: [en, es]
+  inventory: docs/documentation-map.json
+  paths: {en: docs/en, es: docs/es}
+  template_paths: {en: .cursor/cursor-init/templates/en, es: .cursor/cursor-init/templates/es}
+  check_command: python3 scripts/check_docs.py
+  preserve_existing: true

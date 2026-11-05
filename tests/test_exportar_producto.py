@@ -47,6 +47,11 @@ class ExportarProductoTest(unittest.TestCase):
             repo.mkdir()
             for name in ('AGENTS.md', 'README.md', 'scripts/cerebro.py',
                          '.agents/skills/ce-instalacion/SKILL.md', 'LICENSE', 'CONTRIBUTING.md',
+                         'README.es.md', '.cursor-init.yaml', 'THIRD_PARTY_NOTICES.md',
+                         '.cursor/commands/cursor-init/check-docs.md',
+                         'docs/en/onboarding.md', 'docs/es/onboarding.md',
+                         'START_HERE.md', 'GET_STARTED_WITH_CODEX.md', 'CONTINUE_WITH_CODEX.md',
+                         '.cursor/corpus/private.md',
                          'material_privado/EMPRESA-SINTETICA/originales/privado.md'):
                 path = repo / name
                 path.parent.mkdir(parents=True, exist_ok=True)
@@ -64,6 +69,12 @@ class ExportarProductoTest(unittest.TestCase):
                 self.assertIn('scripts/cerebro.py', archive.namelist())
                 self.assertIn('LICENSE', archive.namelist())
                 self.assertIn('CONTRIBUTING.md', archive.namelist())
+                for expected in ('README.es.md', '.cursor-init.yaml', 'THIRD_PARTY_NOTICES.md',
+                                 '.cursor/commands/cursor-init/check-docs.md',
+                                 'docs/en/onboarding.md', 'docs/es/onboarding.md',
+                                 'START_HERE.md', 'GET_STARTED_WITH_CODEX.md', 'CONTINUE_WITH_CODEX.md'):
+                    self.assertIn(expected, archive.namelist())
+                self.assertNotIn('.cursor/corpus/private.md', archive.namelist())
                 self.assertFalse(any(x.startswith('material_privado/')
                                      for x in archive.namelist()))
                 self.assertNotIn(b'SECRETO_EMPRESARIAL',

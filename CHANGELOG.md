@@ -1,10 +1,19 @@
-# Cambios de la edición pública
+# Public edition changelog
 
-## Candidato inicial
+[Español](docs/es/changelog.md)
 
-- Distribución independiente de software, metodología, skills y ejemplos sintéticos.
-- Público: negocios, emprendedores y trabajadores por cuenta propia sin restricción geográfica.
-- Licencia MIT y guía de contribución; fuentes privadas separadas del producto.
-- Exportación con allowlist y manifiesto generado desde el commit distribuido.
+## Unreleased
 
-Este registro comienza con la edición pública. No acredita aceptación empresarial ni una instalación concreta.
+- English primary documentation with paired Spanish onboarding, usage, development, and technical guidance.
+- Separate everyday continuation from installation and integration acceptance.
+- Document the external vault router, private storage boundaries, and unchanged runtime identifiers.
+- Adapt the ai-cursor-init documentation structure to the inspected local toolkit; do not infer hosted APIs, databases, or background services from generic templates.
+
+## Initial candidate
+
+- Independent distribution of software, methodology, agent skills, and synthetic examples.
+- Supports businesses, entrepreneurs, and self-employed people without geographic restriction.
+- MIT license and contribution guidance; private sources remain separate from the product.
+- Allowlisted export and a manifest generated from the distributed commit.
+
+This log begins with the public edition. Entries do not certify business acceptance, release publication, or any specific installation.
