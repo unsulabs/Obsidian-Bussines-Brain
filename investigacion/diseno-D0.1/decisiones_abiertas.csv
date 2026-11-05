@@ -1,0 +1,21 @@
+decision_id,question,alternatives,required_evidence,status,owner_approval
+DEC-01,Experiencia inicial del propietario,Chat guiado / Obsidian Inicio / híbrido,Persona sin experiencia configura y encuentra primera respuesta sin intervención experta,abierta,pendiente
+DEC-02,Representación de entidades,Nota / bloque / registro externo / híbrido,Mismo cliente en tres roles y dos proyectos; no duplicar ni perder historia,abierta,pendiente
+DEC-03,Ontología y relaciones,Properties tipadas / índice semántico / otro modelo,`contrata` ≠ `participa` ≠ `paga`; fuente y recuperación correctas,abierta,pendiente
+DEC-04,Autoridad en sistemas externos,Referencia federada / réplica controlada / dato local,Contrato distinto de oferta y finanzas con corte temporal,abierta,pendiente
+DEC-05,Motor de vigencia,Fechas/estado explícito / revalidación periódica / combinación,"Precio caducado, acuerdo posterior y fuente inaccesible",abierta,pendiente
+DEC-06,Edición y cambios,Borradores / diffs / registro de eventos / versionado de dominio,"Dos editores, conflicto y rollback sin pérdida",abierta,pendiente
+DEC-07,Permisos por agente,Separación OS/directorios / scopes de herramientas / infraestructura aislada,Agente sin permiso no lee ni escribe bloque restringido,abierta,pendiente
+DEC-08,Contrato de tareas,Checkbox / TaskNotes / sistema externo / dual,Programado vs vencimiento; desinstalar plugin y consultar tareas,abierta,pendiente
+DEC-09,Vistas Obsidian,Core nativo / plugin / híbrido,"Comparar carga, mantenimiento y uso cotidiano",abierta,pendiente
+DEC-10,Plantillas adaptativas,Clases especializadas / diálogo IA / mezclas,"Producto, consultoría y empresa híbrida con estructura pertinente",abierta,pendiente
+DEC-11,Paquetes para agentes,Export estático / consulta dinámica / herramienta local,"Mismo caso por Codex, Claude y chat sin disco",abierta,pendiente
+DEC-12,Instrucciones y skills,Archivos por harness / adaptador común / generador,"Pruebas por harness, sin asumir sintaxis universal",abierta,pendiente
+DEC-13,Instalación y permisos,Script guiado / comando Codex / asistente híbrido,"Prueba limpia, consentimiento granular y error reproducible",abierta,pendiente
+DEC-14,Integración de datos,Referencia / copia selectiva / sincronización,Sin fuga de datos ni doble autoridad; reconexión y revocación,abierta,pendiente
+DEC-15,Versiones del producto,Core fijo + instancia / módulos y migraciones,"Upgrade, rollback, recuperación, compatibilidad con extensiones",abierta,pendiente
+DEC-16,Respaldo/sincronización,Git privado / Obsidian Sync / sistema archivo / mixto,Restauración completa sin subir secretos ni conflictos,abierta,pendiente
+DEC-17,Criterio de cobertura,Preguntas por dominio / escenarios / matriz de evidencia,Empresa sin finanzas maduras y otra con muchos proyectos,abierta,pendiente
+DEC-18,Umbral de autonomía,"Riesgo, permisos, historia, consulta frecuente",Evitar nota por cada mención o todo dentro de una nota monolítica,abierta,pendiente
+DEC-19,Métricas de utilidad,Tiempo a primera respuesta / precisión / continuidad / esfuerzo,Test de dueño no técnico y recuperación semántica adversarial,abierta,pendiente
+DEC-20,Política de terceros,Solo oficial y nativo / plugins curados / catálogo opcional,"Licencia, mantenimiento, seguridad, desconexión de plugin",abierta,pendiente

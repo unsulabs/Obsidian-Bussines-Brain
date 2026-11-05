@@ -1,0 +1,2 @@
+Los resultados de pruebas deben generarse sobre el candidato actual. Ejecutar: python -m unittest discover -s tests -v
+No se distribuyen registros de aceptación de instancias privadas.

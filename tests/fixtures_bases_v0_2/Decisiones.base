@@ -1,0 +1,12 @@
+filters:
+  and:
+    - 'tipo == "decision"'
+views:
+  - type: table
+    name: "Decisiones"
+    order:
+      - file.name
+      - estado_editorial
+      - vigencia
+      - fecha_efectiva
+      - fuentes

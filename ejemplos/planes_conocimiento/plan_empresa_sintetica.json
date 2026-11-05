@@ -1,0 +1,105 @@
+{
+  "pregunta": "Organizar conocimiento estratégico, comercial y operativo de una firma completamente ficticia",
+  "asuntos": [
+    {
+      "clave": "modelo-valor",
+      "criterio": "La dirección define un principio para analizar la creación y entrega de valor.",
+      "por_que_importa": "El criterio se utiliza para comparar modalidades sin repetir términos comerciales.",
+      "fuentes": [
+        "F-DEMO-001"
+      ]
+    },
+    {
+      "clave": "oferta-servicio",
+      "criterio": "Se explora una oferta con alcance específico y reglas propias de precio.",
+      "por_que_importa": "El alcance y condiciones pueden cambiar independientemente de la estrategia.",
+      "fuentes": [
+        "F-DEMO-001"
+      ]
+    },
+    {
+      "clave": "proceso-servicio",
+      "criterio": "El equipo utiliza una secuencia de ejecución que debe poder delegarse.",
+      "por_que_importa": "El proceso se consulta y actualiza sin leer toda la estrategia.",
+      "fuentes": [
+        "F-DEMO-001"
+      ]
+    },
+    {
+      "clave": "detalle-pasajero",
+      "criterio": "Una anécdota incidental no representa por sí misma una regla empresarial.",
+      "por_que_importa": "Es suficiente conservar el comentario en la fuente original.",
+      "fuentes": [
+        "F-DEMO-001"
+      ]
+    }
+  ],
+  "unidades": [
+    {
+      "clave": "direccion",
+      "titulo": "Modelo de valor",
+      "accion": "revisar",
+      "tipo": "documento",
+      "clase": "D01",
+      "id_existente": "D01",
+      "razon_identidad": "El D01 conserva la síntesis estratégica y vincula las demás unidades con identidad propia.",
+      "asuntos": [
+        "modelo-valor"
+      ],
+      "etiquetas": [
+        "direccion/modelo-valor"
+      ]
+    },
+    {
+      "clave": "oferta",
+      "titulo": "Oferta bajo análisis",
+      "accion": "crear",
+      "tipo": "oferta",
+      "razon_identidad": "La oferta tiene términos e historial comercial propios que se pueden revisar independientemente.",
+      "asuntos": [
+        "oferta-servicio"
+      ],
+      "etiquetas": [
+        "comercial/ofertas"
+      ]
+    },
+    {
+      "clave": "proceso",
+      "titulo": "Proceso ejecutable",
+      "accion": "crear",
+      "tipo": "proceso",
+      "razon_identidad": "La secuencia de ejecución requiere acceso, revisión y responsabilidades propias.",
+      "asuntos": [
+        "proceso-servicio"
+      ],
+      "etiquetas": [
+        "operacion/procesos"
+      ]
+    },
+    {
+      "clave": "detalle",
+      "titulo": "Comentario en fuente",
+      "accion": "no_crear",
+      "razon_identidad": "La anécdota no necesita historia propia y debe permanecer sólo como referencia de contexto.",
+      "asuntos": [
+        "detalle-pasajero"
+      ]
+    }
+  ],
+  "relaciones": [
+    {
+      "origen": "direccion",
+      "destino": "oferta",
+      "predicado": "refiere_a",
+      "ambito": "diseño del modelo",
+      "fundamento": "El documento de dirección enlaza a la ficha sin copiar todos sus términos."
+    },
+    {
+      "origen": "direccion",
+      "destino": "proceso",
+      "predicado": "refiere_a",
+      "ambito": "entrega operativa",
+      "fundamento": "El modelo puede consultar el proceso sin mantener instrucciones duplicadas."
+    }
+  ]
+}

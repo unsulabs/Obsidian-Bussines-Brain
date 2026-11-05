@@ -1,0 +1,13 @@
+filters:
+  or:
+  - tipo == "reunion"
+  - tipo == "sesion"
+  - tipo == "continuidad"
+views:
+- type: table
+  name: Tabla
+  order:
+  - file.name
+  - tipo
+  - fecha_reunion
+  - registrado_en

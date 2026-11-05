@@ -1,0 +1,116 @@
+{
+  "nodes": [
+    {
+      "id": "doc-D03",
+      "type": "file",
+      "file": "10_Conocimiento/D03.md",
+      "x": 0,
+      "y": 0,
+      "width": 370,
+      "height": 250
+    },
+    {
+      "id": "doc-X01-BRISA-001",
+      "type": "file",
+      "file": "10_Conocimiento/X01-BRISA-001.md",
+      "x": 0,
+      "y": 310,
+      "width": 370,
+      "height": 250
+    },
+    {
+      "id": "doc-X04-BRISA-001",
+      "type": "file",
+      "file": "10_Conocimiento/X04-BRISA-001.md",
+      "x": 0,
+      "y": 620,
+      "width": 370,
+      "height": 250
+    },
+    {
+      "id": "doc-X07-BRISA-001",
+      "type": "file",
+      "file": "10_Conocimiento/X07-BRISA-001.md",
+      "x": 0,
+      "y": 930,
+      "width": 370,
+      "height": 250
+    },
+    {
+      "id": "src-F-0100",
+      "type": "file",
+      "file": "50_Fuentes/F-0100.md",
+      "x": 900,
+      "y": 170,
+      "width": 350,
+      "height": 240
+    },
+    {
+      "id": "src-F-0101",
+      "type": "file",
+      "file": "50_Fuentes/F-0101.md",
+      "x": 900,
+      "y": 480,
+      "width": 350,
+      "height": 240
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-rel-1",
+      "fromNode": "doc-D03",
+      "toNode": "doc-X01-BRISA-001",
+      "label": "refiere_oferta",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "edge-rel-2",
+      "fromNode": "doc-X04-BRISA-001",
+      "toNode": "doc-D03",
+      "label": "inspira_propuesta",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "edge-rel-3",
+      "fromNode": "doc-D03",
+      "toNode": "doc-X07-BRISA-001",
+      "label": "requiere_experimento",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "edge-source-4",
+      "fromNode": "doc-D03",
+      "toNode": "src-F-0101",
+      "label": "sustentado_por",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "edge-source-5",
+      "fromNode": "doc-D03",
+      "toNode": "src-F-0100",
+      "label": "sustentado_por",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "edge-source-6",
+      "fromNode": "doc-X01-BRISA-001",
+      "toNode": "src-F-0101",
+      "label": "sustentado_por",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "edge-source-7",
+      "fromNode": "doc-X04-BRISA-001",
+      "toNode": "src-F-0100",
+      "label": "sustentado_por",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "edge-source-8",
+      "fromNode": "doc-X07-BRISA-001",
+      "toNode": "src-F-0100",
+      "label": "sustentado_por",
+      "toEnd": "arrow"
+    }
+  ]
+}

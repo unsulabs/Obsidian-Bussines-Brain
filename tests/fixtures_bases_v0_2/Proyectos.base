@@ -1,0 +1,24 @@
+filters:
+  or:
+  - tipo == "proyecto"
+  - tipo == "implementacion"
+  - tipo == "caso"
+views:
+- type: table
+  name: Tabla
+  order:
+  - file.name
+  - tipo
+  - estado_proyecto
+  - estado_editorial
+  - registrado_en
+- type: kanban
+  name: Tablero
+  groupBy:
+    property: note.estado_proyecto
+    direction: ASC
+  order:
+  - file.name
+  - tipo
+  - estado_proyecto
+  - estado_editorial

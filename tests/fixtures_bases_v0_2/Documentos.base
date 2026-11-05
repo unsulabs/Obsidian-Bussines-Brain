@@ -1,0 +1,13 @@
+filters:
+  and:
+    - 'tipo == "documento"'
+views:
+  - type: table
+    name: "Documentos"
+    order:
+      - file.name
+      - clase
+      - estado_editorial
+      - fecha_corte
+      - sensibilidad
+      - fuentes

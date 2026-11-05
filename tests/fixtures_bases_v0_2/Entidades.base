@@ -1,0 +1,11 @@
+filters:
+  and:
+    - 'tipo == "entidad"'
+views:
+  - type: table
+    name: "Entidades"
+    order:
+      - file.name
+      - clase
+      - estado_editorial
+      - sensibilidad

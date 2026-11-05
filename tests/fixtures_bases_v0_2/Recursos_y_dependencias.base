@@ -1,0 +1,19 @@
+filters:
+  or:
+  - tipo == "recurso"
+  - tipo == "proveedor"
+  - tipo == "herramienta"
+views:
+- type: table
+  name: Tabla
+  order:
+  - file.name
+  - tipo
+  - vigencia
+  - fuentes
+- type: cards
+  name: Tarjetas
+  order:
+  - file.name
+  - tipo
+  - estado_editorial

@@ -1,0 +1,836 @@
+[
+  {
+    "hallazgo_id": "H-001",
+    "fuente_id": "VID-001",
+    "video_id": "vihPqFnM0dU",
+    "marca_inicio": "01:26",
+    "marca_fin": "02:42",
+    "enlace_segmento": "https://www.youtube.com/watch?v=vihPqFnM0dU&t=86s",
+    "tipo_evidencia": "configuracion_narrada",
+    "contenido_del_video_parafraseado": "Se instala TaskNotes y configura una carpeta dedicada; cada tarea se identifica mediante una etiqueta o propiedad en una nota.",
+    "aplicacion_posible_no_aprobada": "Tarea individual con identidad y metadatos consultables.",
+    "limitaciones": "No constituye por sí mismo el contrato universal de tareas ni compatibilidad con cada versión.",
+    "requisitos": [
+      "RQ-014",
+      "RQ-020",
+      "RQ-021"
+    ],
+    "prueba_propuesta_no_ejecutada": "Crear tarea, localizar archivo Markdown y probar migración sin plugin.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-002",
+    "fuente_id": "VID-001",
+    "video_id": "vihPqFnM0dU",
+    "marca_inicio": "02:56",
+    "marca_fin": "04:43",
+    "enlace_segmento": "https://www.youtube.com/watch?v=vihPqFnM0dU&t=176s",
+    "tipo_evidencia": "configuracion_narrada",
+    "contenido_del_video_parafraseado": "El autor excluye la carpeta de plantillas y personaliza los estados: por hacer, haciendo, hecha y archivada.",
+    "aplicacion_posible_no_aprobada": "Evitar que plantillas se interpreten como datos reales; distinguir terminación de archivo.",
+    "limitaciones": "Estados son una elección personal, no ontología empresarial; no confundir hecho con aprobado.",
+    "requisitos": [
+      "RQ-006",
+      "RQ-017",
+      "RQ-024"
+    ],
+    "prueba_propuesta_no_ejecutada": "Plantilla no debe aparecer en vista de tareas ni convertirse en tarea al editarla.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-003",
+    "fuente_id": "VID-001",
+    "video_id": "vihPqFnM0dU",
+    "marca_inicio": "05:08",
+    "marca_fin": "07:18",
+    "enlace_segmento": "https://www.youtube.com/watch?v=vihPqFnM0dU&t=308s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "Evita etiquetas, contexto y proyecto predeterminados indiscriminadamente; vincula tareas a nota padre cuando corresponde.",
+    "aplicacion_posible_no_aprobada": "Metadatos contextuales solo cuando son informativos; tarea pertenece a proyecto o entidad.",
+    "limitaciones": "No toda tarea tiene un proyecto; no crear enlaces ficticios.",
+    "requisitos": [
+      "RQ-015",
+      "RQ-021",
+      "RQ-028"
+    ],
+    "prueba_propuesta_no_ejecutada": "Capturar tarea sin proyecto y otra asociada a dos contextos sin perder identidad.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-004",
+    "fuente_id": "VID-001",
+    "video_id": "vihPqFnM0dU",
+    "marca_inicio": "07:20",
+    "marca_fin": "08:12",
+    "enlace_segmento": "https://www.youtube.com/watch?v=vihPqFnM0dU&t=440s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "Distingue fecha de entrega (due) de fecha prevista para trabajar (scheduled).",
+    "aplicacion_posible_no_aprobada": "Modelo temporal de tareas distingue compromiso de planificación.",
+    "limitaciones": "Programado no equivale a fecha prometida o vencimiento contractual.",
+    "requisitos": [
+      "RQ-017",
+      "RQ-021",
+      "RQ-022"
+    ],
+    "prueba_propuesta_no_ejecutada": "Cambiar día de trabajo sin alterar entrega comprometida.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-005",
+    "fuente_id": "VID-001",
+    "video_id": "vihPqFnM0dU",
+    "marca_inicio": "08:12",
+    "marca_fin": "08:43",
+    "enlace_segmento": "https://www.youtube.com/watch?v=vihPqFnM0dU&t=492s",
+    "tipo_evidencia": "recomendacion_explicita",
+    "contenido_del_video_parafraseado": "Rechaza una plantilla de cuerpo única porque las tareas tienen contenidos heterogéneos.",
+    "aplicacion_posible_no_aprobada": "Señal para plantillas adaptativas condicionadas por propósito.",
+    "limitaciones": "No demuestra que ninguna tarea deba usar plantilla.",
+    "requisitos": [
+      "RQ-015",
+      "RQ-028"
+    ],
+    "prueba_propuesta_no_ejecutada": "Validar tres clases de tarea con campos mínimos distintos.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-006",
+    "fuente_id": "VID-001",
+    "video_id": "vihPqFnM0dU",
+    "marca_inicio": "11:31",
+    "marca_fin": "17:08",
+    "enlace_segmento": "https://www.youtube.com/watch?v=vihPqFnM0dU&t=691s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Muestra vistas de agenda, calendario y kanban desde la misma información de tareas, con cambios de estado visibles.",
+    "aplicacion_posible_no_aprobada": "Separar unidad de conocimiento de interfaz o vista.",
+    "limitaciones": "La transcripción describe acciones; no se inspeccionaron pantallas ni se probó la instalación.",
+    "requisitos": [
+      "RQ-019",
+      "RQ-020",
+      "RQ-026"
+    ],
+    "prueba_propuesta_no_ejecutada": "Una tarea y tres vistas, sin registros duplicados.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-007",
+    "fuente_id": "VID-001",
+    "video_id": "vihPqFnM0dU",
+    "marca_inicio": "18:13",
+    "marca_fin": "22:32",
+    "enlace_segmento": "https://www.youtube.com/watch?v=vihPqFnM0dU&t=1093s",
+    "tipo_evidencia": "limitacion_observada_en_relato",
+    "contenido_del_video_parafraseado": "Emplea filtros y vistas guardadas por contexto; describe inconsistencias de caché y necesidad de actualización de vistas.",
+    "aplicacion_posible_no_aprobada": "Se requieren pruebas de actualización, cache y sincronización, no solo ver bonitas vistas.",
+    "limitaciones": "Errores pueden depender de versión; no asumir que están vigentes.",
+    "requisitos": [
+      "RQ-026",
+      "RQ-027"
+    ],
+    "prueba_propuesta_no_ejecutada": "Modificar metadato externo y comprobar refresco/consistencia de vistas.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-008",
+    "fuente_id": "VID-001",
+    "video_id": "vihPqFnM0dU",
+    "marca_inicio": "22:48",
+    "marca_fin": "25:34",
+    "enlace_segmento": "https://www.youtube.com/watch?v=vihPqFnM0dU&t=1368s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Registra tiempo de trabajo, Pomodoro y estadísticas por tarea/proyecto.",
+    "aplicacion_posible_no_aprobada": "Posible módulo opcional para estimación y seguimiento operativo.",
+    "limitaciones": "Tiempo registrado no equivale a horas facturables, factura emitida ni cobro.",
+    "requisitos": [
+      "RQ-013",
+      "RQ-021",
+      "RQ-023"
+    ],
+    "prueba_propuesta_no_ejecutada": "Separar time-entry, estimación, cotización y registro financiero.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-009",
+    "fuente_id": "VID-001",
+    "video_id": "vihPqFnM0dU",
+    "marca_inicio": "25:50",
+    "marca_fin": "26:27",
+    "enlace_segmento": "https://www.youtube.com/watch?v=vihPqFnM0dU&t=1550s",
+    "tipo_evidencia": "opinion_del_autor",
+    "contenido_del_video_parafraseado": "El autor compara TaskNotes con otros plugins que decidió dejar de usar y menciona integraciones adicionales.",
+    "aplicacion_posible_no_aprobada": "Candidato de plugin y evaluación de redundancias.",
+    "limitaciones": "Preferencia personal no es recomendación universal ni auditoría técnica.",
+    "requisitos": [
+      "RQ-003",
+      "RQ-020",
+      "RQ-027"
+    ],
+    "prueba_propuesta_no_ejecutada": "Prueba A/B del núcleo sin TaskNotes y con TaskNotes bajo versión comprobada.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-010",
+    "fuente_id": "VID-002",
+    "video_id": "uclyVDxJeeY",
+    "marca_inicio": "00:00",
+    "marca_fin": "01:18",
+    "enlace_segmento": "https://www.youtube.com/watch?v=uclyVDxJeeY&t=0s",
+    "tipo_evidencia": "recomendacion_explicita",
+    "contenido_del_video_parafraseado": "Propone iniciar con tres carpetas y tres notas de entrada en vez de muchos departamentos.",
+    "aplicacion_posible_no_aprobada": "Reducir fricción inicial para dueño sin conocimientos técnicos.",
+    "limitaciones": "Es un onboarding de un caso sencillo, no cobertura integral ni patrón universal de almacenamiento.",
+    "requisitos": [
+      "RQ-001",
+      "RQ-002",
+      "RQ-019"
+    ],
+    "prueba_propuesta_no_ejecutada": "Probar primer inicio de un dueño que no conoce Obsidian sin preguntas técnicas.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-011",
+    "fuente_id": "VID-002",
+    "video_id": "uclyVDxJeeY",
+    "marca_inicio": "01:35",
+    "marca_fin": "03:26",
+    "enlace_segmento": "https://www.youtube.com/watch?v=uclyVDxJeeY&t=95s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "El dashboard resume prioridades, proyectos y enlaces; el detalle queda en documentos aparte.",
+    "aplicacion_posible_no_aprobada": "Inicio como vista y puerta de entrada, no documento maestro de todas las verdades.",
+    "limitaciones": "La lista manual puede desactualizarse; para estado vigente requiere enlace a autoridad.",
+    "requisitos": [
+      "RQ-007",
+      "RQ-016",
+      "RQ-019"
+    ],
+    "prueba_propuesta_no_ejecutada": "Cambiar prioridad en fuente y comprobar que Inicio no muestre información obsoleta.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-012",
+    "fuente_id": "VID-002",
+    "video_id": "uclyVDxJeeY",
+    "marca_inicio": "03:43",
+    "marca_fin": "04:50",
+    "enlace_segmento": "https://www.youtube.com/watch?v=uclyVDxJeeY&t=223s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "Los proyectos tienen notas particulares; normaliza estados planning, active, on hold y completed.",
+    "aplicacion_posible_no_aprobada": "Definir vocabularios controlados por tipo de entidad y no por estilo de usuario.",
+    "limitaciones": "La misma lista de estados no cubre propuestas, acuerdos, ofertas, tareas y aprobaciones.",
+    "requisitos": [
+      "RQ-014",
+      "RQ-015",
+      "RQ-022"
+    ],
+    "prueba_propuesta_no_ejecutada": "Separar proyecto pausado de oferta retirada y tarea cerrada.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-013",
+    "fuente_id": "VID-002",
+    "video_id": "uclyVDxJeeY",
+    "marca_inicio": "04:50",
+    "marca_fin": "05:38",
+    "enlace_segmento": "https://www.youtube.com/watch?v=uclyVDxJeeY&t=290s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "Mantiene una biblioteca con links a fuentes externas y plantillas que evita duplicar trabajo.",
+    "aplicacion_posible_no_aprobada": "Referencia federada a fuentes oficiales; plantillas reutilizables.",
+    "limitaciones": "La simple URL no prueba acceso, versión, permisos ni disponibilidad.",
+    "requisitos": [
+      "RQ-016",
+      "RQ-018",
+      "RQ-025"
+    ],
+    "prueba_propuesta_no_ejecutada": "Validar enlace roto, cambio de PDF y revocación de acceso.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-014",
+    "fuente_id": "VID-002",
+    "video_id": "uclyVDxJeeY",
+    "marca_inicio": "05:38",
+    "marca_fin": "06:25",
+    "enlace_segmento": "https://www.youtube.com/watch?v=uclyVDxJeeY&t=338s",
+    "tipo_evidencia": "recomendacion_explicita",
+    "contenido_del_video_parafraseado": "Sugiere enlaces internos pertinentes y evitar el enlazado indiscriminado.",
+    "aplicacion_posible_no_aprobada": "Relación guiada por valor semántico, no un grafo maximalista.",
+    "limitaciones": "Los wikilinks no codifican por sí solos tipo de relación ni autoridad.",
+    "requisitos": [
+      "RQ-015",
+      "RQ-026"
+    ],
+    "prueba_propuesta_no_ejecutada": "Diferenciar pertenece_a, participa_en, depende_de y menciona.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-015",
+    "fuente_id": "VID-002",
+    "video_id": "uclyVDxJeeY",
+    "marca_inicio": "06:25",
+    "marca_fin": "07:12",
+    "enlace_segmento": "https://www.youtube.com/watch?v=uclyVDxJeeY&t=385s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "Distingue propiedades para ordenar/filtrar y etiquetas para agrupación flexible.",
+    "aplicacion_posible_no_aprobada": "Convención de propiedades por entidad y etiquetas de apoyo.",
+    "limitaciones": "Afirmación de lentitud exponencial por tags no está demostrada.",
+    "requisitos": [
+      "RQ-020",
+      "RQ-026"
+    ],
+    "prueba_propuesta_no_ejecutada": "Probar búsqueda de notas con escalas y propiedades reales; no usar límite arbitrario de tags.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-016",
+    "fuente_id": "VID-002",
+    "video_id": "uclyVDxJeeY",
+    "marca_inicio": "07:12",
+    "marca_fin": "08:33",
+    "enlace_segmento": "https://www.youtube.com/watch?v=uclyVDxJeeY&t=432s",
+    "tipo_evidencia": "rutina_explicada",
+    "contenido_del_video_parafraseado": "Propone revisión diaria de prioridades y archivo de proyectos; menciona respaldo local/Git.",
+    "aplicacion_posible_no_aprobada": "El conocimiento requiere mantenimiento operativo y respaldos.",
+    "limitaciones": "Archivar no debe ocultar vigencia, auditoría ni eliminar acuerdos.",
+    "requisitos": [
+      "RQ-017",
+      "RQ-026",
+      "RQ-027"
+    ],
+    "prueba_propuesta_no_ejecutada": "Simular continuidad tras una semana sin actualizar y recuperación de respaldo.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-017",
+    "fuente_id": "VID-002",
+    "video_id": "uclyVDxJeeY",
+    "marca_inicio": "08:33",
+    "marca_fin": "09:27",
+    "enlace_segmento": "https://www.youtube.com/watch?v=uclyVDxJeeY&t=513s",
+    "tipo_evidencia": "opinion_del_autor",
+    "contenido_del_video_parafraseado": "Valora portabilidad de Markdown y recomienda ampliar estructura solo por necesidad.",
+    "aplicacion_posible_no_aprobada": "Núcleo pequeño y crecimiento incremental.",
+    "limitaciones": "No representa requerimientos de cumplimiento, finanzas o multiempresa.",
+    "requisitos": [
+      "RQ-003",
+      "RQ-028"
+    ],
+    "prueba_propuesta_no_ejecutada": "Probar migrar y consultar notas sin interfaz Obsidian.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-018",
+    "fuente_id": "VID-003",
+    "video_id": "Fzy6BmHWNRQ",
+    "marca_inicio": "02:09",
+    "marca_fin": "04:32",
+    "enlace_segmento": "https://www.youtube.com/watch?v=Fzy6BmHWNRQ&t=129s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Crea un proyecto de consultoría distinto de la empresa cliente e identifica relaciones parent/related.",
+    "aplicacion_posible_no_aprobada": "Diferenciar organización, relación comercial y proyecto específico.",
+    "limitaciones": "Etiquetas up/related son genéricas; convendrían relaciones semánticas verificables.",
+    "requisitos": [
+      "RQ-008",
+      "RQ-009",
+      "RQ-015"
+    ],
+    "prueba_propuesta_no_ejecutada": "Una cuenta con tres proyectos: recuperar empresa sin confundirla con ejecución.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-019",
+    "fuente_id": "VID-003",
+    "video_id": "Fzy6BmHWNRQ",
+    "marca_inicio": "04:32",
+    "marca_fin": "06:42",
+    "enlace_segmento": "https://www.youtube.com/watch?v=Fzy6BmHWNRQ&t=272s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Genera bitácoras de avances relacionadas con un proyecto a partir de notas y tareas del día.",
+    "aplicacion_posible_no_aprobada": "Registro de eventos y procedencia temporal para reconstruir trabajo.",
+    "limitaciones": "El uso de checkbox como historial puede perder semántica de evento si se marca completado.",
+    "requisitos": [
+      "RQ-011",
+      "RQ-014",
+      "RQ-025"
+    ],
+    "prueba_propuesta_no_ejecutada": "Reconstruir cronología sin interpretar cierre de tarea como aceptación comercial.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-020",
+    "fuente_id": "VID-003",
+    "video_id": "Fzy6BmHWNRQ",
+    "marca_inicio": "07:00",
+    "marca_fin": "11:46",
+    "enlace_segmento": "https://www.youtube.com/watch?v=Fzy6BmHWNRQ&t=420s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Modela dos subproyectos diferentes y utiliza propiedad up para construir jerarquía padre-hijo.",
+    "aplicacion_posible_no_aprobada": "Relaciones jerárquicas entre proyectos sin duplicar sus notas.",
+    "limitaciones": "Una sola propiedad no resuelve relaciones muchos-a-muchos ni vigencia.",
+    "requisitos": [
+      "RQ-014",
+      "RQ-015",
+      "RQ-021"
+    ],
+    "prueba_propuesta_no_ejecutada": "Subproyecto compartido o vínculo transversal sin romper integridad referencial.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-021",
+    "fuente_id": "VID-003",
+    "video_id": "Fzy6BmHWNRQ",
+    "marca_inicio": "12:02",
+    "marca_fin": "15:53",
+    "enlace_segmento": "https://www.youtube.com/watch?v=Fzy6BmHWNRQ&t=722s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Una reunión se relaciona simultáneamente con proyecto principal y subproyecto; la vista de cada uno la recupera.",
+    "aplicacion_posible_no_aprobada": "Reunión como entidad independiente, relaciones múltiples y recuperación contextual.",
+    "limitaciones": "No toda reunión amerita expediente; requiere criterios de identidad.",
+    "requisitos": [
+      "RQ-009",
+      "RQ-015",
+      "RQ-025"
+    ],
+    "prueba_propuesta_no_ejecutada": "Una reunión alimenta dos proyectos sin crear copias de la minuta.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-022",
+    "fuente_id": "VID-003",
+    "video_id": "Fzy6BmHWNRQ",
+    "marca_inicio": "16:14",
+    "marca_fin": "19:24",
+    "enlace_segmento": "https://www.youtube.com/watch?v=Fzy6BmHWNRQ&t=974s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Crea personas participantes independientes de las reuniones y de la organización; recupera interacciones.",
+    "aplicacion_posible_no_aprobada": "Separar persona, organización, rol, reunión y relación comercial.",
+    "limitaciones": "Datos personales precisan minimización, consentimiento y permisos.",
+    "requisitos": [
+      "RQ-009",
+      "RQ-018",
+      "RQ-021"
+    ],
+    "prueba_propuesta_no_ejecutada": "Una persona cambia de empresa sin borrar su historial ni divulgar datos restringidos.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-023",
+    "fuente_id": "VID-003",
+    "video_id": "Fzy6BmHWNRQ",
+    "marca_inicio": "19:24",
+    "marca_fin": "20:48",
+    "enlace_segmento": "https://www.youtube.com/watch?v=Fzy6BmHWNRQ&t=1164s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Una tarea asignada a alguien también queda vinculada al proyecto; se consulta desde ambas entidades.",
+    "aplicacion_posible_no_aprobada": "Asignación de responsabilidad y relación multientidad.",
+    "limitaciones": "Mención de persona no demuestra que aceptó tarea o que tenga cuenta activa.",
+    "requisitos": [
+      "RQ-015",
+      "RQ-021",
+      "RQ-024"
+    ],
+    "prueba_propuesta_no_ejecutada": "Registrar responsable, asignador y estado de aceptación de tarea.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-024",
+    "fuente_id": "VID-003",
+    "video_id": "Fzy6BmHWNRQ",
+    "marca_inicio": "21:04",
+    "marca_fin": "24:27",
+    "enlace_segmento": "https://www.youtube.com/watch?v=Fzy6BmHWNRQ&t=1264s",
+    "tipo_evidencia": "ejemplo_del_autor",
+    "contenido_del_video_parafraseado": "El ejemplo registra intereses personales e ideas de regalos dentro del expediente de una persona.",
+    "aplicacion_posible_no_aprobada": "Ejemplo de conocimiento relacional, pero exige selección ética de datos.",
+    "limitaciones": "No adoptar recolección de intereses privados por defecto; no equivale a CRM autorizado.",
+    "requisitos": [
+      "RQ-018",
+      "RQ-025"
+    ],
+    "prueba_propuesta_no_ejecutada": "Prueba de minimización y supresión de información personal irrelevante.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-025",
+    "fuente_id": "VID-003",
+    "video_id": "Fzy6BmHWNRQ",
+    "marca_inicio": "25:29",
+    "marca_fin": "29:52",
+    "enlace_segmento": "https://www.youtube.com/watch?v=Fzy6BmHWNRQ&t=1529s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Conecta notas diarias, sesiones, reuniones, participantes, tareas y proyectos a lo largo del trabajo.",
+    "aplicacion_posible_no_aprobada": "Modelo evento→asuntos→entidades y recuperación multifacética.",
+    "limitaciones": "No representa acuerdos firmados, vigencia de políticas ni autoridad comercial.",
+    "requisitos": [
+      "RQ-009",
+      "RQ-011",
+      "RQ-016",
+      "RQ-026"
+    ],
+    "prueba_propuesta_no_ejecutada": "Consultar qué se decidió y qué quedó solo como propuesta en reunión.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-026",
+    "fuente_id": "VID-003",
+    "video_id": "Fzy6BmHWNRQ",
+    "marca_inicio": "29:52",
+    "marca_fin": "32:20",
+    "enlace_segmento": "https://www.youtube.com/watch?v=Fzy6BmHWNRQ&t=1792s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "Sugiere reutilizar proyectos anteriores y fijar bookmarks de los activos.",
+    "aplicacion_posible_no_aprobada": "Aprendizajes basados en casos y navegación rápida.",
+    "limitaciones": "Caso pasado no se convierte automáticamente en procedimiento vigente.",
+    "requisitos": [
+      "RQ-011",
+      "RQ-019",
+      "RQ-025"
+    ],
+    "prueba_propuesta_no_ejecutada": "Crear lección explícita con respaldo de caso antes de usarla como nueva regla.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-027",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "00:41",
+    "marca_fin": "03:23",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=41s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Presenta bóveda Markdown ficticia de comercio electrónico y sugiere conectarla a un asistente para pensar estratégicamente.",
+    "aplicacion_posible_no_aprobada": "Ejemplo de empresa de producto y capacidad de reflexión asistida.",
+    "limitaciones": "Explicación del almacenamiento por Obsidian es imprecisa; IA no adquiere acceso por existir enlaces.",
+    "requisitos": [
+      "RQ-003",
+      "RQ-007",
+      "RQ-024"
+    ],
+    "prueba_propuesta_no_ejecutada": "Probar acceso real del agente solo a archivos permitidos sin conectores supuestos.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-028",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "03:54",
+    "marca_fin": "06:08",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=234s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Vincula prioridades estratégicas trimestrales a notas de acciones, usando wikilinks, encabezados, bloques y propiedades.",
+    "aplicacion_posible_no_aprobada": "Puente estrategia→acciones→resultados para consultas.",
+    "limitaciones": "Enlace no prueba contribución causal a un objetivo.",
+    "requisitos": [
+      "RQ-007",
+      "RQ-015",
+      "RQ-021"
+    ],
+    "prueba_propuesta_no_ejecutada": "Preguntar qué acciones respaldan un objetivo y exigir evidencia de resultado.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-029",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "06:08",
+    "marca_fin": "07:28",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=368s",
+    "tipo_evidencia": "recomendacion_explicita",
+    "contenido_del_video_parafraseado": "Recomienda proporcionar información vigente al asistente, incluyendo dificultades, para que detecte desalineaciones.",
+    "aplicacion_posible_no_aprobada": "Paquetes de contexto con fecha de corte, limitaciones y propósito.",
+    "limitaciones": "No inferir que ausencia de notas demuestra inactividad; considerar datos incompletos.",
+    "requisitos": [
+      "RQ-016",
+      "RQ-017",
+      "RQ-024"
+    ],
+    "prueba_propuesta_no_ejecutada": "Informe de objetivos que distinga hechos conocidos de ausencias de registro.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-030",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "08:48",
+    "marca_fin": "09:34",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=528s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Usa un inbox de propuestas de la IA en lugar de permitir que el agente modifique directamente la bóveda principal.",
+    "aplicacion_posible_no_aprobada": "Patrón de propuesta→revisión→aplicación con control de cambios.",
+    "limitaciones": "Carpeta inbox sola no es control de acceso técnico; se requiere política de permisos real.",
+    "requisitos": [
+      "RQ-006",
+      "RQ-018",
+      "RQ-024"
+    ],
+    "prueba_propuesta_no_ejecutada": "Un agente no autorizado debe fallar al intentar escribir fuera de inbox.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-031",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "09:34",
+    "marca_fin": "10:52",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=574s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "Propone notas diarias y documentos concisos para mantener historial legible por IA.",
+    "aplicacion_posible_no_aprobada": "Bitácoras de sesiones y granularidad de bloques para recuperación.",
+    "limitaciones": "Tamaños de archivos no garantizan calidad; fragmentar excesivamente puede perder contexto.",
+    "requisitos": [
+      "RQ-014",
+      "RQ-017",
+      "RQ-025"
+    ],
+    "prueba_propuesta_no_ejecutada": "Recuperar contexto de una decisión desde varios episodios sin cortar premisas.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-032",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "11:09",
+    "marca_fin": "13:23",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=669s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Usa mapas de contenido, plantillas y notas diarias para acceso rápido y regularidad.",
+    "aplicacion_posible_no_aprobada": "Vistas de navegación y generación consistente de registros.",
+    "limitaciones": "MOC es mapa, no autoridad vigente; plantilla nunca debe ser fuente de hechos.",
+    "requisitos": [
+      "RQ-019",
+      "RQ-020",
+      "RQ-025"
+    ],
+    "prueba_propuesta_no_ejecutada": "Confirmar que notas creadas desde plantilla siguen marcadas como borrador.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-033",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "13:23",
+    "marca_fin": "16:20",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=803s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Muestra graph y menciones sin enlazar para buscar temas vinculados con iniciativas.",
+    "aplicacion_posible_no_aprobada": "Descubrimiento de conexiones candidatas.",
+    "limitaciones": "Grafo estándar representa enlaces, no predicados ni verdad; asociaciones requieren revisión.",
+    "requisitos": [
+      "RQ-015",
+      "RQ-020",
+      "RQ-026"
+    ],
+    "prueba_propuesta_no_ejecutada": "Distinguir mención casual de dependencia real y aprobación.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-034",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "17:15",
+    "marca_fin": "18:17",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=1035s",
+    "tipo_evidencia": "recomendacion_explicita",
+    "contenido_del_video_parafraseado": "Propone preguntas sobre evolución de decisiones, brechas y asuntos recurrentes en registros diarios.",
+    "aplicacion_posible_no_aprobada": "Casos de uso de análisis longitudinal para propietario.",
+    "limitaciones": "Respuesta puede sesgarse por incompletitud de registro; no hacer diagnósticos categóricos.",
+    "requisitos": [
+      "RQ-007",
+      "RQ-011",
+      "RQ-017"
+    ],
+    "prueba_propuesta_no_ejecutada": "En respuestas, señalar periodo analizado y registros ausentes.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-035",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "18:48",
+    "marca_fin": "22:36",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=1128s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "Describe organización de contexto para Claude mediante CLAUDE.md, memory.md y skill.md e iteración por feedback.",
+    "aplicacion_posible_no_aprobada": "Separar instrucciones, memoria operativa y procedimiento especializado.",
+    "limitaciones": "Nombres y descubrimiento son específicos de herramientas; otros chats no ejecutan skills.",
+    "requisitos": [
+      "RQ-005",
+      "RQ-024",
+      "RQ-029"
+    ],
+    "prueba_propuesta_no_ejecutada": "Misma tarea con Codex, Claude Code y chat sin ejecución, cada uno con capacidades reales.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-036",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "22:36",
+    "marca_fin": "25:19",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=1356s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "Una skill estratégica tiene finalidad, condiciones de activación y pasos para contrastar prioridades con trabajo registrado.",
+    "aplicacion_posible_no_aprobada": "Contrato de tarea/revisión empresarial reutilizable.",
+    "limitaciones": "Instrucciones por sí solas no garantizan ejecución ni autoridad; validar fuentes.",
+    "requisitos": [
+      "RQ-024",
+      "RQ-026"
+    ],
+    "prueba_propuesta_no_ejecutada": "Un agente detecta hito sin dueño y cita registros en vez de inventar responsables.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-037",
+    "fuente_id": "VID-004",
+    "video_id": "w1r4ItfXNh0",
+    "marca_inicio": "25:19",
+    "marca_fin": "27:30",
+    "enlace_segmento": "https://www.youtube.com/watch?v=w1r4ItfXNh0&t=1519s",
+    "tipo_evidencia": "demostracion_descrita",
+    "contenido_del_video_parafraseado": "El ejemplo produce una revisión estratégica que destaca dependencias y acciones sin responsable, y solicita confirmaciones.",
+    "aplicacion_posible_no_aprobada": "Salida útil: hallazgos, riesgos, evidencia y preguntas puntuales.",
+    "limitaciones": "Demostración sintética no acredita impacto en empresas reales ni justifica escritura automática.",
+    "requisitos": [
+      "RQ-001",
+      "RQ-016",
+      "RQ-026"
+    ],
+    "prueba_propuesta_no_ejecutada": "Una revisión identifica solo riesgos comprobables y pide aprobación antes de modificar prioridades.",
+    "validacion": "solo_transcripcion",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-038",
+    "fuente_id": "VID-005",
+    "video_id": "pJSWJaLQtG4",
+    "marca_inicio": "00:00",
+    "marca_fin": "01:20",
+    "enlace_segmento": "https://www.youtube.com/watch?v=pJSWJaLQtG4&t=0s",
+    "tipo_evidencia": "recomendacion_explicita",
+    "contenido_del_video_parafraseado": "Reitera tres carpetas y un tablero inicial para negocios unipersonales.",
+    "aplicacion_posible_no_aprobada": "Onboarding mínimo con pocos conceptos visibles.",
+    "limitaciones": "Muy similar a VID-002; no cuenta como verificación independiente de arquitectura.",
+    "requisitos": [
+      "RQ-001",
+      "RQ-002",
+      "RQ-019"
+    ],
+    "prueba_propuesta_no_ejecutada": "Comparar onboarding con 3 carpetas frente a interfaz orientada a rol, sin imponerlo.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-039",
+    "fuente_id": "VID-005",
+    "video_id": "pJSWJaLQtG4",
+    "marca_inicio": "01:20",
+    "marca_fin": "02:10",
+    "enlace_segmento": "https://www.youtube.com/watch?v=pJSWJaLQtG4&t=80s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "El gerente de proyectos solo muestra prioridades, estado, fecha y siguiente acción; detalles en notas de proyecto.",
+    "aplicacion_posible_no_aprobada": "Separación de tablero vs expediente operativo.",
+    "limitaciones": "Tableros manuales se pueden desincronizar de los originales.",
+    "requisitos": [
+      "RQ-016",
+      "RQ-019",
+      "RQ-022"
+    ],
+    "prueba_propuesta_no_ejecutada": "Estado de proyecto proviene de registro autoritativo, no de dos campos editables.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-040",
+    "fuente_id": "VID-005",
+    "video_id": "pJSWJaLQtG4",
+    "marca_inicio": "02:10",
+    "marca_fin": "02:57",
+    "enlace_segmento": "https://www.youtube.com/watch?v=pJSWJaLQtG4&t=130s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "La biblioteca de recursos conserva enlaces a contratos, SOP y plantillas para tareas repetidas.",
+    "aplicacion_posible_no_aprobada": "Catálogo enlazado a documentos y reutilización.",
+    "limitaciones": "No validar contratos con enlaces sin versión o permisos; no copiar datos fiscales.",
+    "requisitos": [
+      "RQ-016",
+      "RQ-018",
+      "RQ-025"
+    ],
+    "prueba_propuesta_no_ejecutada": "Abrir un contrato de acceso restringido solo con credenciales autorizadas.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-041",
+    "fuente_id": "VID-005",
+    "video_id": "pJSWJaLQtG4",
+    "marca_inicio": "02:57",
+    "marca_fin": "04:49",
+    "enlace_segmento": "https://www.youtube.com/watch?v=pJSWJaLQtG4&t=177s",
+    "tipo_evidencia": "practica_explicada",
+    "contenido_del_video_parafraseado": "Relaciona tableros, proyectos, clientes y recursos; sugiere Properties y, eventualmente, Dataview.",
+    "aplicacion_posible_no_aprobada": "Capacidades de propiedades, enlaces y vistas estructuradas.",
+    "limitaciones": "Dataview es plugin tercero; Bases nativo puede cubrir escenarios y debe evaluarse primero.",
+    "requisitos": [
+      "RQ-020",
+      "RQ-026",
+      "RQ-027"
+    ],
+    "prueba_propuesta_no_ejecutada": "Resolver las vistas con Bases antes de seleccionar Dataview.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  },
+  {
+    "hallazgo_id": "H-042",
+    "fuente_id": "VID-005",
+    "video_id": "pJSWJaLQtG4",
+    "marca_inicio": "04:49",
+    "marca_fin": "06:48",
+    "enlace_segmento": "https://www.youtube.com/watch?v=pJSWJaLQtG4&t=289s",
+    "tipo_evidencia": "rutina_explicada",
+    "contenido_del_video_parafraseado": "Propone revisión diaria breve y plantillas semanales con respaldo regular.",
+    "aplicacion_posible_no_aprobada": "Rutina de mantenimiento + recuperación de datos.",
+    "limitaciones": "Revisión manual no reemplaza detección de conflicto, caducidad y cambios por agente.",
+    "requisitos": [
+      "RQ-016",
+      "RQ-017",
+      "RQ-027"
+    ],
+    "prueba_propuesta_no_ejecutada": "Reanudar tras diez días sin uso y recuperar lo pendiente sin duplicar tareas.",
+    "validacion": "explicacion_transcrita",
+    "decision": "pendiente"
+  }
+]

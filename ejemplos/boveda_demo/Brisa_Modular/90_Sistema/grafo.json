@@ -1,0 +1,534 @@
+{
+  "grafo_version": "0.1",
+  "empresa": "Brisa_Modular",
+  "nodos": [
+    {
+      "id": "SYS-MAPA-EMPRESA",
+      "tipo": "mapa",
+      "ruta": "00_Mapas/Mapa_de_empresa.md"
+    },
+    {
+      "id": "SYS-MAPA-RELACIONES",
+      "tipo": "mapa",
+      "ruta": "00_Mapas/Relaciones_de_conocimiento.md"
+    },
+    {
+      "id": "D03",
+      "tipo": "documento",
+      "ruta": "10_Conocimiento/D03.md"
+    },
+    {
+      "id": "X01-BRISA-001",
+      "tipo": "documento",
+      "ruta": "10_Conocimiento/X01-BRISA-001.md"
+    },
+    {
+      "id": "X04-BRISA-001",
+      "tipo": "documento",
+      "ruta": "10_Conocimiento/X04-BRISA-001.md"
+    },
+    {
+      "id": "X07-BRISA-001",
+      "tipo": "documento",
+      "ruta": "10_Conocimiento/X07-BRISA-001.md"
+    },
+    {
+      "id": "F-0100",
+      "tipo": "fuente",
+      "ruta": "50_Fuentes/F-0100.md"
+    },
+    {
+      "id": "F-0101",
+      "tipo": "fuente",
+      "ruta": "50_Fuentes/F-0101.md"
+    },
+    {
+      "id": "SYS-AUTORIDADES",
+      "tipo": "control",
+      "ruta": "90_Sistema/Autoridades.md"
+    },
+    {
+      "id": "SYS-COMO-USAR",
+      "tipo": "sistema",
+      "ruta": "90_Sistema/Como_usar.md"
+    },
+    {
+      "id": "SYS-BLOQUES",
+      "tipo": "control",
+      "ruta": "90_Sistema/Estados_de_bloques.md"
+    },
+    {
+      "id": "SYS-PENDIENTES",
+      "tipo": "control",
+      "ruta": "90_Sistema/Pendientes.md"
+    },
+    {
+      "id": "SYS-PRUEBAS",
+      "tipo": "control",
+      "ruta": "90_Sistema/Pruebas_de_recuperacion.md"
+    },
+    {
+      "id": "SYS-IMPORT-BRISA-SINTETICA",
+      "tipo": "control",
+      "ruta": "90_Sistema/Traspasos/BRISA-SINTETICA/Reporte.md"
+    },
+    {
+      "id": "SYS-INICIO",
+      "tipo": "mapa",
+      "ruta": "Inicio.md"
+    },
+    {
+      "id": "D03-B001",
+      "tipo": "bloque",
+      "parent_id": "D03",
+      "conocimiento": "hecho_observado",
+      "vigencia": "vigente",
+      "editorial": "en_revision",
+      "cobertura": "suficiente_para_tarea"
+    },
+    {
+      "id": "D03-B004",
+      "tipo": "bloque",
+      "parent_id": "D03",
+      "conocimiento": "propuesta",
+      "vigencia": "sin_verificar",
+      "editorial": "en_revision",
+      "cobertura": "parcial"
+    },
+    {
+      "id": "X01-BRISA-001-B001",
+      "tipo": "bloque",
+      "parent_id": "X01-BRISA-001",
+      "conocimiento": "decision_aprobada",
+      "vigencia": "vigente",
+      "editorial": "en_revision",
+      "cobertura": "suficiente_para_tarea"
+    },
+    {
+      "id": "X04-BRISA-001-B001",
+      "tipo": "bloque",
+      "parent_id": "X04-BRISA-001",
+      "conocimiento": "hecho_observado",
+      "vigencia": "vigente",
+      "editorial": "borrador",
+      "cobertura": "suficiente_para_tarea"
+    },
+    {
+      "id": "X07-BRISA-001-B001",
+      "tipo": "bloque",
+      "parent_id": "X07-BRISA-001",
+      "conocimiento": "hipotesis",
+      "vigencia": "futuro",
+      "editorial": "borrador",
+      "cobertura": "parcial"
+    }
+  ],
+  "aristas": [
+    {
+      "origen": "SYS-MAPA-EMPRESA",
+      "predicado": "enlaza",
+      "destino": "SYS-INICIO",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-MAPA-RELACIONES",
+      "predicado": "enlaza",
+      "destino": "D03",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-MAPA-RELACIONES",
+      "predicado": "enlaza",
+      "destino": "X01-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-MAPA-RELACIONES",
+      "predicado": "enlaza",
+      "destino": "F-0101",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-MAPA-RELACIONES",
+      "predicado": "enlaza",
+      "destino": "X04-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-MAPA-RELACIONES",
+      "predicado": "enlaza",
+      "destino": "F-0100",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-MAPA-RELACIONES",
+      "predicado": "enlaza",
+      "destino": "X07-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-MAPA-RELACIONES",
+      "predicado": "enlaza",
+      "destino": "SYS-INICIO",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "D03",
+      "predicado": "cita_fuente",
+      "destino": "F-0100",
+      "capa": "propiedad",
+      "fuentes": []
+    },
+    {
+      "origen": "D03",
+      "predicado": "cita_fuente",
+      "destino": "F-0101",
+      "capa": "propiedad",
+      "fuentes": []
+    },
+    {
+      "origen": "D03",
+      "predicado": "refiere_oferta",
+      "destino": "X01-BRISA-001",
+      "capa": "propiedad",
+      "fuentes": []
+    },
+    {
+      "origen": "D03",
+      "predicado": "requiere_experimento",
+      "destino": "X07-BRISA-001",
+      "capa": "propiedad",
+      "fuentes": []
+    },
+    {
+      "origen": "D03",
+      "predicado": "enlaza",
+      "destino": "F-0100",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "D03",
+      "predicado": "enlaza",
+      "destino": "F-0101",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "D03",
+      "predicado": "enlaza",
+      "destino": "X01-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "D03",
+      "predicado": "enlaza",
+      "destino": "X07-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "X01-BRISA-001",
+      "predicado": "cita_fuente",
+      "destino": "F-0101",
+      "capa": "propiedad",
+      "fuentes": []
+    },
+    {
+      "origen": "X01-BRISA-001",
+      "predicado": "enlaza",
+      "destino": "F-0101",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "X04-BRISA-001",
+      "predicado": "cita_fuente",
+      "destino": "F-0100",
+      "capa": "propiedad",
+      "fuentes": []
+    },
+    {
+      "origen": "X04-BRISA-001",
+      "predicado": "inspira_propuesta",
+      "destino": "D03",
+      "capa": "propiedad",
+      "fuentes": []
+    },
+    {
+      "origen": "X04-BRISA-001",
+      "predicado": "enlaza",
+      "destino": "F-0100",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "X04-BRISA-001",
+      "predicado": "enlaza",
+      "destino": "D03",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "X07-BRISA-001",
+      "predicado": "cita_fuente",
+      "destino": "F-0100",
+      "capa": "propiedad",
+      "fuentes": []
+    },
+    {
+      "origen": "X07-BRISA-001",
+      "predicado": "enlaza",
+      "destino": "F-0100",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-AUTORIDADES",
+      "predicado": "enlaza",
+      "destino": "X01-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-COMO-USAR",
+      "predicado": "enlaza",
+      "destino": "SYS-INICIO",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-BLOQUES",
+      "predicado": "enlaza",
+      "destino": "D03",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-BLOQUES",
+      "predicado": "enlaza",
+      "destino": "F-0101",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-BLOQUES",
+      "predicado": "enlaza",
+      "destino": "F-0100",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-BLOQUES",
+      "predicado": "enlaza",
+      "destino": "X01-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-BLOQUES",
+      "predicado": "enlaza",
+      "destino": "X04-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-BLOQUES",
+      "predicado": "enlaza",
+      "destino": "X07-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-PENDIENTES",
+      "predicado": "enlaza",
+      "destino": "D03",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-PENDIENTES",
+      "predicado": "enlaza",
+      "destino": "X07-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-PRUEBAS",
+      "predicado": "enlaza",
+      "destino": "X01-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-PRUEBAS",
+      "predicado": "enlaza",
+      "destino": "D03",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-PRUEBAS",
+      "predicado": "enlaza",
+      "destino": "X04-BRISA-001",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-INICIO",
+      "predicado": "enlaza",
+      "destino": "SYS-MAPA-EMPRESA",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-INICIO",
+      "predicado": "enlaza",
+      "destino": "SYS-AUTORIDADES",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-INICIO",
+      "predicado": "enlaza",
+      "destino": "SYS-PENDIENTES",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-INICIO",
+      "predicado": "enlaza",
+      "destino": "SYS-PRUEBAS",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-INICIO",
+      "predicado": "enlaza",
+      "destino": "SYS-MAPA-RELACIONES",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "SYS-INICIO",
+      "predicado": "enlaza",
+      "destino": "SYS-COMO-USAR",
+      "capa": "navegacion",
+      "fuentes": []
+    },
+    {
+      "origen": "D03-B001",
+      "predicado": "pertenece_a",
+      "destino": "D03",
+      "capa": "contrato",
+      "fuentes": []
+    },
+    {
+      "origen": "D03-B001",
+      "predicado": "sustentado_por",
+      "destino": "F-0101",
+      "capa": "contrato",
+      "fuentes": []
+    },
+    {
+      "origen": "D03-B004",
+      "predicado": "pertenece_a",
+      "destino": "D03",
+      "capa": "contrato",
+      "fuentes": []
+    },
+    {
+      "origen": "D03-B004",
+      "predicado": "sustentado_por",
+      "destino": "F-0100",
+      "capa": "contrato",
+      "fuentes": []
+    },
+    {
+      "origen": "X01-BRISA-001-B001",
+      "predicado": "pertenece_a",
+      "destino": "X01-BRISA-001",
+      "capa": "contrato",
+      "fuentes": []
+    },
+    {
+      "origen": "X01-BRISA-001-B001",
+      "predicado": "sustentado_por",
+      "destino": "F-0101",
+      "capa": "contrato",
+      "fuentes": []
+    },
+    {
+      "origen": "X04-BRISA-001-B001",
+      "predicado": "pertenece_a",
+      "destino": "X04-BRISA-001",
+      "capa": "contrato",
+      "fuentes": []
+    },
+    {
+      "origen": "X04-BRISA-001-B001",
+      "predicado": "sustentado_por",
+      "destino": "F-0100",
+      "capa": "contrato",
+      "fuentes": []
+    },
+    {
+      "origen": "X07-BRISA-001-B001",
+      "predicado": "pertenece_a",
+      "destino": "X07-BRISA-001",
+      "capa": "contrato",
+      "fuentes": []
+    },
+    {
+      "origen": "X07-BRISA-001-B001",
+      "predicado": "sustentado_por",
+      "destino": "F-0100",
+      "capa": "contrato",
+      "fuentes": []
+    },
+    {
+      "origen": "D03-B001",
+      "predicado": "refiere_oferta",
+      "destino": "X01-BRISA-001-B001",
+      "capa": "contrato",
+      "fuentes": [
+        "F-0101"
+      ]
+    },
+    {
+      "origen": "X04-BRISA-001-B001",
+      "predicado": "inspira_propuesta",
+      "destino": "D03-B004",
+      "capa": "contrato",
+      "fuentes": [
+        "F-0100"
+      ]
+    },
+    {
+      "origen": "D03-B004",
+      "predicado": "requiere_experimento",
+      "destino": "X07-BRISA-001-B001",
+      "capa": "contrato",
+      "fuentes": [
+        "F-0100"
+      ]
+    },
+    {
+      "origen": "X01-BRISA-001-B001",
+      "predicado": "autoridad_en_precio_modulo_estandar",
+      "destino": "X01-BRISA-001",
+      "capa": "contrato",
+      "fuentes": []
+    }
+  ],
+  "nota": "Proyección de navegación y aristas declaradas. No es un motor de inferencia ni control de acceso."
+}

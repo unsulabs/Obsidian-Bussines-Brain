@@ -1,0 +1,12 @@
+filters:
+  and:
+    - 'tipo == "fuente"'
+views:
+  - type: table
+    name: "Fuentes"
+    order:
+      - file.name
+      - clase_fuente
+      - lectura
+      - sensibilidad
+      - fecha_evento

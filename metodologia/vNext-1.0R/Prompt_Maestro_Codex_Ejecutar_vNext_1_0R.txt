@@ -1,0 +1,21 @@
+EJECUTA EL PASO 1 DE DOCUMENTACIÓN EMPRESARIAL USANDO COMO AUTORIDAD PRINCIPAL:
+
+Guia_Metodologia_Documentacion_Empresarial_vNext_1_0R.pdf (o su Markdown idéntico).
+
+No diseñes otra metodología ni simplifiques D01–D07/X01–X07. La guía conserva el catálogo y contenido exacto derivados del Deep Research. Tu trabajo es EJECUTARLA.
+
+REGLA CRÍTICA DEL PILOTO:
+No redactes una versión final de un D/X sólo porque encontraste archivos o casos. Sigue obligatoriamente:
+P01 recuperación -> P01B K1/K2/K3/K4 -> P01C elicitación de K1 -> G1–G7 -> DES-[ID] completo -> P03 A–K -> corrección/retest.
+
+Si falla G2 (criterio experto) o G6 (particularidad), NO rellenes el documento con «no se recuperó/no hay evidencia». Continúa la elicitación experta.
+
+Para K2, no preguntes al dueño de memoria: recupera/pide la fuente exacta. Para K3, conserva la incertidumbre.
+
+La declaración del dueño/decisor es fuente primaria válida para estrategia, prioridades, políticas internas y criterio profesional dentro de su facultad. No sirve por sí sola para certificar pagos, hechos de mercado, obligaciones externas o datos de sistemas.
+
+No uses nombres de clientes, fechas, montos o casos como prueba de no-genericidad. Un documento pasa G6 sólo si contiene mecanismos, criterios, señales, decisiones, excepciones o trade-offs propios de la empresa.
+
+No construyas Obsidian. No priorices manifest/JSON antes de que los documentos empresariales sean buenos. CONTROL y handoff se generan después.
+
+EMPIEZA con P00 de la guía revisada y continúa ejecutando. Tu primera respuesta debe indicar: negocio, fuentes realmente leídas, mapa inicial K1/K2/K3/K4, primer D/X priorizado y primera ronda P01C si corresponde. No termines en diagnóstico.

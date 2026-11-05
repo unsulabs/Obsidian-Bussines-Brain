@@ -1,0 +1,11 @@
+filters:
+  and:
+  - tipo == "indicador"
+views:
+- type: table
+  name: Tabla
+  order:
+  - file.name
+  - vigencia
+  - estado_editorial
+  - fuentes

@@ -1,0 +1,34 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.DS_Store
+instancias/
+*.log
+*.tmp
+.env
+.env.*
+# Configuración local volátil de Obsidian
+**/.obsidian/workspace.json
+**/.obsidian/workspace-mobile.json
+**/.obsidian/cache/
+# Datos privados, copias locales y transcripciones de terceros
+bovedas_privadas/
+empresas_reales/
+private/
+local_data/
+credentials.json
+secrets.*
+*.key
+*.pem
+*.p12
+*.pfx
+*.sqlite
+*.db
+# No versionar archivos fuente de transcripciones subidos accidentalmente
+transcripciones_completas/
+banco-transcripciones/
+recepcion/
+corpus/
+# Evidencia de verificación puede contener fuentes privadas.
+_verify/
