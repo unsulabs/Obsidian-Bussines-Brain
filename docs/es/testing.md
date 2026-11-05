@@ -1,5 +1,21 @@
 # Pruebas y aceptación
 
+## Regresiones de instalación (2026-11-05)
+
+La revisión desde clon limpio encontró tres bloqueos: el inicio asistido exigía un router externo no disponible; validar una bóveda inexistente devolvía cero notas sin errores; y la auditoría del paquete rechazaba el `.venv` local ignorado que recomienda la documentación. Ahora el producto incluye un router que verifica el registro nativo, rechaza destinos inexistentes o que no son directorios y excluye de la auditoría local sólo el `.venv` raíz ignorado y completamente fuera del índice Git. Un paquete o entorno versionado sigue siendo rechazado; las exportaciones excluyen `.venv` a cualquier profundidad. La recomendación de doctor coincide con Python 3.11+.
+
+Las pruebas dirigidas pasaron en macOS 26.5.1 arm64 con Python 3.11.15, usando registros sintéticos y bóvedas temporales:
+
+```bash
+python -m unittest discover -s tests -p 'test_*boveda_codex.py' -v
+python -m unittest discover -s tests -p 'test_entrega.py' -v
+python -m unittest discover -s tests -p 'test_exportar_producto.py' -v
+python scripts/check_docs.py
+git diff --check
+```
+
+Cubren selección explícita correcta, registro ambiguo/ausente/malformado, discrepancia de identidad nativa, escape de rutas/enlaces simbólicos, resolución de solo lectura, salida fallida del CLI ante bóveda inválida y límites de auditoría/exportación de entornos. Las pruebas de rutas predeterminadas simulan Linux/Windows; no acreditan instalación en esos sistemas. Los registros nativos son fixtures sintéticos, no evidencia GUI. GUI/Bases reales, otros sistemas, utilidad semántica y aceptación del dueño siguen como gates separados. Ejecuta la suite completa indicada abajo contra el checkout final para aceptación del runtime; estas pruebas dirigidas no la reemplazan.
+
 [English](../en/testing.md) · [Documentación](README.md)
 
 Usa el entorno Python 3.11+ verificado de [preparación](onboarding.md). Ejecuta desde la raíz del repositorio. Usa fixtures sintéticos y rutas temporales aisladas; nunca repares una bóveda real para aparentar que una prueba de producto pasa.

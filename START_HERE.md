@@ -9,6 +9,6 @@ Open this repository in Codex. Use the existing product to develop useful knowle
 3. If a vault exists, use [Continue with Codex](CONTINUE_WITH_CODEX.md). Do not create another vault or copy templates over it.
 4. Work on a real task, review the knowledge, and leave a continuation point. Installation and a first note are increments, not proof of a complete business knowledge system.
 
-The agent checks the environment and permissions first. It verifies the destination through the external `obsidian-router` before accessing an existing vault. If routing is unavailable, preserve authorized work outside the vault and leave vault access pending.
+The agent checks the environment and permissions first. It verifies the destination through the included `obsidian-router` before accessing an existing vault. If routing is unavailable, preserve authorized work outside the vault and leave vault access pending.
 
 Technical acceptance after installation, migration, or an integration change is separate from everyday continuation. Choose the appropriate section of the continuation prompt.

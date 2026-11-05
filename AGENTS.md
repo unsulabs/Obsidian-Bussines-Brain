@@ -22,9 +22,11 @@ Configure the bank outside Git and the vault; never version corpus or real busin
 
 ## Two entry points: NEW vs EXISTING instance
 
+Read the included [obsidian-router skill](.agents/skills/obsidian-router/SKILL.md) directly from this checkout for destination verification; no global installation is needed.
+
 If a task names an existing vault, first resolve it with `obsidian-router` and confirm path, native registration and local instructions **before listing, searching or reading any file inside it**. A prompt path is a candidate, not destination verification. Once resolved, load `Como_usar` and `Inicio`; never select by active window.
 
-`obsidian-router` is an external dependency, not included by cloning/exporting this product. If missing or unable to resolve the destination, follow [instance preparation and safe fallback](.agents/skills/ce-banco-transcripciones/references/flujo-predeterminado.md#preparación-de-instancia-y-dependencias): preserve authorized work outside the vault and leave vault reading/integration pending; never substitute an active window or guessed path for verification.
+`obsidian-router` is included at `.agents/skills/obsidian-router/SKILL.md`, with the read-only `scripts/resolver_boveda_codex.py`. Use this repository-owned route without installing a global skill; see [registration and resolution](docs/en/onboarding.md#register-and-resolve-the-vault). If missing or unable to resolve the destination, follow [instance preparation and safe fallback](.agents/skills/ce-banco-transcripciones/references/flujo-predeterminado.md#preparación-de-instancia-y-dependencias): preserve authorized work outside the vault and leave vault reading/integration pending; never substitute an active window or guessed path for verification.
 
 When someone says “continue my business” ("continúa mi empresa"), “recover my vault,” or an existing private instance contains D/X and sources, **DO NOT run crear, copy the template, modify D01 by default or request another initial interview**. A specific D01 revision may be applied with authorization, backup, hash and validation. Everyday continuity uses `ce-continuidad`; queries use `ce-consulta`: resolve the vault and retrieve only relevant state, notes and originals. Neither entry alone requires full acceptance, the suite, a synthetic rehearsal or human map review.
 

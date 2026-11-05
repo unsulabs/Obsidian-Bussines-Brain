@@ -27,6 +27,7 @@ MANIFEST = 'PRODUCT_MANIFEST.json'
 # Se excluyen también bajo carpetas permitidas y aunque Git los haya admitido
 # con --force. Los nombres reservan contenedores privados, no archivos de código.
 PRIVATE_COMPONENTS = frozenset({
+    '.venv',
     'material_privado', 'instancias', 'legado_rechazado',
     'banco-transcripciones', 'recepcion', 'corpus', 'transcripciones_completas',
 })

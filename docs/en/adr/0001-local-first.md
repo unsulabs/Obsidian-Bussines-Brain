@@ -12,7 +12,7 @@ The public product must be reusable across businesses without carrying customer 
 
 ## Decision
 
-Keep reusable software, methodology, instructions, and synthetic examples in Git. Store each business's knowledge in a private vault separate from the product and keep its transcript bank outside both. Use explicit paths in the CLI; assisted access to an existing vault additionally requires the external `obsidian-router`, native Obsidian registration verification, and local instructions. Never select a vault by the active window alone.
+Keep reusable software, methodology, instructions, and synthetic examples in Git. Store each business's knowledge in a private vault separate from the product and keep its transcript bank outside both. Use explicit paths in the CLI; assisted access to an existing vault additionally requires the included `obsidian-router`, native Obsidian registration verification, and local instructions. Never select a vault by the active window alone.
 
 Updating the product does not authorize copying templates into an existing vault. Work runs during an agent session; the repository does not create a hosted service or background monitor. Optional connectors retain their own authorization and access requirements.
 

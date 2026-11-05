@@ -4,4 +4,4 @@ Candidato de software para organización y desarrollo de conocimiento empresaria
 
 Ejecuta `python scripts/cerebro.py doctor` y `python -m unittest discover -s tests -v` sobre el candidato que uses. Los resultados de una versión no certifican otra. La instalación GUI, compatibilidad local, fidelidad de las notas y utilidad empresarial requieren evidencia propia según [los criterios de aceptación](CRITERIOS_DE_ACEPTACION.md).
 
-`obsidian-router` es una dependencia externa del flujo asistido, no incluida. Los permisos multiusuario requieren controles externos: las etiquetas de sensibilidad no son ACL. Ningún test técnico ratifica decisiones del negocio.
+`obsidian-router` está incluido como skill y resolver local del producto; requiere registro local y confirmación contra el registro nativo de Obsidian. Los permisos multiusuario requieren controles externos: las etiquetas de sensibilidad no son ACL. Ningún test técnico ratifica decisiones del negocio.

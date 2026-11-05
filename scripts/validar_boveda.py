@@ -12,6 +12,10 @@ from lib_ce import (BLOCK_RE, EDITORIAL, TEMPORAL, SENSITIVITY,
 
 def validate(vault: Path) -> dict:
     vault = vault.resolve()
+    if not vault.is_dir():
+        return {'notas': 0, 'ids': 0, 'bloques': 0, 'traspasos': 0,
+                'errores': [f'Bóveda inexistente o no es directorio: {vault}'],
+                'advertencias': [], 'tipos': {}}
     errors = []
     warnings = []
     id_to_file = {}

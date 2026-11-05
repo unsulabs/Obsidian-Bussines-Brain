@@ -20,7 +20,7 @@ def diagnose(vault=None):
         candidates=[Path('/usr/bin/obsidian'),Path('/opt/Obsidian/obsidian')]
     modules={name:'LOCALIZADO' if util.find_spec(name) else 'NO INSTALADO' for name in ('yaml','jsonschema')}
     result={'producto':'Cerebro Empresarial 0.4.0-rc.1',
-            'so':platform.platform(), 'python':sys.version.split()[0], 'recomendado_python':'3.10+',
+            'so':platform.platform(), 'python':sys.version.split()[0], 'recomendado_python':'3.11+',
             'directorio_trabajo':str(Path.cwd()),'dependencias_python':modules,
             'obsidian_ruta_cli':cli,'candidatos_obsidian':[str(p) for p in candidates if p.exists()],
             'obsidian_version':'NO VERIFICADO', 'obsidian_gui':'NO VERIFICADO',

@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import subprocess
 from exportar_producto import es_ruta_privada
 
 REPO=Path(__file__).resolve().parent.parent
@@ -16,18 +17,35 @@ SUSPECT_KEY=re.compile(r'(?i)(?:sk-(?:proj-)?[A-Za-z0-9_\-]{24,}|ghp_[A-Za-z0-9]
 EXCLUDE={'scripts/auditar_paquete.py'}
 
 
+def ignored_local_venv(root):
+    """Only a real Git checkout's ignored, entirely untracked root venv is local tooling."""
+    if not (root / '.git').exists():
+        return False
+    try:
+        ignored = subprocess.run(['git', '-C', str(root), 'check-ignore', '-q', '--', '.venv/'],
+                                 capture_output=True).returncode == 0
+        tracked = subprocess.check_output(['git', '-C', str(root), 'ls-files', '--', '.venv'],
+                                          stderr=subprocess.DEVNULL)
+        return ignored and not tracked
+    except (OSError, subprocess.CalledProcessError):
+        return False
+
+
 def audit(root=REPO):
     root=Path(root).resolve()
     violations=[];analyzed=0
     # Podar antes de descender: la auditoría no necesita abrir el corpus para
     # detectar que un contenedor privado se coló en el producto.
     paths=[]
+    local_venv = ignored_local_venv(root)
     for directory, dirs, files in os.walk(root, followlinks=False):
         base=Path(directory)
         for name in list(dirs):
             p=base/name
             rel=p.relative_to(root)
             if name == '.git' or rel.parts[0] == 'material_privado':
+                dirs.remove(name)
+            elif rel.as_posix() == '.venv' and local_venv and not p.is_symlink():
                 dirs.remove(name)
             elif es_ruta_privada(rel.as_posix()) or name in PRIV_DIRS:
                 violations.append('Directorio privado/temporal dentro del paquete: '+str(rel))

@@ -28,4 +28,4 @@ English is the primary language for public usage and development guidance. Each 
 
 Methodology originals under `metodologia/` and `contratos/`, and historical design/research material, retain their original Spanish wording and version identity. Spanish operational references under `guia/`, legacy `docs/` paths, and skill references may still be linked explicitly as Spanish. They preserve detail and provenance; they do not turn historical plans into implemented capabilities. Start with the current guides above and open originals only when the task needs them.
 
-The repository is the product; it contains no customer vault or transcript corpus. Read `AGENTS.md` before agent work and resolve an existing vault with the external `obsidian-router` before accessing it.
+The repository is the product; it contains no customer vault or transcript corpus. Read `AGENTS.md` before agent work and resolve an existing vault with the included `obsidian-router` before accessing it.

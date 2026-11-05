@@ -37,7 +37,22 @@ python scripts/cerebro.py validar --vault /private/path/MyBusiness
 python scripts/cerebro.py estado --vault /private/path/MyBusiness
 ```
 
-En Windows usa un destino local absoluto como `C:\Private\MyBusiness`. Abre la bóveda creada en Obsidian Desktop y compruébala allí. Antes de que el agente acceda a ella como bóveda existente, configura y verifica `obsidian-router` y el registro local de destinos. Clonar este repositorio no instala esa skill ni registra una bóveda.
+En Windows usa un destino local absoluto como `C:\Private\MyBusiness`. Abre la bóveda creada en Obsidian Desktop y compruébala allí. Completa el registro siguiente antes de que el agente acceda a ella como bóveda existente.
+
+## Registrar y resolver la bóveda
+
+La [skill de routing incluida](../../.agents/skills/obsidian-router/SKILL.md) funciona desde este checkout sin instalación global. Tras abrir la carpeta elegida como bóveda en Obsidian, sustituye ruta, nombre e ID de ejemplo por los tuyos:
+
+```bash
+python scripts/registrar_boveda_codex.py --vault /private/path/MyBusiness --nombre "My business" --alias MY-BUSINESS
+python scripts/resolver_boveda_codex.py --selector /private/path/MyBusiness
+```
+
+El registro verifica el ID nativo de Obsidian y escribe sólo `~/.codex/obsidian/vaults.json`, respaldando el registro existente. Nunca escribe la bóveda ni el registro de Obsidian. La resolución es de solo lectura: exige salida 0, `status: selected` y `native_registry_verified: true`; después lee `instructions` antes de `entrypoint`. El registro ausente o conflictivo bloquea el acceso; no fabriques IDs ni edites JSON para evadirlo. Para una bóveda ya registrada, comienza con la resolución. Registrar una bóveda existente requiere el destino previsto por su dueño y autorización.
+
+Rutas nativas predeterminadas: macOS `~/Library/Application Support/obsidian/obsidian.json`, Linux `$XDG_CONFIG_HOME/obsidian/obsidian.json` (o `~/.config/obsidian/obsidian.json`) y Windows `%APPDATA%/obsidian/obsidian.json`. Para instalaciones no estándar, verifica la ubicación nativa real y usa `--nativo "RUTA"` en ambos comandos. Usa `--registro "RUTA"` sólo para un registro local alternativo elegido explícitamente. Estas rutas son valores predeterminados, no pruebas de que Obsidian esté instalado o funcionando.
+
+Opcionalmente añade `--proyecto "/ruta/absoluta/ProyectoCodex"` al registro y resuelve con `python scripts/resolver_boveda_codex.py --project "/ruta/absoluta/ProyectoCodex"`. El proyecto explícito o una subruta debe coincidir con una sola asociación registrada; no se selecciona implícitamente por carpeta actual ni ventana activa.
 
 Usa el [prompt de inicio](../../PROMPT_INICIO_CODEX.md) para continuar por descubrimiento, revisión de fuentes, arquitectura del conocimiento, redacción útil, revisión y una tarea real. Una plantilla o captura provisional no termina ese trabajo.
 

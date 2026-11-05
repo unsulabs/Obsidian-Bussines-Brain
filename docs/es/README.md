@@ -28,4 +28,4 @@ El inglés es el idioma principal de las guías públicas de uso y desarrollo. C
 
 Los originales metodológicos de `metodologia/` y `contratos/`, y el material histórico de diseño/investigación, conservan su redacción española e identidad de versión. Las referencias operativas de `guia/`, rutas previas de `docs/` y referencias de skills pueden seguir enlazadas explícitamente como españolas. Preservan detalle y procedencia; no convierten planes históricos en capacidades implementadas. Empieza por las guías vigentes anteriores y abre originales sólo cuando la tarea lo necesite.
 
-El repositorio es el producto; no contiene bóveda de clientes ni corpus de transcripciones. Lee `AGENTS.md` antes del trabajo del agente y resuelve una bóveda existente mediante la dependencia externa `obsidian-router` antes de acceder a ella.
+El repositorio es el producto; no contiene bóveda de clientes ni corpus de transcripciones. Lee `AGENTS.md` antes del trabajo del agente y resuelve una bóveda existente mediante la skill incluida `obsidian-router` antes de acceder a ella.

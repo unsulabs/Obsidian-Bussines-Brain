@@ -52,6 +52,7 @@ class ExportarProductoTest(unittest.TestCase):
                          'docs/en/onboarding.md', 'docs/es/onboarding.md',
                          'START_HERE.md', 'GET_STARTED_WITH_CODEX.md', 'CONTINUE_WITH_CODEX.md',
                          '.cursor/corpus/private.md',
+                         'scripts/.venv/tool.txt',
                          'material_privado/EMPRESA-SINTETICA/originales/privado.md'):
                 path = repo / name
                 path.parent.mkdir(parents=True, exist_ok=True)
@@ -75,6 +76,7 @@ class ExportarProductoTest(unittest.TestCase):
                                  'START_HERE.md', 'GET_STARTED_WITH_CODEX.md', 'CONTINUE_WITH_CODEX.md'):
                     self.assertIn(expected, archive.namelist())
                 self.assertNotIn('.cursor/corpus/private.md', archive.namelist())
+                self.assertNotIn('scripts/.venv/tool.txt', archive.namelist())
                 self.assertFalse(any(x.startswith('material_privado/')
                                      for x in archive.namelist()))
                 self.assertNotIn(b'SECRETO_EMPRESARIAL',

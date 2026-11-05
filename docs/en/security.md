@@ -14,7 +14,7 @@ Use appropriate operating-system access controls and secure backup/encryption ar
 
 Obsidian provides no per-note ACL: someone with access to the vault can read its Markdown. A `sensibilidad` field classifies information but does not enforce access. Place restricted information only where the explicit destination profile, purpose-specific permission, and external controls support it; do not infer consent from a source card or another business's configuration.
 
-Before an agent reads an existing vault, resolve it through the external `obsidian-router`, verify native Obsidian registration, and follow local instructions. Codex or a connector does not acquire access to a device or account merely because the product mentions it. Verify actual access and scope. Missing routing leaves vault work pending while independently authorized work can continue elsewhere.
+Before an agent reads an existing vault, resolve it through the included `obsidian-router`, verify native Obsidian registration, and follow local instructions. Codex or a connector does not acquire access to a device or account merely because the product mentions it. Verify actual access and scope. Missing routing leaves vault work pending while independently authorized work can continue elsewhere.
 
 ## Preserve sources and control changes
 

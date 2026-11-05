@@ -36,7 +36,7 @@ flowchart LR
     V --> N[Derived Bases and Canvas]
 ```
 
-1. Resolve an existing vault through external `obsidian-router` before reading its files. The active window is not a selector. If the dependency is unavailable, continue authorized work outside the vault and report integration pending.
+1. Resolve an existing vault through included `obsidian-router` before reading its files. The active window is not a selector. If the dependency is unavailable, continue authorized work outside the vault and report integration pending.
 2. Preserve authorized transcripts before summarizing. Ordinary documents, code and questions do not become transcripts because of their length.
 3. Retrieve admissible originals and prior notes, model independent units, then develop proposals. D/X syntheses link canonical owners of changing facts instead of duplicating them.
 4. Validate proposed changes and the exact source scope. Apply only through the relevant authorization, hash, backup and journal controls.

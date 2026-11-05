@@ -36,7 +36,7 @@ flowchart LR
     V --> N[Bases y Canvas derivados]
 ```
 
-1. Resolver una bóveda existente mediante `obsidian-router` externo antes de leer sus archivos. La ventana activa no selecciona destino. Si falta la dependencia, continuar fuera de la bóveda el trabajo autorizado y declarar integración pendiente.
+1. Resolver una bóveda existente mediante `obsidian-router` incluido antes de leer sus archivos. La ventana activa no selecciona destino. Si falta la dependencia, continuar fuera de la bóveda el trabajo autorizado y declarar integración pendiente.
 2. Preservar transcripciones autorizadas antes de resumir. Documentos ordinarios, código y preguntas no se convierten en transcripciones por su longitud.
 3. Recuperar originales admisibles y notas previas, diseñar unidades independientes y desarrollar propuestas. Las síntesis D/X enlazan al dueño canónico de los datos cambiantes sin duplicarlos.
 4. Validar cambios y ámbito exacto de fuentes. Aplicar únicamente con los controles pertinentes de autorización, huella, respaldo y journal.

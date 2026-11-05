@@ -58,7 +58,7 @@ See the [architecture guide](docs/en/architecture.md) for component boundaries.
 - Obsidian Desktop to view the vault; verify Bases and CLI availability locally.
 - Separate private locations for the business vault and source bank.
 
-**External dependency for existing vaults:** `obsidian-router`, a local destination registry, and verification against Obsidian. Cloning does not install them. Before listing or reading vault files, the agent must resolve the destination and read local instructions. An active window or typed CLI path does not replace these checks. If routing is unavailable, continue authorized work outside the vault and leave vault access/integration pending.
+**Vault routing is included:** the repository’s [obsidian-router skill](.agents/skills/obsidian-router/SKILL.md) and read-only resolver verify a local destination registry against Obsidian. Follow [registration and resolution](docs/en/onboarding.md#register-and-resolve-the-vault); cloning alone does not register a vault. Before listing or reading vault files, the agent must resolve the destination and read local instructions. An active window or typed CLI path does not replace these checks. If routing is unavailable, continue authorized work outside the vault and leave vault access/integration pending.
 
 ### Installation
 
@@ -80,6 +80,8 @@ A newer Python 3 interpreter is also supported; verify its version first. On Win
 `doctor` is read-only and does not install missing components. If imports fail, check the interpreter and existing environments. This quickstart prepares the toolkit; it does not create a vault or verify Obsidian GUI behavior or business usefulness.
 
 ### Choose your next step
+
+Open the cloned `Obsidian-Bussines-Brain` folder as a project in Codex. Start a chat there with the [English startup prompt](GET_STARTED_WITH_CODEX.md) or [Spanish startup prompt](PROMPT_INICIO_CODEX.md), or the continuation prompt below for an existing instance. Codex reads `AGENTS.md` and the relevant `.agents/skills/*/SKILL.md` directly from this checkout; no global skill installation is required.
 
 | Your situation | Next step |
 | --- | --- |

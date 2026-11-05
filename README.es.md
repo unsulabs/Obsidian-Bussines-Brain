@@ -58,7 +58,7 @@ Consulta los límites de cada componente en la [guía de arquitectura](docs/es/a
 - Obsidian Desktop para ver la bóveda; comprueba Bases y CLI localmente.
 - Ubicaciones privadas separadas para la bóveda empresarial y el banco de fuentes.
 
-**Dependencia externa para bóvedas existentes:** `obsidian-router`, un registro local de destinos y verificación contra Obsidian. Clonar no los instala. Antes de listar o leer archivos de la bóveda, el agente debe resolver el destino y leer las instrucciones locales. La ventana activa o una ruta escrita en el CLI no reemplazan esas comprobaciones. Si falta routing, continúa el trabajo autorizado fuera de la bóveda y deja pendiente su acceso/integración.
+**Routing de bóvedas incluido:** la [skill obsidian-router](.agents/skills/obsidian-router/SKILL.md) del repositorio y su resolver de solo lectura verifican el registro local contra Obsidian. Sigue el [registro y resolución](docs/es/onboarding.md#registrar-y-resolver-la-bóveda); clonar por sí solo no registra una bóveda. Antes de listar o leer archivos de la bóveda, el agente debe resolver el destino y leer las instrucciones locales. La ventana activa o una ruta escrita en el CLI no reemplazan esas comprobaciones. Si falta routing, continúa el trabajo autorizado fuera de la bóveda y deja pendiente su acceso/integración.
 
 ### Instalación
 
@@ -80,6 +80,8 @@ También se admite un intérprete Python 3 posterior; comprueba primero su versi
 `doctor` es de solo lectura y no instala componentes faltantes. Si fallan imports, comprueba el intérprete y los entornos existentes. Este inicio rápido prepara la herramienta; no crea una bóveda ni verifica el comportamiento GUI de Obsidian o la utilidad empresarial.
 
 ### Elige el siguiente paso
+
+Abre la carpeta clonada `Obsidian-Bussines-Brain` como proyecto en Codex. Inicia allí un chat con el [prompt de inicio en español](PROMPT_INICIO_CODEX.md) o [en inglés](GET_STARTED_WITH_CODEX.md), o el prompt de continuidad siguiente para una instancia existente. Codex lee `AGENTS.md` y las `.agents/skills/*/SKILL.md` pertinentes directamente desde este checkout; no hace falta instalar skills globales.
 
 | Tu situación | Siguiente paso |
 | --- | --- |

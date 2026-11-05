@@ -37,7 +37,22 @@ python scripts/cerebro.py validar --vault /private/path/MyBusiness
 python scripts/cerebro.py estado --vault /private/path/MyBusiness
 ```
 
-On Windows use an absolute local destination such as `C:\Private\MyBusiness`. Open the created vault in Obsidian Desktop and verify it there. Before the agent accesses it as an existing vault, configure and verify the external `obsidian-router` and local destination registry. Cloning this repository does not install that skill or register a vault.
+On Windows use an absolute local destination such as `C:\Private\MyBusiness`. Open the created vault in Obsidian Desktop and verify it there. Complete the registration below before the agent accesses it as an existing vault.
+
+## Register and resolve the vault
+
+The [included routing skill](../../.agents/skills/obsidian-router/SKILL.md) works from this checkout without a global installation. After opening your chosen folder as a vault in Obsidian, replace the example path, name and ID with your own:
+
+```bash
+python scripts/registrar_boveda_codex.py --vault /private/path/MyBusiness --nombre "My business" --alias MY-BUSINESS
+python scripts/resolver_boveda_codex.py --selector /private/path/MyBusiness
+```
+
+Registration verifies the native Obsidian ID and writes only `~/.codex/obsidian/vaults.json`, backing up an existing registry. It never writes the vault or Obsidian's registry. Resolution is read-only: require exit 0, `status: selected` and `native_registry_verified: true`, then read the returned `instructions` before the `entrypoint`. Missing or conflicting registration fails closed; do not fabricate IDs or edit JSON to bypass it. For an existing registered vault, start with resolution. A new registration of an existing vault requires the owner's intended destination and authorization.
+
+Native registry defaults are macOS `~/Library/Application Support/obsidian/obsidian.json`, Linux `$XDG_CONFIG_HOME/obsidian/obsidian.json` (or `~/.config/obsidian/obsidian.json`), and Windows `%APPDATA%/obsidian/obsidian.json`. For a nonstandard installation, verify the real native location and use `--nativo "PATH"` on both commands. Use `--registro "PATH"` only for an explicitly selected alternative local registry. These paths are defaults, not proof that Obsidian is installed or running.
+
+Optionally add `--proyecto "/absolute/CodexProject"` to registration, then resolve with `python scripts/resolver_boveda_codex.py --project "/absolute/CodexProject"`. The explicit project or a child path must match exactly one registered association; there is no implicit current-folder or active-window selection.
 
 Use [the startup prompt](../../GET_STARTED_WITH_CODEX.md) to continue through discovery, source review, knowledge architecture, useful writing, review, and a real task. A template or provisional capture does not finish this work.
 

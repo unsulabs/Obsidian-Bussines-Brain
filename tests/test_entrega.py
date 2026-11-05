@@ -2,6 +2,8 @@ from pathlib import Path
 import json
 import sys
 import unittest
+import subprocess
+import tempfile
 import yaml
 
 ROOT=Path(__file__).resolve().parent.parent
@@ -27,7 +29,8 @@ class EntregaTest(unittest.TestCase):
             s=p.read_text(encoding='utf8')
             self.assertTrue(s.startswith('---\n'))
             fm=yaml.safe_load(s.split('---',2)[1])
-            self.assertTrue(fm['name'].startswith('ce-'))
+            self.assertTrue(fm['name'].startswith('ce-') or
+                            (p.parent.name == 'obsidian-router' and fm['name'] == 'obsidian-router'))
             self.assertGreater(len(fm['description']),45)
             self.assertTrue(len(s)>600)
 
@@ -42,5 +45,20 @@ class EntregaTest(unittest.TestCase):
         out=audit(ROOT)
         self.assertEqual(out['problemas'],[])
         self.assertEqual(out['material_privado_excluido'], (ROOT/'material_privado').exists())
+
+    def test_venv_is_only_exempt_when_ignored_untracked_checkout_tooling(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / '.venv').mkdir()
+            (root / '.venv/tool.txt').write_text('synthetic')
+            def venv_errors():
+                return [x for x in audit(root)['problemas'] if '.venv' in x]
+            self.assertTrue(venv_errors())  # A package must reject it.
+            subprocess.run(['git', 'init', '-q', str(root)], check=True)
+            self.assertTrue(venv_errors())  # An unignored checkout must reject it.
+            (root / '.gitignore').write_text('.venv/\n')
+            self.assertEqual(venv_errors(), [])
+            subprocess.run(['git', '-C', str(root), 'add', '-f', '.venv/tool.txt'], check=True)
+            self.assertTrue(venv_errors())  # Force-tracking does not bypass the audit.
 
 if __name__=='__main__':unittest.main()

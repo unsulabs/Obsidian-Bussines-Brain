@@ -20,9 +20,11 @@ El banco se configura fuera de Git y de la bóveda; no se versionan corpus ni da
 
 ## Dos entradas distintas: instancia NUEVA vs EXISTENTE
 
+Lee directamente la [skill obsidian-router incluida](../../.agents/skills/obsidian-router/SKILL.md) desde este checkout para verificar destinos; no necesita instalación global.
+
 Si una tarea nombra una bóveda existente, resuélvela primero con `obsidian-router` y confirma la ruta, el registro nativo y sus instrucciones locales **antes de listar, buscar o leer cualquier archivo dentro de ella**. Una ruta escrita en el prompt indica la candidata, pero no reemplaza la comprobación del destino. Después de resolverla, carga `Como_usar` e `Inicio`; no selecciones por la ventana activa.
 
-`obsidian-router` es una dependencia externa, no incluida por clonar/exportar este producto. Si falta o no resuelve el destino, sigue la [preparación de instancia y alternativa segura](../../.agents/skills/ce-banco-transcripciones/references/flujo-predeterminado.md#preparación-de-instancia-y-dependencias): conserva trabajo autorizado fuera de la bóveda y deja su lectura/integración pendiente; no sustituyas la verificación por la ventana activa o una ruta supuesta.
+`obsidian-router` viene incluido en `.agents/skills/obsidian-router/SKILL.md`, con el resolver de solo lectura `scripts/resolver_boveda_codex.py`. Usa esta ruta sin instalar una skill global; consulta [registro y resolución](onboarding.md#registrar-y-resolver-la-bóveda). Si falta o no resuelve el destino, sigue la [preparación de instancia y alternativa segura](../../.agents/skills/ce-banco-transcripciones/references/flujo-predeterminado.md#preparación-de-instancia-y-dependencias): conserva trabajo autorizado fuera de la bóveda y deja su lectura/integración pendiente; no sustituyas la verificación por la ventana activa o una ruta supuesta.
 
 Cuando la persona diga "continúa mi empresa", "recupera mi bóveda" o se identifique una instancia privada que ya contiene D/X y fuentes, **NO ejecutar crear, copiar la plantilla, modificar D01 por defecto ni pedir otra entrevista inicial**. Una revisión concreta de D01 sí puede aplicarse con autorización, respaldo, huella y validación. Para continuidad cotidiana usa `ce-continuidad`; para consultas, `ce-consulta`: resuelve la bóveda y recupera sólo estado, notas y originales pertinentes. Ninguna de esas entradas exige por sí sola aceptación integral, suite, ensayo sintético o revisión humana del mapa.
 

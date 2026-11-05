@@ -14,11 +14,19 @@ import os
 import sys
 import tempfile
 from datetime import datetime, timezone
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 
 REGISTRY = Path.home() / ".codex" / "obsidian" / "vaults.json"
-NATIVE = Path.home() / "Library" / "Application Support" / "obsidian" / "obsidian.json"
+def native_registry_path() -> Path:
+    if sys.platform == "darwin":
+        return Path.home() / "Library/Application Support/obsidian/obsidian.json"
+    if sys.platform == "win32":
+        return Path(os.environ.get("APPDATA", Path.home() / "AppData/Roaming")) / "obsidian/obsidian.json"
+    return Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "obsidian/obsidian.json"
+
+
+NATIVE = native_registry_path()
 FORMAT = "codex-obsidian-vaults/1"
 
 
@@ -36,6 +44,7 @@ def canonical(value: str | Path) -> Path:
 
 
 def read_json(path: Path) -> dict:
+    path = canonical(path)
     if not path.is_file() or path.is_symlink():
         raise ValueError(f"JSON inexistente o inseguro: {path}")
     value = json.loads(path.read_text(encoding="utf-8"))
@@ -46,7 +55,7 @@ def read_json(path: Path) -> dict:
 
 def safe_relative(value: str) -> str:
     part = Path(value)
-    if not value or part.is_absolute() or ".." in part.parts or "\\" in value:
+    if not value or part.is_absolute() or PureWindowsPath(value).drive or ".." in part.parts or "\\" in value:
         raise ValueError(f"Ruta relativa insegura: {value}")
     return value
 
@@ -98,9 +107,6 @@ def register(vault: Path, name: str, alias: str, registry_path: Path,
         raise ValueError(f"Bóveda inexistente: {vault}")
     if not name.strip() or not alias.strip():
         raise ValueError("Nombre y alias no pueden estar vacíos")
-    for relative in (instructions, entrypoint):
-        if not (vault / safe_relative(relative)).is_file():
-            raise ValueError(f"Falta archivo de la instancia: {relative}")
     if project is not None:
         project = canonical(project)
         if not project.is_dir():
@@ -111,11 +117,18 @@ def register(vault: Path, name: str, alias: str, registry_path: Path,
     if not isinstance(native_vaults, dict):
         raise ValueError("Registro nativo de Obsidian inválido")
     matches = [ident for ident, entry in native_vaults.items()
-               if isinstance(entry, dict) and canonical(entry.get("path", "")) == vault]
+               if isinstance(entry, dict) and isinstance(entry.get("path"), str)
+               and Path(entry["path"]).is_absolute() and canonical(entry["path"]) == vault]
     if len(matches) != 1:
         raise ValueError("Abre primero la carpeta como bóveda en Obsidian; se requiere un único ID nativo")
     ident = matches[0]
 
+    for relative in (instructions, entrypoint):
+        target = canonical(vault / safe_relative(relative))
+        if not target.is_relative_to(vault) or not target.is_file():
+            raise ValueError(f"Falta archivo de la instancia: {relative}")
+
+    registry_path = canonical(registry_path)
     if registry_path.is_symlink():
         raise ValueError("Registro de Codex con enlace simbólico")
     original = registry_path.read_bytes() if registry_path.exists() else None

@@ -25,6 +25,22 @@ Choose other targeted tests by the changed behavior, then run the full suite for
 
 ## What requires separate evidence
 
+### Installation regression checks (2026-11-05)
+
+Clean-clone review found three blockers: assisted onboarding required an unavailable external router; validation accepted a missing vault as zero notes without errors; and the package audit rejected the documented ignored local `.venv`. The product now includes a native-registry-verified router, rejects missing/non-directory validation targets, and excludes only an ignored, entirely untracked root `.venv` in a Git checkout from the local audit. A package or tracked environment remains rejected; exports exclude `.venv` at every depth. The doctor recommendation now matches Python 3.11+.
+
+Focused checks passed on macOS 26.5.1 arm64 with Python 3.11.15 using synthetic registries and temporary vaults:
+
+```bash
+python -m unittest discover -s tests -p 'test_*boveda_codex.py' -v
+python -m unittest discover -s tests -p 'test_entrega.py' -v
+python -m unittest discover -s tests -p 'test_exportar_producto.py' -v
+python scripts/check_docs.py
+git diff --check
+```
+
+These checks cover successful explicit selection, ambiguous/missing/malformed registration, native identity mismatch, path traversal/symlinks, read-only resolution, invalid vault CLI exits and environment audit/export boundaries. Platform-default path tests mock Linux/Windows; they do not establish installation on those systems. Native Obsidian registration fixtures are synthetic, not GUI evidence. Actual GUI/Bases behavior, other operating systems, semantic usefulness and owner acceptance remain separate gates. Run the full suite above against the final checkout for runtime acceptance; these focused results do not replace it.
+
 | Gate | Evidence required |
 | --- | --- |
 | Structural integrity | Actual validation/test output with interpreter, checkout state, and relevant paths |
